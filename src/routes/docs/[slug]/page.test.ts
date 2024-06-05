@@ -10,7 +10,7 @@ import Page from './+page.svelte';
 
 test('should retrieve posts', async () => {
 	const event = mock<LoadEvent<RouteParams, null, PageParentData, '/docs/[slug]'>>();
-	event.params.slug = 'introduction';
+	event.params.slug = 'todo';
 	const loadreturn = await pageLoad(event);
 	if (!loadreturn) return;
 	const { component, frontmatter } = loadreturn;
@@ -33,7 +33,7 @@ test('should throw 404 error for a non existent slug', async () => {
 test('page component should render', async () => {
 	const layoutData = await layoutLoad();
 	const pageLoadEvent = mock<LoadEvent<RouteParams, null, PageParentData, '/docs/[slug]'>>();
-	pageLoadEvent.params.slug = 'introduction';
+	pageLoadEvent.params.slug = 'todo';
 	const pageData = await pageLoad(pageLoadEvent);
 	if (!pageData) return;
 	if (!layoutData) return;
@@ -46,5 +46,5 @@ test('page component should render', async () => {
 	expect(title).toHaveTextContent('Introduction');
 
 	const body = screen.getByTestId('body');
-	expect(body).toHaveTextContent('Cyclo leverages FLR (Flare) tokens in a novel way');
+	expect(body).toHaveTextContent('todo');
 });
