@@ -4,7 +4,11 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				primary: '#1E26E8'
+			}
+		}
 	},
 
 	plugins: [require('@tailwindcss/typography')]
