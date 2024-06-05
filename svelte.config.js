@@ -26,9 +26,10 @@ const config = {
 		adapter: adapter({
 			trailingSlash: 'always',
 		}),
-		// paths: {
-		// 	base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
-		// }
+		paths: {
+			relative: true
+			// base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+		}
 	},
 
 	extensions: ['.svelte', '.svx', '.md']
