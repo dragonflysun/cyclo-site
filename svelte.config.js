@@ -25,9 +25,8 @@ const config = {
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter(),
 		paths: {
-			// this is to make it work on ipfs (on an unknown path)
-			relative: true,
-		},
+			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+		}
 	},
 
 	extensions: ['.svelte', '.svx', '.md']
