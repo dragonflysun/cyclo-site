@@ -2,9 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-      - '**' # This will trigger for every branch
+    branches: 'main'
 
 jobs:
   build_site:
@@ -12,6 +10,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # If you're using pnpm, add this step then change the commands and cache key below to use `pnpm`
+      # - name: Install pnpm
+      #   uses: pnpm/action-setup@v3
+      #   with:
+      #     version: 8
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -31,6 +35,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
+          # this should match the `pages` option in your adapter-static options
           path: 'build/'
 
   deploy:
@@ -46,13 +51,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Set Branch as Deployment Path
-        run: echo "DEPLOYMENT_PATH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          branch: gh-pages # This is your GitHub Pages branch
-          folder: build # The folder to deploy
-          target_folder: ${{ env.DEPLOYMENT_PATH }} # Target folder based on branch name
