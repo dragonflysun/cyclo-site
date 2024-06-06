@@ -18,7 +18,7 @@
 			{#each data.categorisedArticles as { articles }}
 				<li class="flex flex-col gap-y-2">
 					{#each articles as { slug, title }}
-						<a data-testid="doc-title" href={`/docs/${slug}`}>{title}</a>
+						<a data-testid="doc-title" href={`${slug}`}>{title}</a>
 					{/each}
 				</li>
 			{/each}
