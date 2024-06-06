@@ -10,11 +10,11 @@
 		<img src={logo} alt="Cyclo logo" class="max-h-full" data-testid="logo" />
 	</a>
 </div>
-<div class="z-0 flex">
+<div class="z-0 flex flex-col md:flex-row">
 	<div
-		class="sticky top-[var(--header-height)] h-[calc(100vh-var(--header-height))] min-w-80 overflow-auto border-r p-4"
+		class="overflow-auto border-r p-4 md:sticky md:top-[var(--header-height)] md:h-[calc(100vh-var(--header-height))] md:min-w-80"
 	>
-		<ul class="container mx-auto flex flex-col gap-y-8" data-testid="side-menu">
+		<ul class="container flex flex-col gap-y-8 md:mx-auto" data-testid="side-menu">
 			{#each data.categorisedArticles as { articles }}
 				<li class="flex flex-col gap-y-2">
 					{#each articles as { slug, title }}
@@ -25,7 +25,7 @@
 		</ul>
 	</div>
 	<div>
-		<div class="prose prose-neutral max-w-[100ch] p-8">
+		<div class="prose prose-neutral max-w-[100ch] p-4 md:p-8">
 			<slot></slot>
 		</div>
 	</div>
