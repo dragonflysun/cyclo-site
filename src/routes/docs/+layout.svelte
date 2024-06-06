@@ -14,7 +14,7 @@
 	class="sticky top-0 z-[999] flex h-[var(--header-height)] flex-row items-center gap-x-2 border-b bg-white px-2 py-4 md:p-4"
 >
 	<div class="block cursor-pointer md:hidden">
-		<BarsOutline size="lg" withEvents on:click={toggleMenu} />
+		<BarsOutline size="lg" withEvents on:click={toggleMenu} data-testid="menu-icon" />
 	</div>
 	<a class="h-full" href="/">
 		<img src={logo} alt="Cyclo logo" class="h-full" data-testid="logo" />
@@ -22,10 +22,11 @@
 </div>
 <div class="z-0 flex flex-col md:flex-row">
 	<div
+		data-testid="side-menu"
 		class:left-0={mobileMenuOpen}
 		class="fixed -left-full z-[999] h-[calc(100vh-var(--header-height))] w-full min-w-80 overflow-auto border-b bg-white p-4 transition-all md:sticky md:left-0 md:top-[var(--header-height)] md:w-80 md:border-r"
 	>
-		<ul class="container flex flex-col gap-y-8 md:mx-auto" data-testid="side-menu">
+		<ul class="container flex flex-col gap-y-8 md:mx-auto">
 			{#each data.categorisedArticles as { articles }}
 				<li class="flex flex-col gap-y-2">
 					{#each articles as { slug, title }}
