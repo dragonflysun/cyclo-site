@@ -6,7 +6,9 @@
 </script>
 
 <div class="sticky top-0 z-[999] h-[var(--header-height)] border-b bg-white p-4">
-	<img src={logo} alt="Cyclo logo" class="max-h-full" data-testid="logo" />
+	<a href="/">
+		<img src={logo} alt="Cyclo logo" class="max-h-full" data-testid="logo" />
+	</a>
 </div>
 <div class="z-0 flex">
 	<div
