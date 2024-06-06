@@ -23,5 +23,5 @@ test('layout component should render', async () => {
 	expect(sideMenu).toBeInTheDocument();
 
 	const publishedDocTitles = screen.getAllByTestId('doc-title');
-	expect(publishedDocTitles).toHaveLength(1);
+	expect(publishedDocTitles).toHaveLength(9);
 });

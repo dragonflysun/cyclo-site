@@ -1,0 +1,29 @@
+---
+title: Liquidations
+published: true
+---
+
+## Liquidations
+
+As every mint/burn is 1:1, the system is guaranteed to be fully collateralized at all times, eliminating the need for liquidations.
+
+DeFi products based on loans (e.g., MKR, AAVE, COMP, ALCX) are all over-collateralized. To enforce collateralization, these products actively auction off user assets if their value falls relative to the loan.
+
+This is similar to a bank selling your house when the local housing market dips, even if you are up to date with all payments. This is done to:
+- Maintain a tight peg on some other asset like DAI.
+- Avoid a positive feedback loop of volatility and leverage that could destabilize the ecosystems they provide credit into.
+- Mitigate the risk of collateral going to zero permanently.
+
+### Why Are Liquidations a Problem?
+
+Liquidations introduce significant systemic risk when many users take out similar loans. For example, during the "black Thursday" COVID crash and May 2021, $10B and $8B of liquidations respectively occurred within hours. 
+
+### Can I Get Liquidated on Cyclo?
+
+No.
+
+By avoiding the explicit goal of "stability" or "a peg," and removing all governance or external parameters, expectations, or price goals, there is no need to liquidate any FLR in the Cyclo ecosystem.
+
+The ERC-1155 tokens minted and burned for every ERC-20 token minted and burned guarantee over-collateralization of the system as a whole, without liquidating any individual token holder. If everyone abandoned all their FLR, cFLR would also become valueless. Conversely, a "reverse bank run" would increase cFLR's value, incentivizing mints.
+
+This requires long-term thinking and conviction in FLR itself, accepting short-term price volatility. However, users must believe in FLR's value to trust significant assets to a smart contract on the Flare network.
