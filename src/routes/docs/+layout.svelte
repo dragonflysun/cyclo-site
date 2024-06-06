@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import logo from '$lib/logo.svg';
 	import type { LayoutData } from './$types';
 	import { BarsOutline } from 'flowbite-svelte-icons';
@@ -16,9 +17,17 @@
 	<div class="block cursor-pointer md:hidden">
 		<BarsOutline size="lg" withEvents on:click={toggleMenu} data-testid="menu-icon" />
 	</div>
-	<a class="h-full" href="/">
-		<img src={logo} alt="Cyclo logo" class="h-full" data-testid="logo" />
-	</a>
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+	<img
+		on:click={() => {
+			goto('/');
+		}}
+		src={logo}
+		alt="Cyclo logo"
+		class="h-full"
+		data-testid="logo"
+	/>
 </div>
 <div class="z-0 flex flex-col md:flex-row">
 	<div
