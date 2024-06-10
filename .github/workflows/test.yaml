@@ -14,7 +14,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: nix develop -c npm run test
         env:
-          WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
+          PUBLIC_WALLETCONNECT_ID: ${{ secrets.PUBLIC_WALLETCONNECT_ID }}
 
   lint:
     runs-on: ubuntu-latest
@@ -29,4 +29,4 @@ jobs:
 
       - run: nix develop -c npm run svelte-lint-format-check
         env:
-          WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
+          PUBLIC_WALLETCONNECT_ID: ${{ secrets.PUBLIC_WALLETCONNECT_ID }}
