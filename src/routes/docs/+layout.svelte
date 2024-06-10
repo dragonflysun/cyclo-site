@@ -11,23 +11,12 @@
 	};
 </script>
 
-<div
-	class="sticky top-0 z-[999] flex h-[var(--header-height)] flex-row items-center gap-x-2 border-b bg-white px-2 py-4 md:p-4"
->
+<div class="sticky z-[999] flex flex-row items-center gap-x-2 border-b bg-white px-2 md:p-4">
 	<div class="block cursor-pointer md:hidden">
 		<BarsOutline size="lg" withEvents on:click={toggleMenu} data-testid="menu-icon" />
 	</div>
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-	<img
-		on:click={() => {
-			goto('/');
-		}}
-		src={logo}
-		alt="Cyclo logo"
-		class="h-full"
-		data-testid="logo"
-	/>
 </div>
 <div class="z-0 flex flex-col md:flex-row">
 	<div

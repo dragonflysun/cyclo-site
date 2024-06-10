@@ -11,3 +11,18 @@ button {
 	@apply flex items-center justify-center gap-2 border-4 border-white bg-blue-500 px-4 py-2 font-bold text-white;
 	border-style: outset;
 }
+@layer utilities {
+	.border-outset {
+		border-style: outset;
+	}
+}
+
+.card {
+	@apply border-outset rounded-none  border-4 border-white bg-blue-500 p-4 shadow-md;
+	border-style: outset;
+}
+
+.tab {
+	@apply flex h-full w-32 items-center justify-center gap-2 self-start border-4 border-white bg-blue-500 px-4 py-2 font-bold text-white;
+	border-style: outset;
+}
