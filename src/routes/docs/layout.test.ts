@@ -5,7 +5,7 @@ import Layout from './+layout.svelte';
 import { load as layoutLoad } from './+layout.server';
 
 test('should retrieve layout data', async () => {
-	let data = await layoutLoad();
+	const data = await layoutLoad();
 
 	expect(data).toBeDefined();
 	expect(data.categorisedArticles).toBeDefined();
