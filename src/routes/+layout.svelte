@@ -17,7 +17,7 @@
 				appName: 'Cyclo',
 				alchemyId: PUBLIC_ALCHEMY_PROJECT_ID,
 				walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
-				chains: [$targetNetwork]
+				chains: [$targetNetwork],
 				connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]
 			});
 
