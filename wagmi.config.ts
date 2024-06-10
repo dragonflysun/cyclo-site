@@ -1,13 +1,15 @@
 import { defineConfig } from '@wagmi/cli';
-
-import { erc20Abi } from 'viem';
+import { foundry } from '@wagmi/cli/plugins';
+import { actions } from '@wagmi/cli/plugins';
+import { type ActionsConfig } from '@wagmi/cli/plugins';
 
 export default defineConfig({
 	out: 'src/generated.ts',
-	contracts: [
-		{
-			name: 'erc20',
-			abi: erc20Abi
-		}
+	plugins: [
+		actions(),
+		foundry({
+			include: ['ERC20PriceOracleReceiptVault.json'],
+			project: './ethgild'
+		})
 	]
 });
