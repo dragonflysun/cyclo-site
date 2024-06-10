@@ -28,3 +28,5 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
 
       - run: nix develop -c npm run svelte-lint-format-check
+        env:
+          WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
