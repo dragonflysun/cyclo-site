@@ -2,9 +2,10 @@
 	import WalletConnect from './WalletConnect.svelte';
 	import logo from '$lib/logo-white.svg';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 </script>
 
-<div class=" flex h-16 w-screen items-center justify-between bg-primary px-4">
+<div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
 	<img
 		src={logo}
 		on:click={() => {
@@ -14,8 +15,20 @@
 		class="h-8 cursor-pointer"
 	/>
 	<div class="flex gap-4">
-		<button class="bg-white px-4 py-2 text-primary">Lock</button>
-		<button class="bg-white px-4 py-2 text-primary">Unlock</button>
+		<button
+			class="w-24"
+			class:inset={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
+			on:click={() => {
+				goto('/lock');
+			}}>App</button
+		>
+		<button
+			class="w-24"
+			class:inset={$page.url.pathname.startsWith('/docs')}
+			on:click={() => {
+				goto('/docs');
+			}}>Docs</button
+		>
 	</div>
 	<WalletConnect />
 </div>
