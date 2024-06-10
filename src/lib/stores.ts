@@ -1,8 +1,11 @@
-import { derived } from 'svelte/store';
+import { derived, writable } from 'svelte/store';
 import { chainId, signerAddress } from 'svelte-wagmi';
-import { flare } from '@wagmi/core/chains';
+import { flare, sepolia, type Chain } from '@wagmi/core/chains';
+import { page } from '$app/stores';
 
-export const connectedToFlare = derived(
-	[chainId, signerAddress],
-	([$chainId, $signerAddress]) => $signerAddress && $chainId === flare.id
+export const targetNetwork = writable<Chain>();
+
+export const wrongNetwork = derived(
+	[chainId, signerAddress, targetNetwork],
+	([$chainId, $signerAddress, $targetNetwork]) => $signerAddress && $chainId !== $targetNetwork.id
 );
