@@ -7,10 +7,10 @@
 
 <button on:click={() => $web3Modal.open()} tabindex={0}>
 	{#if !$connectedToFlare}
-		<CheckCircleSolid color="red" />
+		<CloseCircleSolid color="red" />
 		Please connect to {flare.name}
 	{:else}
-		<CloseCircleSolid color="green" />
+		<CheckCircleSolid color="green" />
 		Connected to {flare.name}
 	{/if}
 </button>

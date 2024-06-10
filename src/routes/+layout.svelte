@@ -5,7 +5,7 @@
 	import Header from '$lib/components/Header.svelte';
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
 
-	import { flare } from '@wagmi/core/chains';
+	import { flare, sepolia } from '@wagmi/core/chains';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
@@ -14,7 +14,7 @@
 			const erckit = defaultConfig({
 				appName: 'Cyclo',
 				walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
-				chains: [flare],
+				chains: [flare, sepolia],
 				connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]
 			});
 
