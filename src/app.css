@@ -12,6 +12,11 @@ button {
 	border-style: outset;
 }
 
+p,
+h1 {
+	@apply text-white;
+}
+
 .inset {
 	border-style: inset;
 }

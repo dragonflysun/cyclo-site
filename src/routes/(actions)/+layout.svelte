@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 </script>
 
-<div class="flex min-h-screen flex-col items-center gap-12 bg-primary">
+<div class="flex min-h-screen flex-col items-center gap-6 bg-primary">
 	<div class="flex h-fit max-w-prose gap-6">
 		<button
 			class=" w-32"

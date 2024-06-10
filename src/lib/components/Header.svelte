@@ -6,15 +6,15 @@
 </script>
 
 <div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
-	<img
-		src={logo}
-		on:click={() => {
-			goto('/');
-		}}
-		alt="Cyclo logo"
-		class="h-8 cursor-pointer"
-	/>
-	<div class="flex gap-4">
+	<div class="flex items-center justify-center gap-4">
+		<img
+			src={logo}
+			on:click={() => {
+				goto('/');
+			}}
+			alt="Cyclo logo"
+			class="h-10 cursor-pointer"
+		/>
 		<button
 			class="w-24"
 			class:inset={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}

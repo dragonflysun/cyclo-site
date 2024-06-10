@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Card from '$lib/components/Card.svelte';
+	import Lock from '$lib/components/Lock.svelte';
 </script>
 
-<Card size="lg">Lock</Card>
+<Lock />

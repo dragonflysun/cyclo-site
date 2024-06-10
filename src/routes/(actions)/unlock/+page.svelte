@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Card from '$lib/components/Card.svelte';
+	import Unlock from '$lib/components/Unlock.svelte';
 </script>
 
-<Card size="lg">Unlock!</Card>
+<Unlock />
