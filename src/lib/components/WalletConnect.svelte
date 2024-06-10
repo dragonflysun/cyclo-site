@@ -2,8 +2,6 @@
 	import { targetNetwork, wrongNetwork } from '$lib/stores';
 	import { signerAddress, web3Modal, chainId, loading } from 'svelte-wagmi';
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
-
-	$: console.log('wrong', $wrongNetwork);
 </script>
 
 <button on:click={() => $web3Modal.open()} tabindex={0}>

@@ -3,7 +3,7 @@
 	import { signerAddress, defaultConfig } from 'svelte-wagmi';
 	import { injected, walletConnect } from '@wagmi/connectors';
 	import Header from '$lib/components/Header.svelte';
-	import { PUBLIC_WALLETCONNECT_ID, PUBLIC_ALCHEMY_PROJECT_ID } from '$env/static/public';
+	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { targetNetwork } from '$lib/stores';
@@ -14,8 +14,7 @@
 		$targetNetwork = $page.url.searchParams.get('testnet') ? sepolia : flare;
 		if (browser && window.navigator) {
 			const erckit = defaultConfig({
-				appName: 'Cyclo',
-				alchemyId: PUBLIC_ALCHEMY_PROJECT_ID,
+				appName: 'cyclo',
 				walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
 				chains: [$targetNetwork],
 				connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]
