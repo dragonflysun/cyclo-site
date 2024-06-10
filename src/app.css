@@ -4,5 +4,10 @@
 @tailwind utilities;
 
 body {
-  font-family: 'JetBrains Mono', monospace;
+	font-family: 'JetBrains Mono', monospace;
+}
+
+button {
+	@apply flex items-center justify-center gap-2 border-4 border-white bg-blue-500 px-4 py-2 font-bold text-white;
+	border-style: outset;
 }

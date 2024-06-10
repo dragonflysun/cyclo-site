@@ -20,6 +20,7 @@
 		"@testing-library/jest-dom": "^6.4.5",
 		"@testing-library/svelte": "^5.1.0",
 		"@types/eslint": "^8.56.7",
+		"@wagmi/cli": "^2.1.8",
 		"autoprefixer": "^10.4.19",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -48,6 +49,8 @@
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.1",
 		"lodash-es": "^4.17.21",
-		"rehype-katex-svelte": "^1.2.0"
+		"rehype-katex-svelte": "^1.2.0",
+		"svelte-wagmi": "^1.0.6",
+		"truncate-eth-address": "^1.0.2"
 	}
 }
