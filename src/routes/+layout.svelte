@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import { signerAddress, defaultConfig } from 'svelte-wagmi';
+	import { defaultConfig } from 'svelte-wagmi';
 	import { injected, walletConnect } from '@wagmi/connectors';
 	import Header from '$lib/components/Header.svelte';
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
@@ -19,7 +19,6 @@
 				chains: [$targetNetwork],
 				connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]
 			});
-
 			await erckit.init();
 		}
 	});

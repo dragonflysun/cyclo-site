@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import WalletConnect from '$lib/components/WalletConnect.svelte';
 	import logo from '$lib/logo-white.svg';
 	import Card from '$lib/components/Card.svelte';
 	import Lock from '$lib/components/Lock.svelte';
