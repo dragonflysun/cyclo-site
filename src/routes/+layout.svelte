@@ -1,9 +1,9 @@
 <script lang="ts">
 	import '../app.css';
-	import { signerAddress, defaultConfig } from 'svelte-wagmi';
+	import { defaultConfig } from 'svelte-wagmi';
 	import { injected, walletConnect } from '@wagmi/connectors';
 	import Header from '$lib/components/Header.svelte';
-	import { PUBLIC_WALLETCONNECT_ID, PUBLIC_ALCHEMY_PROJECT_ID } from '$env/static/public';
+	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
 
 	import { flare, sepolia } from '@wagmi/core/chains';
 	import { onMount } from 'svelte';
@@ -13,7 +13,6 @@
 		if (browser && window.navigator) {
 			const erckit = defaultConfig({
 				appName: 'Cyclo',
-				alchemyId: PUBLIC_ALCHEMY_PROJECT_ID,
 				walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
 				chains: [flare, sepolia],
 				connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]

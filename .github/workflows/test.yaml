@@ -12,5 +12,21 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-
       - run: nix develop -c npm run test
+        env:
+          PUBLIC_WALLETCONNECT_ID: ${{ secrets.PUBLIC_WALLETCONNECT_ID }}
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - run: nix develop -c npm run svelte-lint-format-check
+        env:
+          PUBLIC_WALLETCONNECT_ID: ${{ secrets.PUBLIC_WALLETCONNECT_ID }}

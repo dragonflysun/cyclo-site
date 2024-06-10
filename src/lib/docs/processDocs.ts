@@ -2,7 +2,7 @@ import { SvelteComponent } from 'svelte';
 import slugFromPath from './slugFromPath';
 
 export const getFiles = () =>
-	import.meta.glob<{ default: SvelteComponent; metadata: Record<string, any> }>(
+	import.meta.glob<{ default: SvelteComponent; metadata: Record<string, unknown> }>(
 		`/src/docs/**/*.{md,svx,svelte.md}`,
 		{ eager: true }
 	);
