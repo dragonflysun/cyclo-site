@@ -31,12 +31,16 @@
 
 <Card size="lg">
 	<div class="flex w-full flex-col items-center justify-center gap-6">
-		<div class="font-handjet font-semi flex w-full flex-row justify-between text-[56px] text-white">
+		<div
+			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+		>
 			<span>BALANCE</span><span>{2300.0} FLR</span>
 		</div>
 
 		<!-- How much you want to gild -->
-		<div class="font-handjet font-semi flex w-full flex-row justify-between text-[56px] text-white">
+		<div
+			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+		>
 			<span>LOCKING</span>
 			<div class="flex flex-row items-center">
 				<input
@@ -50,7 +54,9 @@
 			<!-- Countdown polling of the price -->
 			<!-- Countdown spinner that updates it every 3s -->
 		</div>
-		<div class="font-handjet font-semi flex w-full flex-row justify-between text-[56px] text-white">
+		<div
+			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+		>
 			<span class="flex flex-row items-center gap-1"> RATIO</span>
 			{#key priceRatio}
 				<span in:fade={{ duration: 700 }} class="flex flex-row items-center gap-2"
@@ -72,7 +78,9 @@
 				>
 			{/key}
 		</div>
-		<div class="font-handjet font-semi flex w-full flex-row justify-between text-[56px] text-white">
+		<div
+			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+		>
 			<span>RECEIVING</span>
 			<div class="flex flex-row items-center gap-2">
 				{#key priceRatio}
@@ -81,6 +89,6 @@
 				<span>cyFLR</span>
 			</div>
 		</div>
-		<button class="font-handjet w-fit px-6 py-0 text-[56px]">LOCK</button>
+		<button class="w-fit px-6 py-0 font-handjet text-[56px]">LOCK</button>
 	</div>
 </Card>

@@ -26,7 +26,7 @@
 
 <Card size="lg">
 	<div
-		class="font-handjet font-semi flex w-full flex-row items-center justify-between text-[56px] text-white"
+		class="flex w-full flex-row items-center justify-between font-handjet text-[56px] font-semibold text-white"
 	>
 		<span>RECEIPT ID</span>
 		<div class="select-container relative flex items-center">
