@@ -6,6 +6,9 @@
 	export let amountToLock = 0.0;
 	export let priceRatio = 1.04;
 
+	/**
+	 * @type {string | number | NodeJS.Timeout | undefined}
+	 */
 	let intervalId;
 
 	function randomizePriceRatio() {
