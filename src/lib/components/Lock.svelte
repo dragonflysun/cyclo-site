@@ -47,7 +47,7 @@
 					placeholder="0.0"
 					type="number"
 					bind:value={amountToLock}
-					class="h-full w-64 border-none bg-transparent text-end text-[56px] text-white outline-none"
+					class="h-full w-64 border-none bg-transparent text-end text-[56px] font-semibold text-white outline-none"
 				/>
 				<span class="ml-2"> FLR</span>
 			</div>
