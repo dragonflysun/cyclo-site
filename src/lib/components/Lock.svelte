@@ -123,6 +123,7 @@
 		</div>
 		<!-- If enough wFLR is approved, immediate Lock, or else, approve -->
 		<button
+			disabled={balance < assets}
 			on:click={() =>
 				transactionStore.initiateTransaction({
 					signerAddress: $signerAddress,
@@ -131,7 +132,8 @@
 					vaultAddress: $erc20PriceOracleReceiptVaultAddress,
 					assets: assets
 				})}
-			class="w-fit px-6 py-0 font-handjet text-[56px]">LOCK</button
+			class="w-fit px-6 py-0 font-handjet text-[56px]"
+			>{balance < assets ? 'INSUFFICIENT FUNDS' : 'LOCK'}</button
 		>
 	</div>
 </Card>
