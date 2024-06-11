@@ -2,15 +2,14 @@
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
 	import transactionStore from '$lib/transactionStore';
-	import { Modal } from 'flowbite-svelte';
+
 	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { ethers } from 'ethers';
 	import type { Hex } from 'viem';
-	import { TransactionStatus } from '$lib/transactionStore';
 
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
-	import TransactionModal from './TransactionModal.svelte';
+
 	import { readErc20BalanceOf } from '../../generated';
 
 	export let amountToLock = 0.0;
@@ -66,7 +65,7 @@
 		<div
 			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
 		>
-			<span>BALANCE</span><span>{readableBalance} wFLR</span>
+			<span>BALANCE</span><span>{readableBalance} WFLR</span>
 		</div>
 
 		<!-- How much you want to gild -->
@@ -121,7 +120,7 @@
 				<span>cyFLR</span>
 			</div>
 		</div>
-		<!-- If enough wFLR is approved, immediate Lock, or else, approve -->
+		<!-- If enough WFLR is approved, immediate Lock, or else, approve -->
 		<button
 			disabled={balance < assets}
 			on:click={() =>
@@ -133,9 +132,7 @@
 					assets: assets
 				})}
 			class="w-fit px-6 py-0 font-handjet text-[56px]"
-			>{balance < assets ? 'INSUFFICIENT FUNDS' : 'LOCK'}</button
+			>{balance < assets ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
 		>
 	</div>
 </Card>
-
-<TransactionModal />

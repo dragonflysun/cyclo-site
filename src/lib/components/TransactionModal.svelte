@@ -26,7 +26,7 @@
 					{$transactionStore.status}
 				</p>
 				<p class="text-sm font-normal text-gray-900 dark:text-white">
-					{$transactionStore.error?.message}
+					{$transactionStore.error}
 				</p>
 			{:else if $transactionStore.status === TransactionStatus.SUCCESS}
 				<div
@@ -51,7 +51,7 @@
 				<div
 					class="bg-primary-100 dark:bg-primary-900 mb-4 flex h-16 w-16 items-center justify-center rounded-full"
 				>
-					<Spinner color="blue" />
+					<Spinner color="blue" size={15} />
 				</div>
 				<p class="text-lg font-semibold text-gray-900 dark:text-white">
 					{$transactionStore.message || $transactionStore.status}

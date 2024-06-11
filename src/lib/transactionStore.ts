@@ -46,7 +46,7 @@ export type TxError = {
 
 const initialState = {
 	status: TransactionStatus.IDLE,
-	error: { code: null, message: '', details: '' },
+	error: '',
 	hash: '',
 	data: null,
 	functionName: '',
@@ -101,11 +101,11 @@ const transactionStore = () => {
 			message: ''
 		}));
 
-	const transactionError = (error: { message: string }) =>
+	const transactionError = (message: string) =>
 		update((state) => ({
 			...state,
 			status: TransactionStatus.ERROR,
-			error: { message: 'message', code: 500, details: '' }
+			error: message
 		}));
 
 	const initiateTransaction = async ({
@@ -122,29 +122,37 @@ const transactionStore = () => {
 		});
 
 		if (data < assets) {
-			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your FLR...');
-			const hash = await writeErc20Approve(config, {
-				address: wrappedFlareAddress,
-				args: [vaultAddress, assets]
-			});
-			console.log('HASH from APPROVAL', hash);
-			awaitApprovalTx(hash);
-			const res = await waitForTransactionReceipt(config, { hash: hash });
-
-			if (res) {
-				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
-					address: vaultAddress,
-					args: [assets, signerAddress as Hex, ONE, '0x']
+			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your WFLR...');
+			try {
+				const hash = await writeErc20Approve(config, {
+					address: wrappedFlareAddress,
+					args: [vaultAddress, assets]
 				});
-				console.log('HASH from MINTING', hash);
-				awaitLockTx(hash);
+				console.log('HASH from APPROVAL', hash);
+				awaitApprovalTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
+
 				if (res) {
-					transactionSuccess(hash);
+					awaitWalletConfirmation('Awaiting wallet confirmation to lock your WFLR...');
+
+					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
+						address: vaultAddress,
+						args: [assets, signerAddress as Hex, 0n, '0x']
+					});
+					console.log('HASH from MINTING', hash);
+					awaitLockTx(hash);
+					const res = await waitForTransactionReceipt(config, { hash: hash });
+					if (res) {
+						transactionSuccess(hash);
+					}
 				}
+			} catch (error) {
+				transactionError('User rejected transaction');
+				console.log('err', error);
 			}
 		} else {
 			try {
+				awaitWalletConfirmation('Awaiting wallet confirmation to lock your WFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
 					address: vaultAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
@@ -156,6 +164,8 @@ const transactionStore = () => {
 					transactionSuccess(hash);
 				}
 			} catch (error) {
+				transactionError('User rejected transaction');
+
 				console.log('err', error);
 			}
 		}
