@@ -17,10 +17,8 @@
 	let assets = BigInt(0); // Initialize shares
 	let balance = BigInt(0); // Initialize balance
 	let readableBalance: string = '';
-	/**
-	 * @type {string | number | NodeJS.Timeout | undefined}
-	 */
-	let intervalId;
+
+	let intervalId: ReturnType<typeof setInterval>;
 
 	$: if (amountToLock > 0) {
 		const etherAmount = ethers.parseEther(amountToLock.toString()).toString();
