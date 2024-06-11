@@ -4,6 +4,7 @@
 	import { injected, walletConnect } from '@wagmi/connectors';
 	import Header from '$lib/components/Header.svelte';
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
+
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { targetNetwork } from '$lib/stores';
@@ -16,7 +17,9 @@
 			const erckit = defaultConfig({
 				appName: 'cyclo',
 				walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
+
 				chains: [$targetNetwork],
+
 				connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]
 			});
 			await erckit.init();
