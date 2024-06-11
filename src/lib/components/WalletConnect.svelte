@@ -15,5 +15,6 @@
 	{:else}
 		<CheckCircleSolid color="green" />
 		Connected to {$targetNetwork.name}
+
 	{/if}
 </button>
