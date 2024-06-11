@@ -12,6 +12,13 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - run: nix develop -c npm i
+        working-directory: ./ethgild
+      - run: nix develop -c forge build
+        working-directory: ./ethgild
+      - run: nix develop -c npm run codegen
+
       - run: nix develop -c npm run test
         env:
           PUBLIC_WALLETCONNECT_ID: ${{ secrets.PUBLIC_WALLETCONNECT_ID }}
@@ -26,7 +33,11 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-
+      - run: nix develop -c npm i
+        working-directory: ./ethgild
+      - run: nix develop -c forge build
+        working-directory: ./ethgild
+      - run: nix develop -c npm run codegen
       - run: nix develop -c npm run svelte-lint-format-check
         env:
           PUBLIC_WALLETCONNECT_ID: ${{ secrets.PUBLIC_WALLETCONNECT_ID }}
