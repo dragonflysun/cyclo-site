@@ -1,4 +1,7 @@
+/* app.css */
+
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -47,16 +50,43 @@ h1 {
 	border-style: outset;
 }
 
-.fill-circle {
-	animation: fillAnimation 2s ease-out infinite;
-	transform: rotate(-90deg);
-	transform-origin: 50% 50%;
+.select-container {
+	position: relative;
+	display: flex;
+	align-items: center;
+	width: fit-content;
 }
-@keyframes fillAnimation {
-	0% {
-		stroke-dasharray: 0 282;
-	}
-	100% {
-		stroke-dasharray: 282 0;
-	}
+
+.select-custom {
+	@apply flex h-fit items-center justify-center gap-2 border-4 border-white bg-blue-500 px-4 py-2 font-bold text-white;
+	border-style: outset;
+	outline: none;
+	appearance: none;
+	opacity: 0; /* Hide the select element */
+	position: absolute;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+}
+
+.select-custom option {
+	@apply cursor-pointer;
+	font-size: 16px; /* Small text size for options */
+}
+
+.select-display {
+	font-size: 56px; /* Larger text size for display */
+	position: relative;
+	z-index: 0;
+	padding-right: 1.5em; /* Make space for the arrow */
+}
+
+.arrow {
+	cursor: pointer;
+	font-family: 'Handjet', sans-serif;
+	font-size: 32px;
+	color: white;
+	position: absolute;
+	right: 16px;
+	pointer-events: none; /* Ensure the arrow doesn't block select interactions */
 }
