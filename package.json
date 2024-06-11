@@ -54,6 +54,7 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.1",
+		"ethers": "^6.13.0",
 		"lodash-es": "^4.17.21",
 		"rehype-katex-svelte": "^1.2.0",
 		"svelte-wagmi": "^1.0.6",

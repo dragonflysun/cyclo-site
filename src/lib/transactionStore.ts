@@ -1,12 +1,21 @@
-import { writable, get } from 'svelte/store';
-import { writeContract, waitForTransactionReceipt, simulateContract } from '@wagmi/core';
-import type { Abi, Hex } from 'viem';
-import { wrongNetwork, targetNetwork } from '$lib/stores';
+import { writable } from 'svelte/store';
+
+import type { Hex } from 'viem';
 
 import type { Config } from '@wagmi/core';
+import { waitForTransactionReceipt } from '@wagmi/core';
+import {
+	readErc20Allowance,
+	writeErc20Approve,
+	writeErc20PriceOracleReceiptVaultDeposit
+} from '../generated';
+
+export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
+export const ONE = BigInt('1000000000000000000');
 
 export enum TransactionStatus {
 	IDLE = 'Idle',
+	CHECKING_ALLOWANCE = 'Checking your approved wFLR spend...',
 	PENDING_WALLET = 'Waiting for wallet confirmation...',
 	PENDING_APPROVAL = 'Approving WFLR spend...',
 	PENDING_LOCK = 'Locking WFLR...',
@@ -16,11 +25,10 @@ export enum TransactionStatus {
 }
 
 export type InitiateTransactionArgs = {
-	contractAddress: string;
-	abi: Abi;
-	functionName: string;
-	args: never[];
-	ipfsUpload: boolean;
+	signerAddress: string | null;
+	wrappedFlareAddress: Hex;
+	vaultAddress: Hex;
+	assets: bigint;
 	config: Config;
 };
 
@@ -41,85 +49,115 @@ const initialState = {
 	error: { code: null, message: '', details: '' },
 	hash: '',
 	data: null,
-	functionName: ''
+	functionName: '',
+	message: ''
 };
 
 // TODO: Add a timeout on all transactions
 const transactionStore = () => {
-	const _targetNetwork = get(targetNetwork);
 	const { subscribe, set, update } = writable(initialState);
 
 	const reset = () => set(initialState);
 
-	const awaitWalletConfirmation = () =>
-		update((state) => ({ ...state, status: TransactionStatus.PENDING_WALLET }));
+	const checkingWalletAllowance = () =>
+		update((state) => ({ ...state, status: TransactionStatus.CHECKING_ALLOWANCE, message: '' }));
+
+	const awaitWalletConfirmation = (message?: string) =>
+		update((state) => ({
+			...state,
+			status: TransactionStatus.PENDING_WALLET,
+			message: message || ''
+		}));
 
 	const awaitApprovalTx = (hash: string) =>
-		update((state) => ({ ...state, hash: hash, status: TransactionStatus.PENDING_APPROVAL }));
+		update((state) => ({
+			...state,
+			hash: hash,
+			status: TransactionStatus.PENDING_APPROVAL,
+			message: ''
+		}));
 
 	const awaitLockTx = (hash: string) =>
-		update((state) => ({ ...state, hash: hash, status: TransactionStatus.PENDING_LOCK }));
+		update((state) => ({
+			...state,
+			hash: hash,
+			status: TransactionStatus.PENDING_LOCK,
+			message: ''
+		}));
 
 	const awaitUnlockTx = (hash: string) =>
-		update((state) => ({ ...state, hash: hash, status: TransactionStatus.PENDING_UNLOCK }));
+		update((state) => ({
+			...state,
+			hash: hash,
+			status: TransactionStatus.PENDING_UNLOCK,
+			message: ''
+		}));
 
 	const transactionSuccess = (hash: string) =>
 		update((state) => ({
 			...state,
 			status: TransactionStatus.SUCCESS,
-			hash: hash
+			hash: hash,
+			message: ''
 		}));
 
-	const transactionError = (txError: TxError) =>
+	const transactionError = (error: { message: string }) =>
 		update((state) => ({
 			...state,
 			status: TransactionStatus.ERROR,
-			error: { message: 'message' }
+			error: { message: 'message', code: 500, details: '' }
 		}));
 
 	const initiateTransaction = async ({
-		contractAddress,
-		abi,
-		functionName,
-		args,
-		ipfsUpload,
-		config
+		signerAddress,
+		config,
+		wrappedFlareAddress,
+		vaultAddress,
+		assets
 	}: InitiateTransactionArgs) => {
-		update((state) => ({
-			...state,
-			functionName: functionName
-		}));
+		checkingWalletAllowance();
+		const data = await readErc20Allowance(config, {
+			address: wrappedFlareAddress,
+			args: [signerAddress as Hex, vaultAddress]
+		});
 
-		const wrongNet = get(wrongNetwork);
-		if (wrongNet) {
-			transactionError({
-				code: 500,
-				message: `Please connect to ${_targetNetwork.name} to continue.`
+		if (data < assets) {
+			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your FLR...');
+			const hash = await writeErc20Approve(config, {
+				address: wrappedFlareAddress,
+				args: [vaultAddress, assets]
 			});
-		}
+			console.log('HASH from APPROVAL', hash);
+			awaitApprovalTx(hash);
+			const res = await waitForTransactionReceipt(config, { hash: hash });
 
-		awaitWalletConfirmation();
-
-		try {
+			if (res) {
+				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
+					address: vaultAddress,
+					args: [assets, signerAddress as Hex, ONE, '0x']
+				});
+				console.log('HASH from MINTING', hash);
+				awaitLockTx(hash);
+				const res = await waitForTransactionReceipt(config, { hash: hash });
+				if (res) {
+					transactionSuccess(hash);
+				}
+			}
+		} else {
 			try {
-				// CONTRACT CALL
-				transactionSuccess(hash);
+				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
+					address: vaultAddress,
+					args: [assets, signerAddress as Hex, 0n, '0x']
+				});
+				console.log('HASH from MINTING', hash);
+				awaitLockTx(hash);
+				const res = await waitForTransactionReceipt(config, { hash: hash });
+				if (res) {
+					transactionSuccess(hash);
+				}
 			} catch (error) {
 				console.log('err', error);
-				transactionError({
-					code: 500,
-					details: hash,
-					message:
-						'User rejected the transaction. This means that the transaction was not confirmed by the user in their wallet.'
-				});
 			}
-		} catch (error) {
-			console.log('err', error);
-			transactionError({
-				code: 500,
-				message:
-					'There was a problem preparing the transaction. This means that invalid values were passed to the contract. Please contact the administrator.'
-			});
 		}
 	};
 

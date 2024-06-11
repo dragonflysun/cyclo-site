@@ -1,15 +1,47 @@
-<script>
+<script lang="ts">
+	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
+	import transactionStore from '$lib/transactionStore';
+	import { Modal } from 'flowbite-svelte';
 	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import { ethers } from 'ethers';
+	import type { Hex } from 'viem';
+	import { TransactionStatus } from '$lib/transactionStore';
+
+	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
+	import TransactionModal from './TransactionModal.svelte';
+	import { readErc20BalanceOf } from '../../generated';
 
 	export let amountToLock = 0.0;
 	export let priceRatio = 1.04;
-
+	let assets = BigInt(0); // Initialize shares
+	let balance = BigInt(0); // Initialize balance
+	let readableBalance: string = '';
 	/**
 	 * @type {string | number | NodeJS.Timeout | undefined}
 	 */
 	let intervalId;
+
+	$: if (amountToLock > 0) {
+		const etherAmount = ethers.parseEther(amountToLock.toString()).toString();
+		assets = BigInt(etherAmount);
+	} else {
+		assets = BigInt(0);
+	}
+
+	$: if ($signerAddress) {
+		getBalance();
+	}
+
+	const getBalance = async () => {
+		const _balance = await readErc20BalanceOf($wagmiConfig, {
+			address: $wrappedFlareAddress,
+			args: [$signerAddress as Hex]
+		});
+		balance = _balance;
+		readableBalance = ethers.formatEther(_balance.toString());
+	};
 
 	function randomizePriceRatio() {
 		priceRatio = Math.random() * 0.4 + 0.8; // Generates a value between 0.8 and 1.2
@@ -34,7 +66,7 @@
 		<div
 			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
 		>
-			<span>BALANCE</span><span>{2300.0} FLR</span>
+			<span>BALANCE</span><span>{readableBalance} wFLR</span>
 		</div>
 
 		<!-- How much you want to gild -->
@@ -89,6 +121,19 @@
 				<span>cyFLR</span>
 			</div>
 		</div>
-		<button class="w-fit px-6 py-0 font-handjet text-[56px]">LOCK</button>
+		<!-- If enough wFLR is approved, immediate Lock, or else, approve -->
+		<button
+			on:click={() =>
+				transactionStore.initiateTransaction({
+					signerAddress: $signerAddress,
+					config: $wagmiConfig,
+					wrappedFlareAddress: $wrappedFlareAddress,
+					vaultAddress: $erc20PriceOracleReceiptVaultAddress,
+					assets: assets
+				})}
+			class="w-fit px-6 py-0 font-handjet text-[56px]">LOCK</button
+		>
 	</div>
 </Card>
+
+<TransactionModal />
