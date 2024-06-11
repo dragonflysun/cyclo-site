@@ -65,7 +65,13 @@
 		<div
 			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
 		>
-			<span>BALANCE</span><span>{readableBalance} WFLR</span>
+			<span>BALANCE</span>
+			<div class="flex flex-row gap-4">
+				{#key readableBalance}{#if readableBalance}<span in:fade={{ duration: 700 }}
+							>{readableBalance}</span
+						>{/if}{/key}
+				<span>WFLR</span>
+			</div>
 		</div>
 
 		<!-- How much you want to gild -->
