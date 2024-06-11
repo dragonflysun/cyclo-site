@@ -136,3 +136,19 @@
 		>
 	</div>
 </Card>
+
+<style lang="postcss">
+	.fill-circle {
+		animation: fillAnimation 2s ease-out infinite;
+		transform: rotate(-90deg);
+		transform-origin: 50% 50%;
+	}
+	@keyframes fillAnimation {
+		0% {
+			stroke-dasharray: 0 282;
+		}
+		100% {
+			stroke-dasharray: 282 0;
+		}
+	}
+</style>
