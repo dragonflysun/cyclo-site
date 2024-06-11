@@ -13,7 +13,7 @@
 		const select = document.querySelector<HTMLSelectElement>('.select-custom');
 		const display = document.querySelector<HTMLSpanElement>('.select-display');
 		if (select && display) {
-			display.textContent = select.options[select.selectedIndex].textContent;
+			display.textContent = selectedReceiptId.toString();
 		}
 	}
 
@@ -37,7 +37,6 @@
 				{/each}
 			</select>
 			<span class="arrow">▼</span>
-			<!-- Add the arrow as a separate element -->
 		</div>
 	</div>
 </Card>

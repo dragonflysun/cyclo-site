@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import logo from '$lib/logo-white.svg';
-	import Card from '$lib/components/Card.svelte';
-	import Lock from '$lib/components/Lock.svelte';
-	import Unlock from '$lib/components/Unlock.svelte';
-	import { Tabs, TabItem } from 'flowbite-svelte';
-
-	let open: 'lock' | 'unlock' = 'lock';
 </script>
 
 <div class="flex h-screen w-screen flex-col items-center justify-center gap-y-8 bg-primary p-4">

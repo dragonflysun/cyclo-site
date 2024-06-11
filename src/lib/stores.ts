@@ -1,7 +1,6 @@
 import { derived, writable } from 'svelte/store';
 import { chainId, signerAddress } from 'svelte-wagmi';
-import { flare, sepolia, type Chain } from '@wagmi/core/chains';
-import { page } from '$app/stores';
+import { type Chain } from '@wagmi/core/chains';
 
 export const targetNetwork = writable<Chain>();
 

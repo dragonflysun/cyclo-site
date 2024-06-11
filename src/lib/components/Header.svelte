@@ -7,14 +7,20 @@
 
 <div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
 	<div class="flex items-center justify-center gap-4">
-		<img
-			src={logo}
+		<a
+			href="/"
+			on:keydown={(e) => {
+				if (e.key !== 'Enter' && e.key !== ' ') return;
+				e.preventDefault();
+				e.currentTarget?.click();
+			}}
 			on:click={() => {
 				goto('/');
 			}}
-			alt="Cyclo logo"
-			class="h-10 cursor-pointer"
-		/>
+		>
+			<img src={logo} alt="Cyclo logo" class="h-10 cursor-pointer" />
+		</a>
+
 		<button
 			class="w-24"
 			class:inset={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}

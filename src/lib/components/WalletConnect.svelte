@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { targetNetwork, wrongNetwork } from '$lib/stores';
-	import { signerAddress, web3Modal, chainId, loading } from 'svelte-wagmi';
+	import { web3Modal, loading } from 'svelte-wagmi';
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
 </script>
 
