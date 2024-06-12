@@ -7,7 +7,7 @@
 	import Receipt from './Receipt.svelte';
 
 	import cyFlrBalanceStore from '$lib/balancesStore';
-	let receipts: ReceiptType[] = []; // Replace with your array of receipt ID numbers
+	let receipts: ReceiptType[] = [];
 	let loading = true;
 	let error = false;
 
@@ -25,10 +25,6 @@
 			error = true;
 		}
 	};
-
-	// show a table of receipts with your balance and the lock price (represented by the formatted Token ID which was the price of FLR at that time (in USD))
-	// open the receipt to show an amount you wanna
-	// we can show the number you have the receipt, the price it was locked at, and the amount of FLR that can be unlocked by this receipt (max) or by your chose unlock amount.
 </script>
 
 {#key receipts}

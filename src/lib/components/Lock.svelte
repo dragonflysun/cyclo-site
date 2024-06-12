@@ -12,7 +12,7 @@
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 
 	export let amountToLock = 0.0;
-	let priceRatio = BigInt(1);
+	let priceRatio = BigInt(0);
 	let assets = BigInt(0); // Initialize shares
 	let balance = BigInt(0); // Initialize balance
 
@@ -25,9 +25,9 @@
 		assets = BigInt(0);
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		balancesStore.refreshWFlr($wagmiConfig, $wrappedFlareAddress, $signerAddress as string);
-		startGettingPriceRatio();
+		await startGettingPriceRatio();
 	});
 
 	const getPriceRatio = async () => {
@@ -38,11 +38,11 @@
 	};
 
 	const startGettingPriceRatio = async () => {
+		intervalId = setInterval(getPriceRatio, 5000);
 		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $erc20PriceOracleReceiptVaultAddress,
 			args: [BigInt(1e18)]
 		});
-		intervalId = setInterval(getPriceRatio, 5000);
 	};
 
 	function stopRandomizingPriceRatio() {

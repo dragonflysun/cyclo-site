@@ -11,27 +11,15 @@
 	export let receipt: Receipt;
 
 	let erc1155balance = BigInt(receipt.balance);
-
-	let readableAmountToRedeem = 0.0;
+	let readableAmountToRedeem: string | number = 0.0;
 	let amountToRedeem = BigInt(0);
-
-	$: amountToRedeem = BigInt(parseEther(readableAmountToRedeem.toString()));
-
-	$: console.log(
-		'to Redeem',
-		amountToRedeem,
-		'max',
-		maxRedeemable,
-		'readabl',
-		readableAmountToRedeem,
-		'flrToReceive',
-		flrToReceive
-	);
-
 	let flrToReceive = BigInt(0);
-
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
+
+	$: if (readableAmountToRedeem) {
+		amountToRedeem = BigInt(parseEther(readableAmountToRedeem.toString()));
+	}
 
 	$: maxRedeemable =
 		$balancesStore?.cyFlrBalance < erc1155balance ? $balancesStore.cyFlrBalance : erc1155balance;
@@ -39,9 +27,9 @@
 	$: buttonDisabled = erc1155balance < amountToRedeem || amountToRedeem <= 0;
 
 	$: if (amountToRedeem > 0) {
-		console.log('trggered!', amountToRedeem);
+		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toFixed(5);
 		const _flrToReceive = (amountToRedeem * 10n ** 18n) / BigInt(receipt.tokenId);
-		console.log(_flrToReceive);
+
 		flrToReceive = _flrToReceive;
 	} else {
 		amountToRedeem = BigInt(0);
@@ -78,10 +66,12 @@
 			<div class="flex flex-row items-center">
 				<input
 					min={0}
+					max={Number(formatEther(maxRedeemable))}
 					placeholder="0.0"
+					step="0.1"
 					type="number"
 					bind:value={readableAmountToRedeem}
-					class="h-full w-64 border-none bg-transparent text-end text-[56px] font-semibold text-white outline-none"
+					class="h-full w-64 overflow-ellipsis border-none bg-transparent text-end text-[56px] font-semibold text-white outline-none"
 				/>
 				<span class="ml-2"> cyFLR</span>
 				<button
@@ -98,8 +88,10 @@
 		>
 			<span>YOU RECEIVE</span>
 
-			<div class="flex flex-row items-center gap-2">
-				<span> ~{Number(formatEther(flrToReceive)).toFixed(5)} wFLR </span>
+			<div class="flex flex-row items-center gap-2 overflow-ellipsis">
+				<span class="flex overflow-ellipsis">
+					~{Number(formatEther(flrToReceive)).toFixed(5)} wFLR
+				</span>
 			</div>
 		</div>
 
