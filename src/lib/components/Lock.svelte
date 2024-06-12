@@ -17,10 +17,8 @@
 	let assets = BigInt(0); // Initialize shares
 	let balance = BigInt(0); // Initialize balance
 	let readableBalance: string = '';
-	/**
-	 * @type {string | number | NodeJS.Timeout | undefined}
-	 */
-	let intervalId;
+
+	let intervalId: ReturnType<typeof setInterval>;
 
 	$: if (amountToLock > 0) {
 		const etherAmount = ethers.parseEther(amountToLock.toString()).toString();
@@ -142,3 +140,19 @@
 		>
 	</div>
 </Card>
+
+<style lang="postcss">
+	.fill-circle {
+		animation: fillAnimation 2s ease-out infinite;
+		transform: rotate(-90deg);
+		transform-origin: 50% 50%;
+	}
+	@keyframes fillAnimation {
+		0% {
+			stroke-dasharray: 0 282;
+		}
+		100% {
+			stroke-dasharray: 282 0;
+		}
+	}
+</style>
