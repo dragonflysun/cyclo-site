@@ -4,8 +4,6 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
-
-	console.log(base);
 </script>
 
 <div class="flex h-16 w-screen items-center justify-between bg-primary px-4">

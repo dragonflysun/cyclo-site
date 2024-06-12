@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import logo from '$lib/logo.svg';
 	import type { LayoutData } from './$types';
-
+	import { BarsOutline } from 'flowbite-svelte-icons';
 	export let data: LayoutData;
 
 	let mobileMenuOpen = false;
@@ -9,6 +11,15 @@
 	};
 </script>
 
+<div
+	class="sticky top-0 z-[999] flex h-[var(--header-height)] flex-row items-center gap-x-2 border-b bg-white px-2 py-4 md:p-4"
+>
+	<div class="block cursor-pointer md:hidden">
+		<BarsOutline size="xl" withEvents on:click={toggleMenu} data-testid="menu-icon" />
+	</div>
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+</div>
 <div class="z-0 flex flex-col md:flex-row">
 	<div
 		data-testid="side-menu"
@@ -34,6 +45,6 @@
 
 <style>
 	:root {
-		--header-height: 64px;
+		--header-height: 0px;
 	}
 </style>
