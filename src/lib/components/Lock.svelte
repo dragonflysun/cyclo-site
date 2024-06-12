@@ -2,21 +2,19 @@
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
 	import transactionStore from '$lib/transactionStore';
-
-	import { onDestroy } from 'svelte';
+	import balancesStore from '$lib/balancesStore';
+	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { ethers } from 'ethers';
-	import type { Hex } from 'viem';
+	import { ethers, formatEther } from 'ethers';
 
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
 
-	import { readErc20BalanceOf } from '../../generated';
+	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 
 	export let amountToLock = 0.0;
-	export let priceRatio = 1.04;
+	let priceRatio = BigInt(1);
 	let assets = BigInt(0); // Initialize shares
 	let balance = BigInt(0); // Initialize balance
-	let readableBalance: string = '';
 
 	let intervalId: ReturnType<typeof setInterval>;
 
@@ -27,31 +25,29 @@
 		assets = BigInt(0);
 	}
 
-	$: if ($signerAddress) {
-		getBalance();
-	}
+	onMount(() => {
+		balancesStore.refreshWFlr($wagmiConfig, $wrappedFlareAddress, $signerAddress as string);
+		startGettingPriceRatio();
+	});
 
-	const getBalance = async () => {
-		const _balance = await readErc20BalanceOf($wagmiConfig, {
-			address: $wrappedFlareAddress,
-			args: [$signerAddress as Hex]
+	const getPriceRatio = async () => {
+		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+			address: $erc20PriceOracleReceiptVaultAddress,
+			args: [BigInt(1e18)]
 		});
-		balance = _balance;
-		readableBalance = Number(ethers.formatEther(_balance.toString())).toFixed(4);
 	};
 
-	function randomizePriceRatio() {
-		priceRatio = Math.random() * 0.4 + 0.8; // Generates a value between 0.8 and 1.2
-	}
-	function startRandomizingPriceRatio() {
-		intervalId = setInterval(randomizePriceRatio, 2000);
-	}
+	const startGettingPriceRatio = async () => {
+		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+			address: $erc20PriceOracleReceiptVaultAddress,
+			args: [BigInt(1e18)]
+		});
+		intervalId = setInterval(getPriceRatio, 5000);
+	};
 
 	function stopRandomizingPriceRatio() {
 		clearInterval(intervalId);
 	}
-
-	startRandomizingPriceRatio();
 
 	onDestroy(() => {
 		stopRandomizingPriceRatio();
@@ -65,8 +61,9 @@
 		>
 			<span>BALANCE</span>
 			<div class="flex flex-row gap-4">
-				{#key readableBalance}{#if readableBalance}<span in:fade={{ duration: 700 }}
-							>{readableBalance}</span
+				{#key $balancesStore.wFlrBalance}{#if $balancesStore.wFlrBalance}<span
+							in:fade={{ duration: 700 }}
+							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
 						>{/if}{/key}
 				<span>WFLR</span>
 			</div>
@@ -95,7 +92,7 @@
 			<span class="flex flex-row items-center gap-1"> RATIO</span>
 			{#key priceRatio}
 				<span in:fade={{ duration: 700 }} class="flex flex-row items-center gap-2"
-					>{priceRatio.toFixed(3)}
+					>{Number(formatEther(priceRatio.toString())).toFixed(5)}
 
 					<svg width="20" height="20" viewBox="0 0 100 100">
 						<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
@@ -119,7 +116,9 @@
 			<span>RECEIVING</span>
 			<div class="flex flex-row items-center gap-2">
 				{#key priceRatio}
-					<span in:fade={{ duration: 700 }}>{(amountToLock * priceRatio).toFixed(3)}</span>
+					<span in:fade={{ duration: 700 }}
+						>{(amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
+					>
 				{/key}
 				<span>cyFLR</span>
 			</div>
@@ -143,7 +142,7 @@
 
 <style lang="postcss">
 	.fill-circle {
-		animation: fillAnimation 2s ease-out infinite;
+		animation: fillAnimation 5s ease-out infinite;
 		transform: rotate(-90deg);
 		transform-origin: 50% 50%;
 	}

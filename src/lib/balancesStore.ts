@@ -5,6 +5,7 @@ import type { Hex } from 'viem';
 
 const initialState = {
 	cyFlrBalance: BigInt(0),
+	wFlrBalance: BigInt(0),
 	status: 'Checking'
 };
 
@@ -12,9 +13,21 @@ const cyFlrBalanceStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
-	const refreshCyFlr = async (config: Config, signerAddress: string) => {
+	const refreshWFlr = async (config: Config, wFlrAddress: Hex, signerAddress: string) => {
+		const newWFlrBalance = await readErc20BalanceOf(config, {
+			address: wFlrAddress,
+			args: [signerAddress as Hex]
+		});
+		update((state) => ({
+			...state,
+			wFlrBalance: newWFlrBalance,
+			status: 'Ready'
+		}));
+	};
+
+	const refreshCyFlr = async (config: Config, cyFlrAddress: Hex, signerAddress: string) => {
 		const newCyFlrBalance = await readErc20BalanceOf(config, {
-			address: '0xa77592e40d4a06e3bceae6f56d61fd26cf2e4be7',
+			address: cyFlrAddress,
 			args: [signerAddress as Hex]
 		});
 		update((state) => ({
@@ -27,7 +40,8 @@ const cyFlrBalanceStore = () => {
 	return {
 		subscribe,
 		reset,
-		refreshCyFlr
+		refreshCyFlr,
+		refreshWFlr
 	};
 };
 

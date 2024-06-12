@@ -186,12 +186,13 @@ const transactionStore = () => {
 				awaitUnlockTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 				if (res) {
-					balancesStore.refreshCyFlr(config, signerAddress as string);
+					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
 					return transactionSuccess(hash);
 				} else {
 					return transactionError('Transaction timed out... You can see more here' + hash);
 				}
 			} catch (error) {
+				console.log(error);
 				return transactionError('User rejected transaction');
 			}
 		};

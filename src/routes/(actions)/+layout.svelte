@@ -4,10 +4,11 @@
 	import { page } from '$app/stores';
 	import balancesStore from '$lib/balancesStore';
 	import TransactionModal from '$lib/components/TransactionModal.svelte';
-	import { backIn } from 'svelte/easing';
+	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
 
 	$: if ($signerAddress) {
-		balancesStore.refreshCyFlr($wagmiConfig, $signerAddress);
+		balancesStore.refreshWFlr($wagmiConfig, $wrappedFlareAddress, $signerAddress);
+		balancesStore.refreshCyFlr($wagmiConfig, $cyFlareAddress, $signerAddress);
 	}
 </script>
 

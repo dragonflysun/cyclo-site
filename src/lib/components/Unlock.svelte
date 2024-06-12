@@ -1,26 +1,21 @@
 <script lang="ts">
-	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
+	import { signerAddress } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
-	import { onMount } from 'svelte';
 	import { getReceipts } from '$lib/queries/getReceipts';
 	import type { Receipt as ReceiptType } from '$lib/types';
 	import { formatEther } from 'ethers';
 	import Receipt from './Receipt.svelte';
-	import { CaretDownOutline } from 'flowbite-svelte-icons';
-	import { cyFlareAddress } from '$lib/stores';
-	import { readErc20BalanceOf } from '../../generated';
-	import { type Hex } from 'viem';
+
 	import cyFlrBalanceStore from '$lib/balancesStore';
 	let receipts: ReceiptType[] = []; // Replace with your array of receipt ID numbers
 	let loading = true;
+	let error = false;
 
-	let cyFlrBalance = BigInt(0);
 	$: if ($signerAddress) {
 		refreshReceipts();
 	}
 
 	const refreshReceipts = async () => {
-		console.log('refreshing!');
 		if (!$signerAddress) return;
 		const res = await getReceipts($signerAddress);
 		if (res.items) {
@@ -30,13 +25,6 @@
 			error = true;
 		}
 	};
-
-	onMount(async () => {
-		cyFlrBalance = await readErc20BalanceOf($wagmiConfig, {
-			address: $cyFlareAddress,
-			args: [$signerAddress as Hex]
-		});
-	});
 
 	// show a table of receipts with your balance and the lock price (represented by the formatted Token ID which was the price of FLR at that time (in USD))
 	// open the receipt to show an amount you wanna
@@ -61,6 +49,12 @@
 		{#each receipts as receipt}
 			<Receipt {receipt} />
 		{/each}
+	{:else if error}
+		<div
+			class="flex w-full items-center justify-center text-center font-handjet text-[56px] font-semibold text-white"
+		>
+			ERROR: NO RECEIPTS FOUND...
+		</div>
 	{/if}
 {/key}
 

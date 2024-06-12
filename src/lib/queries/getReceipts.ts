@@ -3,14 +3,12 @@ import axios from 'axios';
 import { formatEther } from 'ethers';
 
 export const getReceipts = async (address: string) => {
-	let data;
-	console.log('address', address);
-	let query: string = `https://api.routescan.io/v2/network/mainnet/evm/14/address/${address}/erc1155-holdings?limit=1000`;
+	const query: string = `https://api.routescan.io/v2/network/mainnet/evm/14/address/${address}/erc1155-holdings?limit=1000`;
 
 	try {
 		const response = await axios.get(query);
 		console.log(response.data);
-		const mapped = response.data.items.map((item: Receipt) => {
+		response.data.items.map((item: Receipt) => {
 			item.readableTokenId = formatEther(item.tokenId);
 		});
 		return response.data; // Return the data here

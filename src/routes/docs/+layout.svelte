@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { LayoutData } from './$types';
-	import { BarsOutline } from 'flowbite-svelte-icons';
+
 	export let data: LayoutData;
 
 	let mobileMenuOpen = false;

@@ -6,7 +6,7 @@
 	import { cyFlareAddress, erc1155Address } from '$lib/stores';
 	import transactionStore from '$lib/transactionStore';
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
-	import { ethers, formatEther, parseEther } from 'ethers';
+	import { formatEther, parseEther } from 'ethers';
 
 	export let receipt: Receipt;
 
