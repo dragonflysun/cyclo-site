@@ -151,10 +151,15 @@ const transactionStore = () => {
 		}
 	};
 
+	const initiateUnlockTransaction = async () => {
+		console.log('unlocking');
+	};
+
 	return {
 		subscribe,
 		reset,
 		initiateTransaction,
+		initiateUnlockTransaction,
 		awaitWalletConfirmation,
 		awaitApprovalTx,
 		awaitLockTx,
