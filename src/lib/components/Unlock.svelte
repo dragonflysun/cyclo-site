@@ -1,13 +1,20 @@
 <script lang="ts">
-	import { signerAddress } from 'svelte-wagmi';
+	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
 	import { onMount } from 'svelte';
 	import { getReceipts } from '$lib/queries/getReceipts';
 	import type { Receipt as ReceiptType } from '$lib/types';
 	import { formatEther } from 'ethers';
 	import Receipt from './Receipt.svelte';
+	import { CaretDownOutline } from 'flowbite-svelte-icons';
+	import { cyFlareAddress } from '$lib/stores';
+	import { readErc20BalanceOf } from '../../generated';
+	import { type Hex } from 'viem';
+	import cyFlrBalanceStore from '$lib/balancesStore';
 	let receipts: ReceiptType[] = []; // Replace with your array of receipt ID numbers
+	let loading = true;
 
+	let cyFlrBalance = BigInt(0);
 	$: if ($signerAddress) {
 		refreshReceipts();
 	}
@@ -16,32 +23,45 @@
 		console.log('refreshing!');
 		if (!$signerAddress) return;
 		const res = await getReceipts($signerAddress);
-		receipts = res.items;
+		if (res.items) {
+			loading = false;
+			receipts = res.items;
+		} else {
+			error = true;
+		}
 	};
-	// get overall balance of cyFLR
+
+	onMount(async () => {
+		cyFlrBalance = await readErc20BalanceOf($wagmiConfig, {
+			address: $cyFlareAddress,
+			args: [$signerAddress as Hex]
+		});
+	});
+
 	// show a table of receipts with your balance and the lock price (represented by the formatted Token ID which was the price of FLR at that time (in USD))
 	// open the receipt to show an amount you wanna
 	// we can show the number you have the receipt, the price it was locked at, and the amount of FLR that can be unlocked by this receipt (max) or by your chose unlock amount.
-
-	// function updateSelectDisplay(): void {
-	// 	const select = document.querySelector<HTMLSelectElement>('.select-custom');
-	// 	const display = document.querySelector<HTMLSpanElement>('.select-display');
-	// 	if (select && display) {
-	// 		display.textContent = parseEther(selectedReceipt.tokenId).toString();
-	// 	}
-	// }
-
-	// function handleSelectChange(event: Event): void {
-	// 	const target = event.target as HTMLSelectElement;
-	// 	parseEther(selectedReceipt.tokenId) = Number(target.value);
-	// 	updateSelectDisplay();
-	// }
 </script>
 
 {#key receipts}
-	{#each receipts as receipt}
-		<Receipt {receipt} />
-	{/each}
+	<Card size="lg">
+		<div class="flex w-full justify-between font-handjet text-[56px] font-semibold text-white">
+			<span>BALANCE</span><span
+				>{Number(formatEther($cyFlrBalanceStore.cyFlrBalance)).toFixed(4)} cyFLR</span
+			>
+		</div>
+	</Card>
+	{#if loading}
+		<div
+			class="flex w-full items-center justify-center text-center font-handjet text-[56px] font-semibold text-white"
+		>
+			LOADING...
+		</div>
+	{:else if receipts.length > 0}
+		{#each receipts as receipt}
+			<Receipt {receipt} />
+		{/each}
+	{/if}
 {/key}
 
 <style lang="postcss">

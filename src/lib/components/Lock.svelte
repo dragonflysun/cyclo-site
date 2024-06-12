@@ -39,7 +39,7 @@
 			args: [$signerAddress as Hex]
 		});
 		balance = _balance;
-		readableBalance = ethers.formatEther(_balance.toString());
+		readableBalance = Number(ethers.formatEther(_balance.toString())).toFixed(4);
 	};
 
 	function randomizePriceRatio() {

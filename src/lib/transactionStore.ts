@@ -12,6 +12,7 @@ import {
 	writeErc20PriceOracleReceiptVaultDeposit,
 	writeErc20PriceOracleReceiptVaultRedeem
 } from '../generated';
+import balancesStore from './balancesStore';
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 export const ONE = BigInt('1000000000000000000');
@@ -179,18 +180,32 @@ const transactionStore = () => {
 			try {
 				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your WFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
-					address: erc1155Address,
+					address: cyFlareAddress,
 					args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
 				});
 				awaitUnlockTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 				if (res) {
-					transactionSuccess(hash);
+					balancesStore.refreshCyFlr(config, signerAddress as string);
+					return transactionSuccess(hash);
+				} else {
+					return transactionError('Transaction timed out... You can see more here' + hash);
 				}
 			} catch (error) {
-				transactionError('Wrong contract args');
-				console.log('err', error);
+				return transactionError('User rejected transaction');
 			}
+		};
+
+		const writeApproveCyFlareSpend = async () => {
+			awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your WFLR...');
+
+			const hash = await writeErc20Approve(config, {
+				address: cyFlareAddress,
+				args: [cyFlareAddress, assets]
+			});
+			awaitApprovalTx(hash);
+			const res = await waitForTransactionReceipt(config, { hash: hash });
+			return res;
 		};
 
 		checkingWalletAllowance('Checking you are approved to unlock your WFLR...');
@@ -217,14 +232,7 @@ const transactionStore = () => {
 					});
 					if (cyFlareSpendAllowance < assets) {
 						try {
-							awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your WFLR...');
-
-							const hash = await writeErc20Approve(config, {
-								address: cyFlareAddress,
-								args: [cyFlareAddress, assets]
-							});
-							awaitApprovalTx(hash);
-							const res = await waitForTransactionReceipt(config, { hash: hash });
+							await writeApproveCyFlareSpend();
 							writeUnlock();
 						} catch (error) {
 							transactionError('User rejected transaction');
@@ -243,16 +251,10 @@ const transactionStore = () => {
 				args: [signerAddress as Hex, cyFlareAddress]
 			});
 			if (cyFlareSpendAllowance < assets) {
-				awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your WFLR...');
-
-				const hash = await writeErc20Approve(config, {
-					address: cyFlareAddress,
-					args: [cyFlareAddress, assets]
-				});
-				awaitApprovalTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
+				await writeApproveCyFlareSpend();
+				writeUnlock();
 			}
-			console.log('writing!!');
+
 			writeUnlock();
 		}
 	};
