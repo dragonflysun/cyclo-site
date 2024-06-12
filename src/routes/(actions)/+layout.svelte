@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import TransactionModal from '$lib/components/TransactionModal.svelte';
 </script>
 
 <div class="flex min-h-screen flex-col items-center gap-6 bg-primary">
@@ -17,4 +18,5 @@
 		>
 	</div>
 	<slot />
+	<TransactionModal />
 </div>

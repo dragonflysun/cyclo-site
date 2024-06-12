@@ -23,35 +23,6 @@
 	// open the receipt to show an amount you wanna
 	// we can show the number you have the receipt, the price it was locked at, and the amount of FLR that can be unlocked by this receipt (max) or by your chose unlock amount.
 
-	{
-		const receipts = [
-			{
-				chainId: '14',
-				tokenAddress: '0xA3b81870529832AE874e0c6F5a03D94EbB042Ba7',
-				tokenId: '1257220947081177536',
-				balance: '7543325682487065216'
-			},
-			{
-				chainId: '14',
-				tokenAddress: '0xA3b81870529832AE874e0c6F5a03D94EbB042Ba7',
-				tokenId: '1398481939835619712',
-				balance: '2796963879671239424'
-			},
-			{
-				chainId: '14',
-				tokenAddress: '0xA3b81870529832AE874e0c6F5a03D94EbB042Ba7',
-				tokenId: '1060308083497264290',
-				balance: '1060308083497264290'
-			},
-			{
-				chainId: '14',
-				tokenAddress: '0xA3b81870529832AE874e0c6F5a03D94EbB042Ba7',
-				tokenId: '506816838193429936',
-				balance: '506816838193429936'
-			}
-		];
-	}
-
 	// function updateSelectDisplay(): void {
 	// 	const select = document.querySelector<HTMLSelectElement>('.select-custom');
 	// 	const display = document.querySelector<HTMLSpanElement>('.select-display');

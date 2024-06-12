@@ -2,14 +2,18 @@ import { defineConfig } from '@wagmi/cli';
 import { foundry } from '@wagmi/cli/plugins';
 import { actions } from '@wagmi/cli/plugins';
 import { type ActionsConfig } from '@wagmi/cli/plugins';
-import { erc20Abi } from 'viem';
-
+import { erc20Abi, type Abi } from 'viem';
+import { erc1155Abi } from './src/lib/contracts/erc1155Abi';
 export default defineConfig({
 	out: 'src/generated.ts',
 	contracts: [
 		{
 			name: 'erc20',
 			abi: erc20Abi
+		},
+		{
+			name: 'erc1155',
+			abi: erc1155Abi as Abi
 		}
 	],
 	plugins: [

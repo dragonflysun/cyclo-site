@@ -5,9 +5,12 @@ import type { Hex } from 'viem';
 import type { Config } from '@wagmi/core';
 import { waitForTransactionReceipt } from '@wagmi/core';
 import {
+	readErc1155IsApprovedForAll,
 	readErc20Allowance,
+	writeErc1155SetApprovalForAll,
 	writeErc20Approve,
-	writeErc20PriceOracleReceiptVaultDeposit
+	writeErc20PriceOracleReceiptVaultDeposit,
+	writeErc20PriceOracleReceiptVaultRedeem
 } from '../generated';
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
@@ -32,6 +35,15 @@ export type InitiateTransactionArgs = {
 	config: Config;
 };
 
+export type InitiateUnlockTransactionArgs = {
+	signerAddress: string | null;
+	cyFlareAddress: Hex;
+	erc1155Address: Hex;
+	assets: bigint;
+	config: Config;
+	tokenId: string;
+};
+
 const initialState = {
 	status: TransactionStatus.IDLE,
 	error: '',
@@ -45,8 +57,12 @@ const transactionStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
-	const checkingWalletAllowance = () =>
-		update((state) => ({ ...state, status: TransactionStatus.CHECKING_ALLOWANCE, message: '' }));
+	const checkingWalletAllowance = (message?: string) =>
+		update((state) => ({
+			...state,
+			status: TransactionStatus.CHECKING_ALLOWANCE,
+			message: message || ''
+		}));
 	const awaitWalletConfirmation = (message?: string) =>
 		update((state) => ({
 			...state,
@@ -151,8 +167,120 @@ const transactionStore = () => {
 		}
 	};
 
-	const initiateUnlockTransaction = async () => {
+	const initiateUnlockTransaction = async ({
+		signerAddress,
+		config,
+		cyFlareAddress,
+		erc1155Address,
+		tokenId,
+		assets
+	}: InitiateUnlockTransactionArgs) => {
 		console.log('unlocking');
+
+		checkingWalletAllowance('Checking you are approved to unlock your WFLR...');
+
+		const isERC1155Approved = await readErc1155IsApprovedForAll(config, {
+			address: erc1155Address,
+			args: [signerAddress as Hex, cyFlareAddress]
+		});
+
+		if (!isERC1155Approved) {
+			try {
+				awaitWalletConfirmation('You need to approve the cyFLR contract to unlock your WFLR...');
+				const hash = await writeErc1155SetApprovalForAll(config, {
+					address: erc1155Address,
+					args: [cyFlareAddress, true]
+				});
+				awaitApprovalTx(hash);
+				const res = await waitForTransactionReceipt(config, { hash: hash });
+
+				if (res) {
+					const cyFlareSpendAllowance = await readErc20Allowance(config, {
+						address: cyFlareAddress,
+						args: [signerAddress as Hex, cyFlareAddress]
+					});
+					if (cyFlareSpendAllowance < assets) {
+						try {
+							awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your WFLR...');
+
+							const hash = await writeErc20Approve(config, {
+								address: cyFlareAddress,
+								args: [cyFlareAddress, assets]
+							});
+							awaitApprovalTx(hash);
+							const res = await waitForTransactionReceipt(config, { hash: hash });
+						} catch (error) {
+							transactionError('User rejected transaction');
+							console.log('err', error);
+						}
+					}
+
+					try {
+						awaitWalletConfirmation('Awaiting wallet confirmation to unlock your WFLR...');
+						const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
+							address: erc1155Address,
+							args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
+						});
+						awaitUnlockTx(hash);
+						const res = await waitForTransactionReceipt(config, { hash: hash });
+						if (res) {
+							transactionSuccess(hash);
+						}
+					} catch (error) {
+						transactionError('User rejected transaction');
+						console.log('err', error);
+					}
+				}
+			} catch (error) {
+				transactionError('User rejected transaction');
+				console.log('err', error);
+			}
+		} else {
+			const cyFlareSpendAllowance = await readErc20Allowance(config, {
+				address: cyFlareAddress,
+				args: [signerAddress as Hex, cyFlareAddress]
+			});
+			if (cyFlareSpendAllowance < assets) {
+				awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your WFLR...');
+
+				const hash = await writeErc20Approve(config, {
+					address: cyFlareAddress,
+					args: [cyFlareAddress, assets]
+				});
+				awaitApprovalTx(hash);
+				const res = await waitForTransactionReceipt(config, { hash: hash });
+			}
+			awaitWalletConfirmation('Awaiting wallet confirmation to unlock your WFLR...');
+			const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
+				address: erc1155Address,
+				args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
+			});
+			awaitUnlockTx(hash);
+			const res = await waitForTransactionReceipt(config, { hash: hash });
+			if (res) {
+				transactionSuccess(hash);
+			}
+		}
+
+		console.log('ERC1155 Approval!', isERC1155Approved);
+		// const hash = await writeErc20Approve(config, {
+		// 	address: '1155 Contract Address',
+		// 	args: ['cyFLR contract address', assets]
+		// });
+
+		// const hash = await writeErc20Approve(config, {
+		// 	address: '1155 Contract Address',
+		// 	args: ['cyFLR contract address', assets]
+		// });
+
+		// Function is Redeem
+		// Provide the ID
+
+		// It will take the tokeID from the 1155, and an equal amount of cyFLR
+		// and the ER1155 contract to spend cyFLr (setApprovalForAll)
+
+		// Approve the tstCyflr contract to spend the cyFLR
+		// Amount to redeem
 	};
 
 	return {

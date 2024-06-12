@@ -2,11 +2,7 @@
 	import type { Receipt } from '$lib/types';
 	import Card from '$lib/components/Card.svelte';
 	import { fade } from 'svelte/transition';
-	import {
-		wrappedFlareAddress,
-		erc20PriceOracleReceiptVaultAddress,
-		targetNetwork
-	} from '$lib/stores';
+	import { targetNetwork, cyFlareAddress, erc1155Address } from '$lib/stores';
 	import transactionStore from '$lib/transactionStore';
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { ethers, formatEther } from 'ethers';
@@ -14,7 +10,7 @@
 
 	export let receipt: Receipt;
 	let assets = BigInt(0); // Initialize shares
-	let balance = BigInt(0); // Initialize balance
+	let balance = BigInt(receipt.balance); // Initialize balance
 	let amountToUnlock = 0.0;
 	const readableBalance = Number(formatEther(receipt.balance)).toFixed(4);
 	const tokenId = receipt.tokenId;
@@ -38,7 +34,7 @@
 				{#key readableBalance}{#if readableBalance}<span in:fade={{ duration: 700 }}
 							>{readableBalance}</span
 						>{/if}{/key}
-				<span>WFLR</span>
+				<span>cyFLR</span>
 			</div>
 		</div>
 
@@ -47,7 +43,7 @@
 			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
 		>
 			<span>LOCKED FLR PRICE</span>
-			<!-- Indicator to show in +/- current flare price -->
+
 			<div class="flex flex-row items-center gap-2">
 				<span>{Number(formatEther(tokenId)).toFixed(4)}</span>
 			</div>
@@ -81,7 +77,7 @@
 					bind:value={amountToUnlock}
 					class="h-full w-64 border-none bg-transparent text-end text-[56px] font-semibold text-white outline-none"
 				/>
-				<span class="ml-2"> FLR</span>
+				<span class="ml-2"> cyFLR</span>
 			</div>
 		</div>
 		<button
@@ -90,12 +86,13 @@
 				transactionStore.initiateUnlockTransaction({
 					signerAddress: $signerAddress,
 					config: $wagmiConfig,
-					wrappedFlareAddress: $wrappedFlareAddress,
-					vaultAddress: $erc20PriceOracleReceiptVaultAddress,
-					assets: assets
+					erc1155Address: $erc1155Address,
+					cyFlareAddress: $cyFlareAddress,
+					assets: assets,
+					tokenId: receipt.tokenId
 				})}
 			class="w-fit px-6 py-0 font-handjet text-[56px]"
-			>{balance < assets ? 'INSUFFICIENT WFLR' : 'UNLOCK'}</button
+			>{balance < assets ? 'INSUFFICIENT cyFLR' : 'UNLOCK'}</button
 		>
 	</div>
 </Card>
