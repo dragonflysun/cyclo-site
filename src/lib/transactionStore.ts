@@ -32,18 +32,6 @@ export type InitiateTransactionArgs = {
 	config: Config;
 };
 
-export type TxError = {
-	// 1 - Transaction failed
-	// 2 - Transaction reverted
-	// 3 - Transaction not found
-	// 4 - IPFS not logged in
-	// 5 - Wrong network
-	// 6 - Transaction IPFS Upload failed
-	// 7 - Transaction subgraph failed
-	message: string;
-	details?: string;
-};
-
 const initialState = {
 	status: TransactionStatus.IDLE,
 	error: '',
@@ -53,22 +41,18 @@ const initialState = {
 	message: ''
 };
 
-// TODO: Add a timeout on all transactions
 const transactionStore = () => {
 	const { subscribe, set, update } = writable(initialState);
-
 	const reset = () => set(initialState);
 
 	const checkingWalletAllowance = () =>
 		update((state) => ({ ...state, status: TransactionStatus.CHECKING_ALLOWANCE, message: '' }));
-
 	const awaitWalletConfirmation = (message?: string) =>
 		update((state) => ({
 			...state,
 			status: TransactionStatus.PENDING_WALLET,
 			message: message || ''
 		}));
-
 	const awaitApprovalTx = (hash: string) =>
 		update((state) => ({
 			...state,
@@ -76,7 +60,6 @@ const transactionStore = () => {
 			status: TransactionStatus.PENDING_APPROVAL,
 			message: ''
 		}));
-
 	const awaitLockTx = (hash: string) =>
 		update((state) => ({
 			...state,
@@ -84,7 +67,6 @@ const transactionStore = () => {
 			status: TransactionStatus.PENDING_LOCK,
 			message: ''
 		}));
-
 	const awaitUnlockTx = (hash: string) =>
 		update((state) => ({
 			...state,
@@ -92,7 +74,6 @@ const transactionStore = () => {
 			status: TransactionStatus.PENDING_UNLOCK,
 			message: ''
 		}));
-
 	const transactionSuccess = (hash: string) =>
 		update((state) => ({
 			...state,
@@ -100,7 +81,6 @@ const transactionStore = () => {
 			hash: hash,
 			message: ''
 		}));
-
 	const transactionError = (message: string) =>
 		update((state) => ({
 			...state,

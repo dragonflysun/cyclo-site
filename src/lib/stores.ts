@@ -2,6 +2,7 @@ import { derived, writable } from 'svelte/store';
 import { chainId, signerAddress } from 'svelte-wagmi';
 import { type Chain } from '@wagmi/core/chains';
 import type { Hex } from 'viem';
+import type { Receipt } from './types';
 
 export const targetNetwork = writable<Chain>();
 export const erc20PriceOracleReceiptVaultAddress = writable<Hex>(
@@ -12,3 +13,5 @@ export const wrongNetwork = derived(
 	[chainId, signerAddress, targetNetwork],
 	([$chainId, $signerAddress, $targetNetwork]) => $signerAddress && $chainId !== $targetNetwork.id
 );
+
+export const myReceipts = writable<Receipt[]>([]);

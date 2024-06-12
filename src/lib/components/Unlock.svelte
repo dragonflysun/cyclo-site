@@ -1,10 +1,23 @@
 <script lang="ts">
+	import { signerAddress } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
 	import { onMount } from 'svelte';
+	import { getReceipts } from '$lib/queries/getReceipts';
+	import type { Receipt as ReceiptType } from '$lib/types';
+	import { formatEther } from 'ethers';
+	import Receipt from './Receipt.svelte';
+	let receipts: ReceiptType[] = []; // Replace with your array of receipt ID numbers
 
-	let receiptIds: number[] = [1, 2, 3, 4, 5]; // Replace with your array of receipt ID numbers
-	let selectedReceiptId: number = receiptIds[0];
+	$: if ($signerAddress) {
+		refreshReceipts();
+	}
 
+	const refreshReceipts = async () => {
+		console.log('refreshing!');
+		if (!$signerAddress) return;
+		const res = await getReceipts($signerAddress);
+		receipts = res.items;
+	};
 	// get overall balance of cyFLR
 	// show a table of receipts with your balance and the lock price (represented by the formatted Token ID which was the price of FLR at that time (in USD))
 	// open the receipt to show an amount you wanna
@@ -39,41 +52,26 @@
 		];
 	}
 
-	onMount((): void => {
-		updateSelectDisplay();
-	});
+	// function updateSelectDisplay(): void {
+	// 	const select = document.querySelector<HTMLSelectElement>('.select-custom');
+	// 	const display = document.querySelector<HTMLSpanElement>('.select-display');
+	// 	if (select && display) {
+	// 		display.textContent = parseEther(selectedReceipt.tokenId).toString();
+	// 	}
+	// }
 
-	function updateSelectDisplay(): void {
-		const select = document.querySelector<HTMLSelectElement>('.select-custom');
-		const display = document.querySelector<HTMLSpanElement>('.select-display');
-		if (select && display) {
-			display.textContent = selectedReceiptId.toString();
-		}
-	}
-
-	function handleSelectChange(event: Event): void {
-		const target = event.target as HTMLSelectElement;
-		selectedReceiptId = Number(target.value);
-		updateSelectDisplay();
-	}
+	// function handleSelectChange(event: Event): void {
+	// 	const target = event.target as HTMLSelectElement;
+	// 	parseEther(selectedReceipt.tokenId) = Number(target.value);
+	// 	updateSelectDisplay();
+	// }
 </script>
 
-<Card size="lg">
-	<div
-		class="flex w-full flex-row items-center justify-between font-handjet text-[56px] font-semibold text-white"
-	>
-		<span>RECEIPT ID</span>
-		<div class="select-container relative flex items-center">
-			<span class="select-display"></span>
-			<select class="select-custom w-fit" on:change={handleSelectChange}>
-				{#each receiptIds as receiptId}
-					<option value={receiptId}>{receiptId}</option>
-				{/each}
-			</select>
-			<span class="arrow">▼</span>
-		</div>
-	</div>
-</Card>
+{#key receipts}
+	{#each receipts as receipt}
+		<Receipt {receipt} />
+	{/each}
+{/key}
 
 <style lang="postcss">
 	.select-container {
