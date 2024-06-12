@@ -175,7 +175,23 @@ const transactionStore = () => {
 		tokenId,
 		assets
 	}: InitiateUnlockTransactionArgs) => {
-		console.log('unlocking');
+		const writeUnlock = async () => {
+			try {
+				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your WFLR...');
+				const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
+					address: erc1155Address,
+					args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
+				});
+				awaitUnlockTx(hash);
+				const res = await waitForTransactionReceipt(config, { hash: hash });
+				if (res) {
+					transactionSuccess(hash);
+				}
+			} catch (error) {
+				transactionError('Wrong contract args');
+				console.log('err', error);
+			}
+		};
 
 		checkingWalletAllowance('Checking you are approved to unlock your WFLR...');
 
@@ -209,27 +225,13 @@ const transactionStore = () => {
 							});
 							awaitApprovalTx(hash);
 							const res = await waitForTransactionReceipt(config, { hash: hash });
+							writeUnlock();
 						} catch (error) {
 							transactionError('User rejected transaction');
 							console.log('err', error);
 						}
 					}
-
-					try {
-						awaitWalletConfirmation('Awaiting wallet confirmation to unlock your WFLR...');
-						const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
-							address: erc1155Address,
-							args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
-						});
-						awaitUnlockTx(hash);
-						const res = await waitForTransactionReceipt(config, { hash: hash });
-						if (res) {
-							transactionSuccess(hash);
-						}
-					} catch (error) {
-						transactionError('User rejected transaction');
-						console.log('err', error);
-					}
+					writeUnlock();
 				}
 			} catch (error) {
 				transactionError('User rejected transaction');
@@ -250,37 +252,9 @@ const transactionStore = () => {
 				awaitApprovalTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 			}
-			awaitWalletConfirmation('Awaiting wallet confirmation to unlock your WFLR...');
-			const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
-				address: erc1155Address,
-				args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
-			});
-			awaitUnlockTx(hash);
-			const res = await waitForTransactionReceipt(config, { hash: hash });
-			if (res) {
-				transactionSuccess(hash);
-			}
+			console.log('writing!!');
+			writeUnlock();
 		}
-
-		console.log('ERC1155 Approval!', isERC1155Approved);
-		// const hash = await writeErc20Approve(config, {
-		// 	address: '1155 Contract Address',
-		// 	args: ['cyFLR contract address', assets]
-		// });
-
-		// const hash = await writeErc20Approve(config, {
-		// 	address: '1155 Contract Address',
-		// 	args: ['cyFLR contract address', assets]
-		// });
-
-		// Function is Redeem
-		// Provide the ID
-
-		// It will take the tokeID from the 1155, and an equal amount of cyFLR
-		// and the ER1155 contract to spend cyFLr (setApprovalForAll)
-
-		// Approve the tstCyflr contract to spend the cyFLR
-		// Amount to redeem
 	};
 
 	return {
