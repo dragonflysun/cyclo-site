@@ -29,6 +29,8 @@
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
+		"flowbite": "^2.3.0",
+		"flowbite-svelte": "^0.46.1",
 		"flowbite-svelte-icons": "^1.6.1",
 		"globals": "^15.0.0",
 		"i": "^0.3.7",
@@ -52,6 +54,7 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.1",
+		"ethers": "^6.13.0",
 		"lodash-es": "^4.17.21",
 		"rehype-katex-svelte": "^1.2.0",
 		"svelte-wagmi": "^1.0.6",
