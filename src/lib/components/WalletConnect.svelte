@@ -1,17 +1,16 @@
 <script lang="ts">
 	import { targetNetwork, wrongNetwork } from '$lib/stores';
-	import { web3Modal, loading } from 'svelte-wagmi';
+	import { web3Modal, loading, signerAddress, connected } from 'svelte-wagmi';
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
 </script>
 
-<button on:click={() => $web3Modal.open()} tabindex={0}>
+<button class="p-2" on:click={() => $web3Modal.open()} tabindex={0}>
 	{#if $loading}
 		<CheckCircleSolid color="gray" />
-
 		Loading...
-	{:else if $wrongNetwork}
+	{:else if $wrongNetwork || !$signerAddress || !$connected}
 		<CloseCircleSolid color="red" />
-		Please connect to {$targetNetwork.name}
+		Connect to {$targetNetwork.name}
 	{:else}
 		<CheckCircleSolid color="green" />
 		Connected to {$targetNetwork.name}

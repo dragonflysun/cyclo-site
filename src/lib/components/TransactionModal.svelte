@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Button, Modal, Spinner } from 'flowbite-svelte';
+	import { Modal, Spinner } from 'flowbite-svelte';
+	import Button from '$lib/components/Button.svelte';
+
 	import transactionStore from '$lib/transactionStore';
 	import { TransactionStatus } from '$lib/transactionStore';
 

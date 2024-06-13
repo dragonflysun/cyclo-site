@@ -3,6 +3,8 @@
 	import logo from '$lib/logo-white.svg';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { base } from '$app/paths';
+	import Button from '$lib/components/Button.svelte';
 </script>
 
 <div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
@@ -15,25 +17,25 @@
 				e.currentTarget?.click();
 			}}
 			on:click={() => {
-				goto('/');
+				goto(base + '/');
 			}}
 		>
 			<img src={logo} alt="Cyclo logo" class="h-10 cursor-pointer" />
 		</a>
 
-		<button
+		<Button
 			class="w-24"
-			class:inset={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
+			inset={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
 			on:click={() => {
-				goto('/lock');
-			}}>App</button
+				goto(base + '/lock');
+			}}>App</Button
 		>
-		<button
+		<Button
 			class="w-24"
-			class:inset={$page.url.pathname.startsWith('/docs')}
+			inset={$page.url.pathname.startsWith('/docs')}
 			on:click={() => {
-				goto('/docs');
-			}}>Docs</button
+				goto(base + '/docs');
+			}}>Docs</Button
 		>
 	</div>
 	<WalletConnect />
