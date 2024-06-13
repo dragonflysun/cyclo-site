@@ -37,8 +37,6 @@
 	} else {
 		amountToRedeem = BigInt(0);
 	}
-
-	$: console.log($balancesStore.cyFlrBalance, erc1155balance, amountToRedeem, flrToReceive);
 </script>
 
 <div class="flex w-full flex-col items-center justify-center gap-6 p-6">
