@@ -45,7 +45,6 @@
 			address: $cyFlareAddress,
 			args: [BigInt(1e18)]
 		});
-		console.log(priceRatio);
 	};
 
 	const startGettingPriceRatio = async () => {

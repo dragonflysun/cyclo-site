@@ -8,7 +8,7 @@ import type { Hex } from 'viem';
 export const getReceipts = async (address: string, erc1155Address: string, config: Config) => {
 	const query: string = `https://api.routescan.io/v2/network/mainnet/evm/14/address/${address}/erc1155-holdings?limit=1000`;
 
-	const getBalance = async (tokenId: BigInt) => {
+	const getBalance = async (tokenId: bigint) => {
 		const res = await readErc1155BalanceOf(config, {
 			address: erc1155Address as Hex,
 			args: [address as Hex, tokenId as bigint]

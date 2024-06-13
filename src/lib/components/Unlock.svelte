@@ -9,7 +9,7 @@
 	import balancesStore from '$lib/balancesStore';
 	import { fade } from 'svelte/transition';
 	import { erc1155Address } from '$lib/stores';
-	import transactionStore from '$lib/transactionStore';
+
 	let receipts: ReceiptType[] = [];
 	let loading = true;
 
