@@ -7,8 +7,6 @@
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { formatEther, parseEther } from 'ethers';
 	import Button from '$lib/components/Button.svelte';
-	import { read } from '$app/server';
-
 	import burnDia from '$lib/images/burn-dia.svg';
 
 	export let receipt: Receipt;
