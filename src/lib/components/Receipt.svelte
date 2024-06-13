@@ -17,9 +17,14 @@
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
-	$: if (readableAmountToRedeem) {
-		amountToRedeem = BigInt(parseEther(readableAmountToRedeem.toString()));
-	}
+	const checkBalance = () => {
+		if (readableAmountToRedeem === '') {
+			readableAmountToRedeem = 0.0;
+		}
+		amountToRedeem = parseEther(readableAmountToRedeem.toString());
+	};
+
+	$: console.log(maxRedeemable, amountToRedeem, $balancesStore.cyFlrBalance, erc1155balance);
 
 	$: maxRedeemable =
 		$balancesStore?.cyFlrBalance < erc1155balance ? $balancesStore.cyFlrBalance : erc1155balance;
@@ -27,9 +32,7 @@
 	$: buttonDisabled = erc1155balance < amountToRedeem || amountToRedeem <= 0;
 
 	$: if (amountToRedeem > 0) {
-		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toFixed(5);
 		const _flrToReceive = (amountToRedeem * 10n ** 18n) / BigInt(receipt.tokenId);
-
 		flrToReceive = _flrToReceive;
 	} else {
 		amountToRedeem = BigInt(0);
@@ -39,7 +42,7 @@
 <Card size="lg">
 	<div class="flex w-full flex-col items-center justify-center gap-6">
 		<div
-			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
 		>
 			<span>NUMBER HELD</span>
 			<div class="flex flex-row gap-4">
@@ -50,7 +53,7 @@
 		</div>
 
 		<div
-			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
 		>
 			<span>UNLOCK PRICE</span>
 
@@ -60,23 +63,24 @@
 		</div>
 
 		<div
-			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
 		>
 			<span>REDEEMING</span>
 			<div class="flex flex-row items-center">
 				<input
 					min={0}
-					max={Number(formatEther(maxRedeemable))}
 					placeholder="0.0"
 					step="0.1"
 					type="number"
 					bind:value={readableAmountToRedeem}
-					class="h-full w-64 overflow-ellipsis border-none bg-transparent text-end text-[56px] font-semibold text-white outline-none"
+					on:change={checkBalance}
+					class="h-full w-64 overflow-ellipsis border-none bg-transparent text-end text-2xl font-semibold text-white outline-none"
 				/>
 				<span class="ml-2"> cyFLR</span>
 				<button
 					on:click={() => {
 						amountToRedeem = maxRedeemable;
+						readableAmountToRedeem = Number(formatEther(maxRedeemable.toString())).toFixed(5);
 					}}
 					class="mx-2 p-1 text-base">MAX</button
 				>
@@ -84,7 +88,7 @@
 		</div>
 
 		<div
-			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
 		>
 			<span>YOU RECEIVE</span>
 
@@ -106,7 +110,7 @@
 					assets: amountToRedeem,
 					tokenId: receipt.tokenId
 				})}
-			class={`w-fit px-6 py-0 font-handjet text-[56px] ${buttonDisabled ? 'text-red-500' : ''}`}
+			class={`w-fit px-6 py-0 font-handjet text-2xl ${buttonDisabled ? 'text-red-500' : ''}`}
 			>{'UNLOCK'}</button
 		>
 	</div>

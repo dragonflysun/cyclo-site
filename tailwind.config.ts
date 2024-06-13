@@ -9,9 +9,9 @@ export default {
 
 	theme: {
 		extend: {
-			fontFamily: {
-				handjet: ['Handjet', 'sans-serif']
-			},
+			// fontFamily: {
+			// 	handjet: ['Handjet', 'sans-serif']
+			// },
 			colors: {
 				primary: '#1E26E8'
 			}

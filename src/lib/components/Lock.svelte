@@ -11,17 +11,15 @@
 
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 
-	export let amountToLock = 0.0;
+	$: console.log($balancesStore.wFlrBalance, assets);
+
+	export let amountToLock = '0.0';
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0); // Initialize shares
-	let balance = BigInt(0); // Initialize balance
 
 	let intervalId: ReturnType<typeof setInterval>;
 
-	$: if (amountToLock > 0) {
-		const etherAmount = ethers.parseEther(amountToLock.toString()).toString();
-		assets = BigInt(etherAmount);
-	} else {
+	$: if (+amountToLock === 0) {
 		assets = BigInt(0);
 	}
 
@@ -57,7 +55,7 @@
 <Card size="lg">
 	<div class="flex w-full flex-col items-center justify-center gap-6">
 		<div
-			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
 		>
 			<span>BALANCE</span>
 			<div class="flex flex-row gap-4">
@@ -71,7 +69,7 @@
 
 		<!-- How much you want to gild -->
 		<div
-			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
 		>
 			<span>LOCKING</span>
 			<div class="flex flex-row items-center">
@@ -79,15 +77,20 @@
 					placeholder="0.0"
 					type="number"
 					bind:value={amountToLock}
-					class="h-full w-64 border-none bg-transparent text-end text-[56px] font-semibold text-white outline-none"
+					class="flex h-full w-fit border-none bg-transparent p-0 text-end text-2xl font-semibold text-white outline-none"
 				/>
 				<span class="ml-2"> FLR</span>
+				<button
+					on:click={() => {
+						assets = $balancesStore.wFlrBalance;
+						amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
+					}}
+					class="mx-2 p-1 text-base">MAX</button
+				>
 			</div>
-			<!-- Countdown polling of the price -->
-			<!-- Countdown spinner that updates it every 3s -->
 		</div>
 		<div
-			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
 		>
 			<span class="flex flex-row items-center gap-1"> RATIO</span>
 			{#key priceRatio}
@@ -111,13 +114,13 @@
 			{/key}
 		</div>
 		<div
-			class="flex w-full flex-row justify-between font-handjet text-[56px] font-semibold text-white"
+			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
 		>
 			<span>RECEIVING</span>
 			<div class="flex flex-row items-center gap-2">
 				{#key priceRatio}
 					<span in:fade={{ duration: 700 }}
-						>{(amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
+						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
 					>
 				{/key}
 				<span>cyFLR</span>
@@ -125,7 +128,7 @@
 		</div>
 		<!-- If enough WFLR is approved, immediate Lock, or else, approve -->
 		<button
-			disabled={balance < assets}
+			disabled={$balancesStore.wFlrBalance < assets}
 			on:click={() =>
 				transactionStore.initiateTransaction({
 					signerAddress: $signerAddress,
@@ -134,8 +137,8 @@
 					vaultAddress: $erc20PriceOracleReceiptVaultAddress,
 					assets: assets
 				})}
-			class="w-fit px-6 py-0 font-handjet text-[56px]"
-			>{balance < assets ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
+			class="w-fit px-6 py-0 font-handjet text-2xl"
+			>{$balancesStore.wFlrBalance < assets ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
 		>
 	</div>
 </Card>
