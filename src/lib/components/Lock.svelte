@@ -1,19 +1,21 @@
 <script lang="ts">
-	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
+	import Input from '$lib/components/Input.svelte';
+	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
+	import { base } from '$app/paths';
+	import mintDia from '$lib/images/mint-dia.svg';
+	import ftso from '$lib/images/ftso.svg';
+	import Button from '$lib/components/Button.svelte';
+
+	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
-	import Input from '$lib/components/Input.svelte';
-	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
-	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
-	import Button from './Button.svelte';
-	import mintDia from '$lib/images/mint-dia.svg';
-	import ftso from '$lib/images/ftso.svg';
-	import { base } from '$app/paths';
 	export let amountToLock = '0.0';
+
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0);
 	let insufficientFunds = false;
