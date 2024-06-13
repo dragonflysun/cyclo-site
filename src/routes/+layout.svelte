@@ -1,25 +1,23 @@
 <script lang="ts">
 	import '../app.css';
-	import { defaultConfig } from 'svelte-wagmi';
+	import { defaultConfig, wagmiConfig } from 'svelte-wagmi';
 	import { injected, walletConnect } from '@wagmi/connectors';
 	import Header from '$lib/components/Header.svelte';
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import { targetNetwork } from '$lib/stores';
-	import { page } from '$app/stores';
-	import { sepolia, flare } from '@wagmi/core/chains';
+
+	import { flare } from '@wagmi/core/chains';
+
+	$: console.log($wagmiConfig);
 
 	onMount(async () => {
-		$targetNetwork = $page.url.searchParams.get('testnet') ? sepolia : flare;
 		if (browser && window.navigator) {
 			const erckit = defaultConfig({
 				appName: 'cyclo',
 				walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
-
-				chains: [$targetNetwork],
-
+				chains: [flare],
 				connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]
 			});
 			await erckit.init();
@@ -27,7 +25,9 @@
 	});
 </script>
 
-<main>
-	<Header />
-	<slot></slot>
-</main>
+{#if $wagmiConfig}
+	<main>
+		<Header />
+		<slot></slot>
+	</main>
+{/if}

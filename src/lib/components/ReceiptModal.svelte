@@ -55,7 +55,7 @@
 		</div>
 	</div>
 
-	<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
+	<div class="flex w-full flex-row items-center justify-between text-2xl font-semibold text-white">
 		<span>REDEEMING</span>
 		<div class="flex flex-row items-center">
 			<input
@@ -88,7 +88,7 @@
 		</div>
 	</div>
 
-	<button
+	<Button
 		disabled={buttonDisabled}
 		on:click={() =>
 			transactionStore.initiateUnlockTransaction({
@@ -98,7 +98,6 @@
 				cyFlareAddress: $cyFlareAddress,
 				assets: amountToRedeem,
 				tokenId: receipt.tokenId
-			})}
-		class={`w-fit px-6 py-0  text-2xl ${buttonDisabled ? 'text-red-500' : ''}`}>{'UNLOCK'}</button
+			})}>{'UNLOCK'}</Button
 	>
 </div>

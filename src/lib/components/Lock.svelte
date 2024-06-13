@@ -32,9 +32,8 @@
 		}
 	};
 
-	onMount(async () => {
-		balancesStore.refreshWFlr($wagmiConfig, $wrappedFlareAddress, $signerAddress as string);
-		await startGettingPriceRatio();
+	onMount(() => {
+		startGettingPriceRatio();
 	});
 
 	const getPriceRatio = async () => {
@@ -52,12 +51,12 @@
 		});
 	};
 
-	function stopRandomizingPriceRatio() {
+	function stopGettingPriceRatio() {
 		clearInterval(intervalId);
 	}
 
 	onDestroy(() => {
-		stopRandomizingPriceRatio();
+		stopGettingPriceRatio();
 	});
 </script>
 
