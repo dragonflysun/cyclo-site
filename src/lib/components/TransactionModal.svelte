@@ -38,17 +38,24 @@
 				>
 					<h1 class="text-lg md:text-2xl">✅</h1>
 				</div>
-				<div class="flex flex-col gap-2 text-left">
+				<div class="flex flex-col gap-4 text-left">
 					<p class="text-lg font-semibold text-gray-900 dark:text-white">
 						{$transactionStore.status}
 					</p>
-				</div>
+					{#if $transactionStore.message}
+						<p class="text-sm font-normal text-gray-900 dark:text-white">
+							{$transactionStore.message}
+						</p>
+					{/if}
 
-				{#if $transactionStore.hash}
-					<a class="hover:underline" href={`https://flarescan.com/tx/${$transactionStore.hash}`}
-						>View transaction on Flarescan</a
-					>
-				{/if}
+					{#if $transactionStore.hash}
+						<a
+							class="text-center hover:underline"
+							href={`https://flarescan.com/tx/${$transactionStore.hash}`}
+							>View transaction on Flarescan</a
+						>
+					{/if}
+				</div>
 
 				<Button on:click={() => handleClose()} class="mt-4">DISMISS</Button>
 			{:else if $transactionStore.status === TransactionStatus.CHECKING_ALLOWANCE || $transactionStore.status === TransactionStatus.PENDING_WALLET || $transactionStore.status === TransactionStatus.PENDING_LOCK || $transactionStore.status === TransactionStatus.PENDING_UNLOCK || $transactionStore.status === TransactionStatus.PENDING_APPROVAL}
