@@ -9,6 +9,8 @@
 
 	import cyFlrBalanceStore from '$lib/balancesStore';
 	import Button from '$lib/components/Button.svelte';
+	import balancesStore from '$lib/balancesStore';
+	import { fade } from 'svelte/transition';
 	let receipts: ReceiptType[] = [];
 	let loading = true;
 	let error = false;
@@ -36,10 +38,14 @@
 {:else}
 	{#key receipts}
 		<Card size="md">
-			<div class="flex w-full justify-between text-2xl font-semibold text-white">
-				<span>BALANCE</span><span
-					>{Number(formatEther($cyFlrBalanceStore.cyFlrBalance)).toFixed(4)} cyFLR</span
-				>
+			<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
+				<span>BALANCE</span>
+				<div class="flex flex-row gap-4">
+					{#key $balancesStore.cyFlrBalance}<span in:fade={{ duration: 700 }}
+							>{Number(formatEther($balancesStore.cyFlrBalance)).toFixed(4)}</span
+						>{/key}
+					<span>cyFLR</span>
+				</div>
 			</div>
 		</Card>
 		{#if loading}
@@ -53,11 +59,11 @@
 			<!-- A more declarative modal that explains what's gonna happen -->
 			<!-- Show the calculation in the modal -->
 			<ReceiptsTable {receipts} />
-		{:else if error}
+		{:else if !receipts.length}
 			<div
 				class=" flex w-full items-center justify-center text-center text-2xl font-semibold text-white"
 			>
-				ERROR: NO RECEIPTS FOUND...
+				NO RECEIPTS FOUND...
 			</div>
 		{/if}
 	{/key}
