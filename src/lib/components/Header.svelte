@@ -9,19 +9,13 @@
 
 <div class="flex h-16 w-screen items-center justify-between bg-[#1C02B8] px-4">
 	<div class="flex items-center justify-center gap-6">
-		<a
-			href="/"
-			on:keydown={(e) => {
-				if (e.key !== 'Enter' && e.key !== ' ') return;
-				e.preventDefault();
-				e.currentTarget?.click();
-			}}
+		<button
 			on:click={() => {
 				goto(base + '/');
 			}}
 		>
 			<img src={logo} alt="Cyclo logo" class="h-10 cursor-pointer" />
-		</a>
+		</button>
 
 		<Button
 			inset={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}

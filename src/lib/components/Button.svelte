@@ -1,6 +1,5 @@
 <script lang="ts">
 	export let inset: boolean = false;
-	$: outset = inset === false;
 </script>
 
 <button
@@ -8,7 +7,7 @@
 	class={`flex h-fit items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 font-bold text-white`}
 	on:click
 	class:inset
-	class:outset
+	class:outset={!inset}
 >
 	<slot></slot></button
 >
