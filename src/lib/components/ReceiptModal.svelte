@@ -40,7 +40,7 @@
 </script>
 
 <div class="flex w-full flex-col items-center justify-center gap-6 p-6">
-	<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
+	<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 		<span>NUMBER HELD</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}<span in:fade={{ duration: 700 }}
@@ -49,7 +49,7 @@
 		</div>
 	</div>
 
-	<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
+	<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 		<span>LOCK-UP PRICE</span>
 
 		<div class="flex flex-row items-center gap-2">
@@ -57,7 +57,9 @@
 		</div>
 	</div>
 
-	<div class="flex w-full flex-row items-center justify-between text-2xl font-semibold text-white">
+	<div
+		class="flex w-full flex-row items-center justify-between text-lg font-semibold text-white md:text-2xl"
+	>
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
 			<Input
@@ -72,7 +74,9 @@
 		</div>
 	</div>
 
-	<div class="flex w-full flex-col items-center justify-center text-2xl font-semibold text-white">
+	<div
+		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white md:text-2xl"
+	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
 			<span class="w-1/2 text-center"
 				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
@@ -91,7 +95,7 @@
 	</div>
 
 	<button
-		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-2xl font-bold text-white"
+		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white md:text-2xl"
 		disabled={buttonDisabled}
 		on:click={() =>
 			transactionStore.initiateUnlockTransaction({

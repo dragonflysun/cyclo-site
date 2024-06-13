@@ -28,13 +28,15 @@
 </script>
 
 {#if !$signerAddress}
-	<Button on:click={() => $web3Modal.open()} class=" w-fit text-2xl"
+	<Button on:click={() => $web3Modal.open()} class=" w-fit text-lg md:text-2xl"
 		>CONNECT WALLET TO VIEW RECEIPTS</Button
 	>
 {:else}
 	{#key receipts}
 		<Card size="md">
-			<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
+			<div
+				class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
+			>
 				<span>BALANCE</span>
 				<div class="flex flex-row gap-4">
 					{#key $balancesStore.cyFlrBalance}<span in:fade={{ duration: 700 }}
@@ -46,7 +48,7 @@
 		</Card>
 		{#if loading}
 			<div
-				class=" flex w-full items-center justify-center text-center text-2xl font-semibold text-white"
+				class=" flex w-full items-center justify-center text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				LOADING...
 			</div>
@@ -54,7 +56,7 @@
 			<ReceiptsTable {receipts} />
 		{:else if !receipts.length}
 			<div
-				class=" flex w-full items-center justify-center text-center text-2xl font-semibold text-white"
+				class=" flex w-full items-center justify-center text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				NO RECEIPTS FOUND...
 			</div>

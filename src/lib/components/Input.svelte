@@ -12,10 +12,10 @@
 </script>
 
 <div
-	class="flex h-full w-fit items-center justify-center rounded-sm border-2 border-white text-2xl font-semibold text-primary outline-none"
+	class="flex h-full w-fit items-center justify-center rounded-sm border-2 border-white text-lg font-semibold text-primary outline-none md:text-2xl"
 >
 	<input
-		class="m-0 w-40 border-none bg-primary p-0 text-right text-2xl text-white outline-none focus:ring-0"
+		class="m-0 w-24 border-none bg-primary p-0 text-right text-lg text-white outline-none focus:ring-0 md:w-40 md:text-2xl"
 		{...$$restProps}
 		on:change
 		min={0}
@@ -25,7 +25,9 @@
 		bind:value={amount}
 	/>
 	{#if unit}
-		<span class=" h-full content-center self-center bg-primary pr-2 text-right text-2xl text-white">
+		<span
+			class=" h-full content-center self-center bg-primary pr-2 text-right text-lg text-white md:text-2xl"
+		>
 			{unit}</span
 		>
 	{/if}

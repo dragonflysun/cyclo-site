@@ -67,7 +67,9 @@
 <Card size="lg">
 	<div class="flex w-full flex-col items-center justify-center gap-10">
 		{#if $signerAddress}
-			<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
+			<div
+				class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
+			>
 				<div class="flex flex-col">
 					<span>WFLR BALANCE</span>
 					<a
@@ -84,7 +86,7 @@
 			</div>
 		{/if}
 
-		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
+		<div class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<div class="flex flex-col">
 				<span>WFLR/USD PRICE</span>
 				<a href={base + '/docs/why-flare'} class="cursor-pointer text-xs font-light hover:underline"
@@ -114,7 +116,7 @@
 
 		<!-- How much you want to gild -->
 		<div
-			class=" itens-center flex w-full flex-row justify-between text-2xl font-semibold text-white"
+			class=" itens-center flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 		>
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
@@ -132,7 +134,7 @@
 
 		<div class="flex flex-col gap-2">
 			<div
-				class="flex w-full items-center justify-center gap-2 text-center text-2xl font-semibold text-white"
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				<span>{amountToLock}</span>
 
@@ -150,7 +152,7 @@
 			</div>
 
 			<div
-				class="flex w-full items-center justify-center gap-2 text-center text-2xl font-semibold text-white"
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				{#key priceRatio}
 					<span in:fade={{ duration: 700 }}
@@ -164,7 +166,7 @@
 		{#if $signerAddress}
 			<Button
 				disabled={insufficientFunds || !assets}
-				customClass="text-2xl w-full bg-white text-primary"
+				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				on:click={() =>
 					transactionStore.initiateTransaction({
 						signerAddress: $signerAddress,
@@ -175,7 +177,7 @@
 					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
 			>
 		{:else}
-			<Button customClass="text-xl" on:click={() => $web3Modal.open()}>CONNECT WALLET</Button>
+			<Button customClass="text-lg" on:click={() => $web3Modal.open()}>CONNECT WALLET</Button>
 		{/if}
 	</div>
 </Card>
