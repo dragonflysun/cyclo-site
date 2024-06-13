@@ -9,6 +9,7 @@
 
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import Button from './Button.svelte';
 
 	export let amountToLock = '0.0';
 	let priceRatio = BigInt(0);
@@ -126,7 +127,7 @@
 			</div>
 		</div>
 
-		<button
+		<Button
 			disabled={insufficientFunds}
 			on:click={() =>
 				transactionStore.initiateTransaction({
@@ -136,7 +137,7 @@
 					vaultAddress: $erc20PriceOracleReceiptVaultAddress,
 					assets: assets
 				})}
-			class=" w-fit px-6 py-0 text-2xl">{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
+			class=" w-fit px-6 py-0 text-2xl">{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
 		>
 	</div>
 </Card>
