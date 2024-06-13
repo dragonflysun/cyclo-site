@@ -168,7 +168,7 @@
 				disabled={insufficientFunds || !assets}
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				on:click={() =>
-					transactionStore.initiateTransaction({
+					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						wrappedFlareAddress: $wrappedFlareAddress,
