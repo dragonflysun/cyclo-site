@@ -4,15 +4,14 @@
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
 </script>
 
-<button class="p-2" on:click={() => $web3Modal.open()} tabindex={0}>
-	{#if $loading}
-		<CheckCircleSolid color="gray" />
-		Loading...
-	{:else if $wrongNetwork || !$signerAddress || !$connected}
-		<CloseCircleSolid color="red" />
-		Connect to {$targetNetwork.name}
-	{:else}
-		<CheckCircleSolid color="green" />
-		Connected to {$targetNetwork.name}
-	{/if}
-</button>
+{#if $targetNetwork}
+	<button class="p-2" on:click={() => $web3Modal.open()} tabindex={0}>
+		{#if $wrongNetwork || !$signerAddress || !$connected}
+			<CloseCircleSolid color="red" />
+			Connect to {$targetNetwork?.name}
+		{:else}
+			<CheckCircleSolid color="green" />
+			Connected to {$targetNetwork?.name}
+		{/if}
+	</button>
+{/if}

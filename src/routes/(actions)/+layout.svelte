@@ -15,20 +15,14 @@
 </script>
 
 <div class="flex min-h-screen flex-col items-center gap-6 bg-primary pb-24 pt-4">
-	{#if !$signerAddress || !$connected}
-		<Button on:click={() => $web3Modal.open()}>Connect a wallet to use CYCLO</Button>
-	{:else if $wrongNetwork}
-		<Button on:click={() => $web3Modal.open()}>Connect to Flare</Button>
-	{:else}
-		<div class="flex h-fit max-w-prose gap-6">
-			<Button class=" w-32" inset={$page.url.pathname === '/lock'} on:click={() => goto('/lock')}
-				>LOCK</Button
-			>
-			<Button class="w-32" inset={$page.url.pathname === '/unlock'} on:click={() => goto('/unlock')}
-				>UNLOCK</Button
-			>
-		</div>
-		<slot />
-		<TransactionModal />
-	{/if}
+	<div class="flex h-fit max-w-prose gap-6">
+		<Button class=" w-32" inset={$page.url.pathname === '/lock'} on:click={() => goto('/lock')}
+			>LOCK</Button
+		>
+		<Button class="w-32" inset={$page.url.pathname === '/unlock'} on:click={() => goto('/unlock')}
+			>UNLOCK</Button
+		>
+	</div>
+	<slot />
+	<TransactionModal />
 </div>

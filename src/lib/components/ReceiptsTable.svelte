@@ -45,25 +45,27 @@
 	});
 </script>
 
-<Table divClass="table" hoverable={true}>
-	<TableHead>
+<Table divClass="table">
+	<TableHead class="bg-opacity-0 bg-none text-white">
 		<TableHeadCell>Locked Price</TableHeadCell>
 		<TableHeadCell>Number Held</TableHeadCell>
 		<TableHeadCell>Locked FLR/Receipt</TableHeadCell>
 		<TableHeadCell>Total Locked FLR</TableHeadCell>
 		<TableHeadCell>Redeem</TableHeadCell>
 	</TableHead>
-	<TableBody>
+	<TableBody tableBodyClass="bg-opacity-0 text-white">
 		{#each mappedReceipts as receipt}
-			<TableBodyRow>
-				<TableBodyCell>{receipt.tokenId}</TableBodyCell>
-				<TableBodyCell>{Number(formatEther(receipt.balance)).toFixed(5)}</TableBodyCell>
+			<TableBodyRow class="bg-opacity-0 text-white">
+				<TableBodyCell class="text-white">{receipt.tokenId}</TableBodyCell>
+				<TableBodyCell class="text-white"
+					>{Number(formatEther(receipt.balance)).toFixed(5)}</TableBodyCell
+				>
 
-				<TableBodyCell>
+				<TableBodyCell class="text-white">
 					{receipt.readableFlrPerReceipt}
 				</TableBodyCell>
-				<TableBodyCell>{receipt.readableTotalFlr}</TableBodyCell>
-				<TableBodyCell
+				<TableBodyCell class="text-white">{receipt.readableTotalFlr}</TableBodyCell>
+				<TableBodyCell class="text-white"
 					><Button on:click={() => (selectedReceipt = receipt)}>Redeem</Button></TableBodyCell
 				>
 			</TableBodyRow>
