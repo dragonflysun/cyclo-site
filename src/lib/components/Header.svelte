@@ -7,7 +7,7 @@
 	import Button from './Button.svelte';
 </script>
 
-<div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
+<div class="flex h-16 w-screen items-center justify-between bg-[#1C02B8] px-4">
 	<div class="flex items-center justify-center gap-6">
 		<a
 			href="/"
