@@ -4,7 +4,7 @@
 	import Button from '$lib/components/Button.svelte';
 </script>
 
-<div class="flex h-screen w-screen flex-col items-center justify-center gap-y-8 bg-primary p-4">
+<div class="flex h-screen w-screen flex-col items-center justify-center gap-y-8 bg-[#1C02B8] p-4">
 	<img src={logo} alt="Cyclo logo" class="w-full max-w-[400px]" />
 	<h1 class="text-center text-2xl text-white">A new way to leverage FLR, coming soon</h1>
 	<Button

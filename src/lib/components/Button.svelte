@@ -12,4 +12,8 @@
 	.outset {
 		border-style: outset;
 	}
+
+	.inset {
+		border-style: inset;
+	}
 </style>
