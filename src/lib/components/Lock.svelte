@@ -64,7 +64,7 @@
 	<div class="flex w-full flex-col items-center justify-center gap-6">
 		{#if $signerAddress}
 			<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
-				<span>BALANCE</span>
+				<span>WFLR BALANCE</span>
 				<div class="flex flex-row gap-4">
 					{#key $balancesStore.wFlrBalance}<span in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
@@ -74,25 +74,8 @@
 			</div>
 		{/if}
 
-		<!-- How much you want to gild -->
-		<div
-			class=" itens-center flex w-full flex-row justify-between text-2xl font-semibold text-white"
-		>
-			<span class="align-center content-center">LOCKING</span>
-			<div class="flex flex-row items-center">
-				<Input on:change={checkBalance} bind:amount={amountToLock} unit={'FLR'} />
-
-				<Button
-					on:click={() => {
-						assets = $balancesStore.wFlrBalance;
-						amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
-					}}
-					class="ml-4 p-1 text-base">MAX</Button
-				>
-			</div>
-		</div>
 		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
-			<span class="flex flex-row items-center gap-1"> RATIO</span>
+			<span class="flex flex-row items-center gap-1"> WFLR/USD PRICE</span>
 			{#key priceRatio}
 				<span in:fade={{ duration: 700 }} class="flex flex-row items-center gap-2"
 					>{Number(formatEther(priceRatio.toString())).toFixed(5)}
@@ -113,6 +96,25 @@
 				>
 			{/key}
 		</div>
+
+		<!-- How much you want to gild -->
+		<div
+			class=" itens-center flex w-full flex-row justify-between text-2xl font-semibold text-white"
+		>
+			<span class="align-center content-center">LOCK AMOUNT</span>
+
+			<Input
+				on:change={checkBalance}
+				on:setValueToMax={() => {
+					assets = $balancesStore.wFlrBalance;
+					amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
+				}}
+				bind:amount={amountToLock}
+				maxValue={$balancesStore.wFlrBalance}
+				unit={'FLR'}
+			/>
+		</div>
+
 		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>RECEIVING</span>
 			<div class="flex flex-row items-center gap-2">

@@ -8,11 +8,12 @@
 	import { formatEther, parseEther } from 'ethers';
 	import Button from '$lib/components/Button.svelte';
 	import burnDia from '$lib/images/burn-dia.svg';
+	import Input from './Input.svelte';
 
 	export let receipt: Receipt;
 
 	let erc1155balance = BigInt(receipt.balance);
-	let readableAmountToRedeem: string | number = 0.0;
+	let readableAmountToRedeem: string = '0.0';
 
 	let amountToRedeem = BigInt(0);
 	let flrToReceive = BigInt(0);
@@ -21,7 +22,7 @@
 
 	const checkBalance = () => {
 		if (readableAmountToRedeem === '') {
-			readableAmountToRedeem = 0.0;
+			readableAmountToRedeem = '0.0';
 		}
 		amountToRedeem = parseEther(readableAmountToRedeem.toString());
 	};
@@ -46,7 +47,7 @@
 		<span>NUMBER HELD</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}<span in:fade={{ duration: 700 }}
-						>~{Number(readableBalance).toFixed(5)}</span
+						>{Number(readableBalance).toFixed(5)}</span
 					>{/if}{/key}
 		</div>
 	</div>
@@ -62,23 +63,15 @@
 	<div class="flex w-full flex-row items-center justify-between text-2xl font-semibold text-white">
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
-			<input
-				min={0}
-				placeholder="0.0"
-				step="0.1"
-				type="number"
-				bind:value={readableAmountToRedeem}
+			<Input
+				maxValue={maxRedeemable}
+				bind:amount={readableAmountToRedeem}
 				on:change={checkBalance}
-				class="flex h-full w-32 rounded-sm border-none bg-white bg-opacity-90 p-0 text-end text-2xl font-semibold text-blue-500 outline-none"
-			/>
-
-			<Button
-				on:click={() => {
+				on:setValueToMax={() => {
 					amountToRedeem = maxRedeemable;
 					readableAmountToRedeem = Number(formatEther(maxRedeemable.toString())).toFixed(5);
 				}}
-				class="ml-4 p-1 text-base">MAX</Button
-			>
+			/>
 		</div>
 	</div>
 
@@ -101,7 +94,7 @@
 	</div>
 
 	<button
-		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-white bg-opacity-20 px-4 py-2 text-2xl font-bold text-white"
+		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-2xl font-bold text-white"
 		disabled={buttonDisabled}
 		on:click={() =>
 			transactionStore.initiateUnlockTransaction({
