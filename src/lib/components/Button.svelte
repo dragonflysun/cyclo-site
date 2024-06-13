@@ -1,8 +1,6 @@
 <script lang="ts">
 	export let inset: boolean = false;
-	$: outset = inset === false;
 </script>
-
 
 <button {...$$restProps} on:click class:inset class:outset={!inset}> <slot></slot></button>
 
@@ -13,6 +11,5 @@
 
 	.outset {
 		border-style: outset;
-
 	}
 </style>
