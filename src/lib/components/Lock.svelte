@@ -5,7 +5,7 @@
 	import balancesStore from '$lib/balancesStore';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { ethers, formatEther, parseEther } from 'ethers';
+	import { formatEther, parseEther } from 'ethers';
 
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
 
