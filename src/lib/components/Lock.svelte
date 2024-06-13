@@ -11,8 +11,6 @@
 
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 
-	$: console.log($balancesStore.wFlrBalance, assets);
-
 	export let amountToLock = '0.0';
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0);
@@ -21,7 +19,6 @@
 	let intervalId: ReturnType<typeof setInterval>;
 
 	const checkBalance = () => {
-		console.log('CHECKING!');
 		if ($balancesStore.wFlrBalance < assets) {
 			insufficientFunds = true;
 		} else if (parseEther(amountToLock.toString()) > $balancesStore.wFlrBalance) {

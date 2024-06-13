@@ -24,8 +24,6 @@
 		amountToRedeem = parseEther(readableAmountToRedeem.toString());
 	};
 
-	$: console.log(maxRedeemable, amountToRedeem, $balancesStore.cyFlrBalance, erc1155balance);
-
 	$: maxRedeemable =
 		$balancesStore?.cyFlrBalance < erc1155balance ? $balancesStore.cyFlrBalance : erc1155balance;
 
