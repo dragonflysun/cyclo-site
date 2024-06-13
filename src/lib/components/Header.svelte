@@ -7,17 +7,17 @@
 </script>
 
 <div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
-	<div class="flex items-center justify-center gap-6">
+	<div class="flex items-center justify-center gap-6 pr-4">
 		<button
 			on:click={() => {
 				goto(base + '/');
 			}}
 		>
-			<img src={logo} alt="Cyclo logo" class="h-10 cursor-pointer" />
+			<img src={logo} alt="Cyclo logo" class="h-8 cursor-pointer" />
 		</button>
 
 		<button
-			class="ml-4 text-white"
+			class="text-white md:ml-4"
 			class:underline={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
 			on:click={() => {
 				goto(base + '/lock');

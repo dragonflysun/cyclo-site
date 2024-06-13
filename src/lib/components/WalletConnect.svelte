@@ -5,15 +5,15 @@
 	import Button from './Button.svelte';
 </script>
 
-<Button class="p-2" on:click={() => $web3Modal.open()} tabindex={0}>
+<Button on:click={() => $web3Modal.open()} tabindex={0}>
 	{#if $loading}
 		<CheckCircleSolid color="gray" />
 		Loading...
 	{:else if $wrongNetwork || !$signerAddress || !$connected}
-		<CloseCircleSolid color="red" />
-		Connect to {$targetNetwork.name}
+		<CloseCircleSolid color="red" class="hidden md:inline" />
+		<span>Connect</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
 	{:else}
-		<CheckCircleSolid color="green" />
-		Connected to {$targetNetwork.name}
+		<CheckCircleSolid color="green" class="hidden md:inline" />
+		<span>Connected</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
 	{/if}
 </Button>
