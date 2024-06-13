@@ -5,7 +5,7 @@
 	import balancesStore from '$lib/balancesStore';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { ethers, formatEther } from 'ethers';
+	import { ethers, formatEther, parseEther } from 'ethers';
 
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
 
@@ -15,9 +15,25 @@
 
 	export let amountToLock = '0.0';
 	let priceRatio = BigInt(0);
-	let assets = BigInt(0); // Initialize shares
+	let assets = BigInt(0);
+	let insufficientFunds = false;
 
 	let intervalId: ReturnType<typeof setInterval>;
+
+	const checkBalance = () => {
+		console.log('CHECKING!');
+		if ($balancesStore.wFlrBalance < assets) {
+			insufficientFunds = true;
+		} else if (parseEther(amountToLock.toString()) > $balancesStore.wFlrBalance) {
+			insufficientFunds = true;
+		} else {
+			insufficientFunds = false;
+		}
+	};
+
+	$: if (assets) {
+		checkBalance();
+	}
 
 	$: if (+amountToLock === 0) {
 		assets = BigInt(0);
@@ -74,7 +90,10 @@
 			<span>LOCKING</span>
 			<div class="flex flex-row items-center">
 				<input
+					min={0}
 					placeholder="0.0"
+					step="0.1"
+					on:change={checkBalance}
 					type="number"
 					bind:value={amountToLock}
 					class="flex h-full w-fit border-none bg-transparent p-0 text-end text-2xl font-semibold text-white outline-none"
@@ -128,7 +147,7 @@
 		</div>
 		<!-- If enough WFLR is approved, immediate Lock, or else, approve -->
 		<button
-			disabled={$balancesStore.wFlrBalance < assets}
+			disabled={insufficientFunds}
 			on:click={() =>
 				transactionStore.initiateTransaction({
 					signerAddress: $signerAddress,
@@ -138,7 +157,7 @@
 					assets: assets
 				})}
 			class="w-fit px-6 py-0 font-handjet text-2xl"
-			>{$balancesStore.wFlrBalance < assets ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
+			>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
 		>
 	</div>
 </Card>
