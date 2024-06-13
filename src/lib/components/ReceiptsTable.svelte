@@ -20,7 +20,7 @@
 	import ReceiptModal from '$lib/components/ReceiptModal.svelte';
 
 	export let receipts: ReceiptType[];
-	let selectedReceipt: ReceiptType | null = receipts[0];
+	let selectedReceipt: ReceiptType | null = null;
 
 	const mappedReceipts = receipts.map((receipt) => {
 		const flrPerReceipt = 10n ** 36n / BigInt(receipt.tokenId);

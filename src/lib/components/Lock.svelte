@@ -66,10 +66,9 @@
 			<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
 				<span>BALANCE</span>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.wFlrBalance}{#if $balancesStore.wFlrBalance}<span
-								in:fade={{ duration: 700 }}
-								>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
-							>{/if}{/key}
+					{#key $balancesStore.wFlrBalance}<span in:fade={{ duration: 700 }}
+							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
+						>{/key}
 					<span>WFLR</span>
 				</div>
 			</div>
