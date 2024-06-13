@@ -49,9 +49,6 @@
 				LOADING...
 			</div>
 		{:else if receipts.length > 0}
-			<!-- lock up price | number held | locked FLR per receipt | total locked FLR | [redeem] -->
-			<!-- A more declarative modal that explains what's gonna happen -->
-			<!-- Show the calculation in the modal -->
 			<ReceiptsTable {receipts} />
 		{:else if !receipts.length}
 			<div
