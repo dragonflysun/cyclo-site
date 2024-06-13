@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-import type { Hex } from 'viem';
+import type { Hex, WaitForTransactionReceiptErrorType } from 'viem';
 
 import type { Config } from '@wagmi/core';
 import { waitForTransactionReceipt } from '@wagmi/core';
@@ -143,9 +143,12 @@ const transactionStore = () => {
 						transactionSuccess(hash);
 					}
 				}
-			} catch (error) {
-				transactionError('User rejected transaction');
-				console.log('err', error);
+			} catch (e) {
+				const error = e as WaitForTransactionReceiptErrorType;
+
+				transactionError(
+					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
+				);
 			}
 		} else {
 			try {

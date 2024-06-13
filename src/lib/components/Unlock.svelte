@@ -5,6 +5,7 @@
 	import type { Receipt as ReceiptType } from '$lib/types';
 	import { formatEther } from 'ethers';
 	import Receipt from './Receipt.svelte';
+	import ReceiptsTable from '$lib/components/ReceiptsTable.svelte';
 
 	import cyFlrBalanceStore from '$lib/balancesStore';
 	let receipts: ReceiptType[] = [];
@@ -42,9 +43,10 @@
 			LOADING...
 		</div>
 	{:else if receipts.length > 0}
-		{#each receipts as receipt}
-			<Receipt {receipt} />
-		{/each}
+		<!-- lock up price | number held | locked FLR per receipt | total locked FLR | [redeem] -->
+		<!-- A more declarative modal that explains what's gonna happen -->
+		<!-- Show the calculation in the modal -->
+		<ReceiptsTable {receipts} />
 	{:else if error}
 		<div
 			class=" flex w-full items-center justify-center text-center text-2xl font-semibold text-white"

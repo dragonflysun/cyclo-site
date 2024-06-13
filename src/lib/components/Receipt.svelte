@@ -10,6 +10,8 @@
 
 	export let receipt: Receipt;
 
+	console.log('receipt', receipt);
+
 	let erc1155balance = BigInt(receipt.balance);
 	let readableAmountToRedeem: string | number = 0.0;
 	let amountToRedeem = BigInt(0);
