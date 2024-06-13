@@ -7,7 +7,7 @@
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
 	import Input from '$lib/components/Input.svelte';
-	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import Button from './Button.svelte';
 	import mintDia from '$lib/images/mint-dia.svg';
@@ -39,7 +39,7 @@
 
 	const getPriceRatio = async () => {
 		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $erc20PriceOracleReceiptVaultAddress,
+			address: $cyFlareAddress,
 			args: [BigInt(1e18)]
 		});
 	};
@@ -47,7 +47,7 @@
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
 		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $erc20PriceOracleReceiptVaultAddress,
+			address: $cyFlareAddress,
 			args: [BigInt(1e18)]
 		});
 	};
@@ -156,7 +156,7 @@
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						wrappedFlareAddress: $wrappedFlareAddress,
-						vaultAddress: $erc20PriceOracleReceiptVaultAddress,
+						vaultAddress: $cyFlareAddress,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
 			>
