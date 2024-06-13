@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
+	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
-
+	import Input from '$lib/components/Input.svelte';
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import Button from './Button.svelte';
@@ -18,6 +18,10 @@
 
 	let intervalId: ReturnType<typeof setInterval>;
 
+	$: if ($signerAddress) {
+		checkBalance();
+	}
+
 	const checkBalance = () => {
 		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
 		assets = bigNumValue;
@@ -28,9 +32,8 @@
 		}
 	};
 
-	onMount(async () => {
-		balancesStore.refreshWFlr($wagmiConfig, $wrappedFlareAddress, $signerAddress as string);
-		await startGettingPriceRatio();
+	onMount(() => {
+		startGettingPriceRatio();
 	});
 
 	const getPriceRatio = async () => {
@@ -48,53 +51,31 @@
 		});
 	};
 
-	function stopRandomizingPriceRatio() {
+	function stopGettingPriceRatio() {
 		clearInterval(intervalId);
 	}
 
 	onDestroy(() => {
-		stopRandomizingPriceRatio();
+		stopGettingPriceRatio();
 	});
 </script>
 
 <Card size="lg">
 	<div class="flex w-full flex-col items-center justify-center gap-6">
-		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
-			<span>BALANCE</span>
-			<div class="flex flex-row gap-4">
-				{#key $balancesStore.wFlrBalance}{#if $balancesStore.wFlrBalance}<span
-							in:fade={{ duration: 700 }}
+		{#if $signerAddress}
+			<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
+				<span>WFLR BALANCE</span>
+				<div class="flex flex-row gap-4">
+					{#key $balancesStore.wFlrBalance}<span in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
-						>{/if}{/key}
-				<span>WFLR</span>
+						>{/key}
+					<span>WFLR</span>
+				</div>
 			</div>
-		</div>
+		{/if}
 
-		<!-- How much you want to gild -->
 		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
-			<span>LOCKING</span>
-			<div class="flex flex-row items-center">
-				<input
-					min={0}
-					placeholder="0.0"
-					step="0.1"
-					on:change={checkBalance}
-					type="number"
-					bind:value={amountToLock}
-					class="flex h-full w-fit border-none bg-transparent p-0 text-end text-2xl font-semibold text-white outline-none"
-				/>
-				<span class="ml-2"> FLR</span>
-				<button
-					on:click={() => {
-						assets = $balancesStore.wFlrBalance;
-						amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
-					}}
-					class="ml-4 p-1 text-base">MAX</button
-				>
-			</div>
-		</div>
-		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
-			<span class="flex flex-row items-center gap-1"> RATIO</span>
+			<span class="flex flex-row items-center gap-1"> WFLR/USD PRICE</span>
 			{#key priceRatio}
 				<span in:fade={{ duration: 700 }} class="flex flex-row items-center gap-2"
 					>{Number(formatEther(priceRatio.toString())).toFixed(5)}
@@ -115,6 +96,25 @@
 				>
 			{/key}
 		</div>
+
+		<!-- How much you want to gild -->
+		<div
+			class=" itens-center flex w-full flex-row justify-between text-2xl font-semibold text-white"
+		>
+			<span class="align-center content-center">LOCK AMOUNT</span>
+
+			<Input
+				on:change={checkBalance}
+				on:setValueToMax={() => {
+					assets = $balancesStore.wFlrBalance;
+					amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
+				}}
+				bind:amount={amountToLock}
+				maxValue={$balancesStore.wFlrBalance}
+				unit={'FLR'}
+			/>
+		</div>
+
 		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>RECEIVING</span>
 			<div class="flex flex-row items-center gap-2">
@@ -126,19 +126,22 @@
 				<span>cyFLR</span>
 			</div>
 		</div>
-
-		<Button
-			disabled={insufficientFunds}
-			on:click={() =>
-				transactionStore.initiateTransaction({
-					signerAddress: $signerAddress,
-					config: $wagmiConfig,
-					wrappedFlareAddress: $wrappedFlareAddress,
-					vaultAddress: $erc20PriceOracleReceiptVaultAddress,
-					assets: assets
-				})}
-			class=" w-fit px-6 py-0 text-2xl">{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
-		>
+		{#if $signerAddress}
+			<Button
+				disabled={insufficientFunds || !assets}
+				customClass="text-xl"
+				on:click={() =>
+					transactionStore.initiateTransaction({
+						signerAddress: $signerAddress,
+						config: $wagmiConfig,
+						wrappedFlareAddress: $wrappedFlareAddress,
+						vaultAddress: $erc20PriceOracleReceiptVaultAddress,
+						assets: assets
+					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
+			>
+		{:else}
+			<Button customClass="text-xl" on:click={() => $web3Modal.open()}>CONNECT WALLET</Button>
+		{/if}
 	</div>
 </Card>
 
