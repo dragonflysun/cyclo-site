@@ -29,7 +29,7 @@
 
 {#key receipts}
 	<Card size="lg">
-		<div class="flex w-full justify-between font-handjet text-2xl font-semibold text-white">
+		<div class=" flex w-full justify-between text-2xl font-semibold text-white">
 			<span>BALANCE</span><span
 				>{Number(formatEther($cyFlrBalanceStore.cyFlrBalance)).toFixed(4)} cyFLR</span
 			>
@@ -37,7 +37,7 @@
 	</Card>
 	{#if loading}
 		<div
-			class="flex w-full items-center justify-center text-center font-handjet text-2xl font-semibold text-white"
+			class=" flex w-full items-center justify-center text-center text-2xl font-semibold text-white"
 		>
 			LOADING...
 		</div>
@@ -47,7 +47,7 @@
 		{/each}
 	{:else if error}
 		<div
-			class="flex w-full items-center justify-center text-center font-handjet text-2xl font-semibold text-white"
+			class=" flex w-full items-center justify-center text-center text-2xl font-semibold text-white"
 		>
 			ERROR: NO RECEIPTS FOUND...
 		</div>

@@ -8,7 +8,6 @@
 	import { formatEther, parseEther } from 'ethers';
 
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
-
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 
 	export let amountToLock = '0.0';
@@ -59,9 +58,7 @@
 
 <Card size="lg">
 	<div class="flex w-full flex-col items-center justify-center gap-6">
-		<div
-			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
-		>
+		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>BALANCE</span>
 			<div class="flex flex-row gap-4">
 				{#key $balancesStore.wFlrBalance}{#if $balancesStore.wFlrBalance}<span
@@ -73,9 +70,7 @@
 		</div>
 
 		<!-- How much you want to gild -->
-		<div
-			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
-		>
+		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>LOCKING</span>
 			<div class="flex flex-row items-center">
 				<input
@@ -97,9 +92,7 @@
 				>
 			</div>
 		</div>
-		<div
-			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
-		>
+		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span class="flex flex-row items-center gap-1"> RATIO</span>
 			{#key priceRatio}
 				<span in:fade={{ duration: 700 }} class="flex flex-row items-center gap-2"
@@ -121,9 +114,7 @@
 				>
 			{/key}
 		</div>
-		<div
-			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
-		>
+		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>RECEIVING</span>
 			<div class="flex flex-row items-center gap-2">
 				{#key priceRatio}
@@ -134,7 +125,7 @@
 				<span>cyFLR</span>
 			</div>
 		</div>
-		<!-- If enough WFLR is approved, immediate Lock, or else, approve -->
+
 		<button
 			disabled={insufficientFunds}
 			on:click={() =>
@@ -145,8 +136,7 @@
 					vaultAddress: $erc20PriceOracleReceiptVaultAddress,
 					assets: assets
 				})}
-			class="w-fit px-6 py-0 font-handjet text-2xl"
-			>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
+			class=" w-fit px-6 py-0 text-2xl">{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
 		>
 	</div>
 </Card>

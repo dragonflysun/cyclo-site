@@ -39,9 +39,7 @@
 
 <Card size="lg">
 	<div class="flex w-full flex-col items-center justify-center gap-6">
-		<div
-			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
-		>
+		<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>NUMBER HELD</span>
 			<div class="flex flex-row gap-4">
 				{#key readableBalance}{#if readableBalance}<span in:fade={{ duration: 700 }}
@@ -50,9 +48,7 @@
 			</div>
 		</div>
 
-		<div
-			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
-		>
+		<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>UNLOCK PRICE</span>
 
 			<div class="flex flex-row items-center gap-2">
@@ -60,9 +56,7 @@
 			</div>
 		</div>
 
-		<div
-			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
-		>
+		<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>REDEEMING</span>
 			<div class="flex flex-row items-center">
 				<input
@@ -85,9 +79,7 @@
 			</div>
 		</div>
 
-		<div
-			class="flex w-full flex-row justify-between font-handjet text-2xl font-semibold text-white"
-		>
+		<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
 			<span>YOU RECEIVE</span>
 
 			<div class="flex flex-row items-center gap-2 overflow-ellipsis">
@@ -108,8 +100,7 @@
 					assets: amountToRedeem,
 					tokenId: receipt.tokenId
 				})}
-			class={`w-fit px-6 py-0 font-handjet text-2xl ${buttonDisabled ? 'text-red-500' : ''}`}
-			>{'UNLOCK'}</button
+			class={`w-fit px-6 py-0  text-2xl ${buttonDisabled ? 'text-red-500' : ''}`}>{'UNLOCK'}</button
 		>
 	</div>
 </Card>
