@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-import type { Hex } from 'viem';
+import type { Hex, WaitForTransactionReceiptErrorType, WriteContractErrorType } from 'viem';
 
 import type { Config } from '@wagmi/core';
 import { waitForTransactionReceipt } from '@wagmi/core';
@@ -143,9 +143,11 @@ const transactionStore = () => {
 						transactionSuccess(hash);
 					}
 				}
-			} catch (error) {
-				transactionError('User rejected transaction');
-				console.log('err', error);
+			} catch (e) {
+				const error = e as WaitForTransactionReceiptErrorType;
+				transactionError(
+					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
+				);
 			}
 		} else {
 			try {
@@ -160,9 +162,9 @@ const transactionStore = () => {
 				if (res) {
 					transactionSuccess(hash);
 				}
-			} catch (error) {
-				transactionError('User rejected transaction');
-
+			} catch (e) {
+				const error = e as WriteContractErrorType;
+				transactionError(error.name);
 				console.log('err', error);
 			}
 		}
@@ -191,22 +193,28 @@ const transactionStore = () => {
 				} else {
 					return transactionError('Transaction timed out... You can see more here' + hash);
 				}
-			} catch (error) {
-				console.log(error);
-				return transactionError('User rejected transaction');
+			} catch (e) {
+				const error = e as WriteContractErrorType;
+				return transactionError(error.name);
 			}
 		};
 
 		const writeApproveCyFlareSpend = async () => {
 			awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your WFLR...');
-
-			const hash = await writeErc20Approve(config, {
-				address: cyFlareAddress,
-				args: [cyFlareAddress, assets]
-			});
-			awaitApprovalTx(hash);
-			const res = await waitForTransactionReceipt(config, { hash: hash });
-			return res;
+			try {
+				const hash = await writeErc20Approve(config, {
+					address: cyFlareAddress,
+					args: [cyFlareAddress, assets]
+				});
+				awaitApprovalTx(hash);
+				const res = await waitForTransactionReceipt(config, { hash: hash });
+				return res;
+			} catch (e) {
+				const error = e as WaitForTransactionReceiptErrorType;
+				return transactionError(
+					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
+				);
+			}
 		};
 
 		checkingWalletAllowance('Checking you are approved to unlock your WFLR...');
