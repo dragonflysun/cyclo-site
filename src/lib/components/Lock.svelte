@@ -30,7 +30,7 @@
 
 	const checkBalance = () => {
 		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
-		// assets = bigNumValue;
+		assets = bigNumValue;
 		if ($balancesStore.wFlrBalance < assets) {
 			insufficientFunds = true;
 		} else {
