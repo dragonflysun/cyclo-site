@@ -31,6 +31,6 @@
 	{/if}
 	<button
 		on:click={setValueToMax}
-		class="flex h-full items-center self-stretch bg-white pl-3 pr-2 text-base">MAX</button
+		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base">MAX</button
 	>
 </div>
