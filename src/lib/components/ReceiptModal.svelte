@@ -7,15 +7,22 @@
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { formatEther, parseEther } from 'ethers';
 	import Button from '$lib/components/Button.svelte';
+	import { read } from '$app/server';
+
+	import burnDia from '$lib/images/burn-dia.svg';
 
 	export let receipt: Receipt;
 
 	let erc1155balance = BigInt(receipt.balance);
 	let readableAmountToRedeem: string | number = 0.0;
+	console.log(receipt.tokenAddress, receipt.tokenId);
+
 	let amountToRedeem = BigInt(0);
 	let flrToReceive = BigInt(0);
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
+
+	$: console.log(readableAmountToRedeem);
 
 	const checkBalance = () => {
 		if (readableAmountToRedeem === '') {
@@ -37,7 +44,7 @@
 	}
 </script>
 
-<div class="flex w-full flex-col items-center justify-center gap-6 p-10">
+<div class="flex w-full flex-col items-center justify-center gap-6 p-6">
 	<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
 		<span>NUMBER HELD</span>
 		<div class="flex flex-row gap-4">
@@ -48,7 +55,7 @@
 	</div>
 
 	<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
-		<span>UNLOCK PRICE</span>
+		<span>LOCK-UP PRICE</span>
 
 		<div class="flex flex-row items-center gap-2">
 			<span>{Number(formatEther(tokenId)).toFixed(4)}</span>
@@ -56,7 +63,7 @@
 	</div>
 
 	<div class="flex w-full flex-row items-center justify-between text-2xl font-semibold text-white">
-		<span>REDEEMING</span>
+		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
 			<input
 				min={0}
@@ -65,9 +72,9 @@
 				type="number"
 				bind:value={readableAmountToRedeem}
 				on:change={checkBalance}
-				class="h-full w-64 overflow-ellipsis border-none bg-transparent text-end text-2xl font-semibold text-white outline-none"
+				class="flex h-full w-32 rounded-sm border-none bg-white bg-opacity-90 p-0 text-end text-2xl font-semibold text-blue-500 outline-none"
 			/>
-			<span class="ml-2"> cyFLR</span>
+
 			<Button
 				on:click={() => {
 					amountToRedeem = maxRedeemable;
@@ -78,17 +85,26 @@
 		</div>
 	</div>
 
-	<div class="flex w-full flex-row justify-between text-2xl font-semibold text-white">
-		<span>YOU RECEIVE</span>
+	<div class="flex w-full flex-col items-center justify-center text-2xl font-semibold text-white">
+		<div class="flex w-full flex-row justify-center gap-12 text-right">
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
+			>
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cyFLR</span
+			>
+		</div>
+		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis">
-				{Number(formatEther(flrToReceive)).toFixed(5)} wFLR
+				{Number(formatEther(flrToReceive)).toFixed(5)} WFLR
 			</span>
 		</div>
 	</div>
 
-	<Button
+	<button
+		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-white bg-opacity-20 px-4 py-2 text-2xl font-bold text-white"
 		disabled={buttonDisabled}
 		on:click={() =>
 			transactionStore.initiateUnlockTransaction({
@@ -98,6 +114,11 @@
 				cyFlareAddress: $cyFlareAddress,
 				assets: amountToRedeem,
 				tokenId: receipt.tokenId
-			})}>{'UNLOCK'}</Button
+			})}
+		>{erc1155balance < amountToRedeem
+			? 'INSUFFICIENT RECEIPTS'
+			: $balancesStore.cyFlrBalance < amountToRedeem
+				? 'INSUFFICIENT cyFLR'
+				: 'UNLOCK'}</button
 	>
 </div>

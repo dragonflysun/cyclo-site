@@ -61,7 +61,10 @@
 
 {#if selectedReceipt}
 	<Modal
-		defaultClass="bg-blue-500 border-4 rounded-none inset"
+		outsideclose={true}
+		dismissable={true}
+		on:close={() => (selectedReceipt = null)}
+		defaultClass="bg-primary border-4 rounded-none inset"
 		open={selectedReceipt ? true : false}
 	>
 		<ReceiptModal receipt={selectedReceipt} />
