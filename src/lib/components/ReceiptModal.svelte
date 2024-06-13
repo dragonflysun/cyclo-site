@@ -6,7 +6,6 @@
 	import transactionStore from '$lib/transactionStore';
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { formatEther, parseEther } from 'ethers';
-	import Button from '$lib/components/Button.svelte';
 	import burnDia from '$lib/images/burn-dia.svg';
 	import Input from './Input.svelte';
 

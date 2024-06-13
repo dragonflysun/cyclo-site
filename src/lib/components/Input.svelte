@@ -1,7 +1,6 @@
 <script lang="ts">
 	export let amount: string = '0.0';
 	export let unit: string = '';
-	export let maxValue;
 
 	import { createEventDispatcher } from 'svelte';
 
