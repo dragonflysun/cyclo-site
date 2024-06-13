@@ -134,8 +134,9 @@
 			</div>
 		</div>
 		{#if $signerAddress}
-			<button
+			<Button
 				disabled={insufficientFunds || !assets}
+				customClass="text-xl"
 				on:click={() =>
 					transactionStore.initiateTransaction({
 						signerAddress: $signerAddress,
@@ -143,13 +144,10 @@
 						wrappedFlareAddress: $wrappedFlareAddress,
 						vaultAddress: $erc20PriceOracleReceiptVaultAddress,
 						assets: assets
-					})}
-				class=" w-fit px-6 py-0 text-2xl">{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</button
+					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
 			>
 		{:else}
-			<button on:click={() => $web3Modal.open()} class=" w-fit px-6 py-0 text-2xl"
-				>CONNECT WALLET</button
-			>
+			<Button customClass="text-xl" on:click={() => $web3Modal.open()}>CONNECT WALLET</Button>
 		{/if}
 	</div>
 </Card>

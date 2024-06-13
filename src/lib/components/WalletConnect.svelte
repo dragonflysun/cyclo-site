@@ -6,7 +6,7 @@
 </script>
 
 {#if $targetNetwork}
-	<button class="p-2" on:click={() => $web3Modal.open()} tabindex={0}>
+	<Button on:click={() => $web3Modal.open()} tabindex={0}>
 		{#if $wrongNetwork || !$signerAddress || !$connected}
 			<CloseCircleSolid color="red" />
 			Connect to {$targetNetwork?.name}
@@ -14,5 +14,5 @@
 			<CheckCircleSolid color="green" />
 			Connected to {$targetNetwork?.name}
 		{/if}
-	</button>
+	</Button>
 {/if}

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import balancesStore from '$lib/balancesStore';
 	import type { Receipt } from '$lib/types';
-	import Card from '$lib/components/Card.svelte';
 	import { fade } from 'svelte/transition';
 	import { cyFlareAddress, erc1155Address } from '$lib/stores';
 	import transactionStore from '$lib/transactionStore';

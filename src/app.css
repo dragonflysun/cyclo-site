@@ -23,6 +23,10 @@ input {
 	border-style: inset;
 }
 
+.outset {
+	border-style: outset;
+}
+
 @layer utilities {
 	.border-outset {
 		border-style: outset;

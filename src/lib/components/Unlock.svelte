@@ -4,16 +4,12 @@
 	import { getReceipts } from '$lib/queries/getReceipts';
 	import type { Receipt as ReceiptType } from '$lib/types';
 	import { formatEther } from 'ethers';
-	import Receipt from './ReceiptModal.svelte';
 	import ReceiptsTable from '$lib/components/ReceiptsTable.svelte';
-
-	import cyFlrBalanceStore from '$lib/balancesStore';
 	import Button from '$lib/components/Button.svelte';
 	import balancesStore from '$lib/balancesStore';
 	import { fade } from 'svelte/transition';
 	let receipts: ReceiptType[] = [];
 	let loading = true;
-	let error = false;
 
 	$: if ($signerAddress) {
 		refreshReceipts();
@@ -24,9 +20,7 @@
 		const res = await getReceipts($signerAddress);
 		if (res.items) {
 			loading = false;
-			receipts = res.items;
-		} else {
-			error = true;
+			return (receipts = res.items);
 		}
 	};
 </script>

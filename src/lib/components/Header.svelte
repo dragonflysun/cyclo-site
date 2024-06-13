@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
+	import Button from './Button.svelte';
 </script>
 
 <div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
@@ -22,19 +23,17 @@
 			<img src={logo} alt="Cyclo logo" class="h-10 cursor-pointer" />
 		</a>
 
-		<button
-			class="ml-4 text-white"
-			class:underline={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
+		<Button
+			inset={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
 			on:click={() => {
 				goto(base + '/lock');
-			}}>App</button
+			}}>App</Button
 		>
-		<button
-			class="text-white"
-			class:underline={$page.url.pathname.startsWith('/docs')}
+		<Button
+			inset={$page.url.pathname.startsWith('/docs')}
 			on:click={() => {
 				goto(base + '/docs');
-			}}>Docs</button
+			}}>Docs</Button
 		>
 	</div>
 	<WalletConnect />

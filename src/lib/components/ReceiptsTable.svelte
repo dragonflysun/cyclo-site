@@ -1,7 +1,5 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
-	import Receipt from '$lib/components/ReceiptModal.svelte';
-
 	import {
 		Table,
 		TableBody,
@@ -12,11 +10,8 @@
 		Modal
 	} from 'flowbite-svelte';
 	import type { Receipt as ReceiptType } from '$lib/types';
-	import balancesStore from '$lib/balancesStore';
-	import transactionStore from '$lib/transactionStore';
-	import { signerAddress } from 'svelte-wagmi';
 	import { formatEther } from 'ethers';
-	import { onMount } from 'svelte';
+
 	import ReceiptModal from '$lib/components/ReceiptModal.svelte';
 
 	export let receipts: ReceiptType[];
@@ -31,18 +26,6 @@
 			readableFlrPerReceipt: Number(formatEther(flrPerReceipt)).toFixed(5),
 			readableTotalFlr: Number(formatEther(totalFlr)).toFixed(5)
 		};
-	});
-
-	let balances;
-	let cyFlareAddress;
-	let erc1155Address;
-	let signer;
-
-	onMount(() => {
-		balances = $balancesStore;
-		cyFlareAddress = $cyFlareAddress;
-		erc1155Address = $erc1155Address;
-		signer = $signerAddress;
 	});
 </script>
 
