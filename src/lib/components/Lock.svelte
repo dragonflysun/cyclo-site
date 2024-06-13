@@ -19,22 +19,14 @@
 	let intervalId: ReturnType<typeof setInterval>;
 
 	const checkBalance = () => {
+		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
+		assets = bigNumValue;
 		if ($balancesStore.wFlrBalance < assets) {
-			insufficientFunds = true;
-		} else if (parseEther(amountToLock.toString()) > $balancesStore.wFlrBalance) {
 			insufficientFunds = true;
 		} else {
 			insufficientFunds = false;
 		}
 	};
-
-	$: if (assets) {
-		checkBalance();
-	}
-
-	$: if (+amountToLock === 0) {
-		assets = BigInt(0);
-	}
 
 	onMount(async () => {
 		balancesStore.refreshWFlr($wagmiConfig, $wrappedFlareAddress, $signerAddress as string);

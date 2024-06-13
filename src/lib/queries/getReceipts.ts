@@ -7,7 +7,7 @@ export const getReceipts = async (address: string) => {
 
 	try {
 		const response = await axios.get(query);
-		console.log(response.data);
+
 		response.data.items.map((item: Receipt) => {
 			item.readableTokenId = formatEther(item.tokenId);
 		});
