@@ -12,6 +12,7 @@
 	import Button from './Button.svelte';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
+	import { base } from '$app/paths';
 	export let amountToLock = '0.0';
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0);
@@ -65,7 +66,13 @@
 	<div class="flex w-full flex-col items-center justify-center gap-10">
 		{#if $signerAddress}
 			<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
-				<span>WFLR BALANCE</span>
+				<div class="flex flex-col">
+					<span>WFLR BALANCE</span>
+					<a
+						href={'https://portal.flare.network'}
+						class="cursor-pointer text-xs font-light hover:underline">How do I get WFLR?</a
+					>
+				</div>
 				<div class="flex flex-row gap-4">
 					{#key $balancesStore.wFlrBalance}<span in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
@@ -76,7 +83,12 @@
 		{/if}
 
 		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
-			<span class="flex flex-row items-center gap-1"> WFLR/USD PRICE</span>
+			<div class="flex flex-col">
+				<span>WFLR/USD PRICE</span>
+				<a href={base + '/docs/why-flare'} class="cursor-pointer text-xs font-light hover:underline"
+					>How does Cyclo use the FTSO?</a
+				>
+			</div>
 			{#key priceRatio}
 				<span in:fade={{ duration: 700 }} class="flex flex-row items-center gap-2"
 					>{Number(formatEther(priceRatio.toString())).toFixed(5)}
