@@ -1,11 +1,11 @@
 <script>
-	import { connected, signerAddress, wagmiConfig } from 'svelte-wagmi';
+	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import balancesStore from '$lib/balancesStore';
 	import TransactionModal from '$lib/components/TransactionModal.svelte';
 	import { cyFlareAddress, wrappedFlareAddress, wrongNetwork } from '$lib/stores';
-	import { web3Modal } from 'svelte-wagmi';
+
 	import Button from '$lib/components/Button.svelte';
 
 	$: if ($signerAddress) {

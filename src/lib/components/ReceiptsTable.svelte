@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
-	import Receipt from '$lib/components/Receipt.svelte';
+	import Receipt from '$lib/components/ReceiptModal.svelte';
 
 	import {
 		Table,
@@ -17,9 +17,10 @@
 	import { signerAddress } from 'svelte-wagmi';
 	import { formatEther } from 'ethers';
 	import { onMount } from 'svelte';
+	import ReceiptModal from '$lib/components/ReceiptModal.svelte';
 
 	export let receipts: ReceiptType[];
-	let selectedReceipt: ReceiptType | null = null;
+	let selectedReceipt: ReceiptType | null = receipts[0];
 
 	const mappedReceipts = receipts.map((receipt) => {
 		const flrPerReceipt = 10n ** 36n / BigInt(receipt.tokenId);
@@ -56,7 +57,9 @@
 	<TableBody tableBodyClass="bg-opacity-0 text-white">
 		{#each mappedReceipts as receipt}
 			<TableBodyRow class="bg-opacity-0 text-white">
-				<TableBodyCell class="text-white">{receipt.tokenId}</TableBodyCell>
+				<TableBodyCell class="text-white"
+					>{Number(formatEther(receipt.tokenId)).toFixed(5)}</TableBodyCell
+				>
 				<TableBodyCell class="text-white"
 					>{Number(formatEther(receipt.balance)).toFixed(5)}</TableBodyCell
 				>
@@ -74,7 +77,10 @@
 </Table>
 
 {#if selectedReceipt}
-	<Modal open={selectedReceipt ? true : false}>
-		<Receipt receipt={selectedReceipt} />
+	<Modal
+		defaultClass="bg-blue-500 border-4 rounded-none inset"
+		open={selectedReceipt ? true : false}
+	>
+		<ReceiptModal receipt={selectedReceipt} />
 	</Modal>
 {/if}
