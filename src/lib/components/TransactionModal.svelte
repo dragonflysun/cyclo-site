@@ -23,7 +23,7 @@
 				<div
 					class="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-400 bg-red-100 dark:bg-red-900"
 				>
-					<h1 class="text-2xl">❌</h1>
+					<h1 class="text-lg md:text-2xl">❌</h1>
 				</div>
 				<p class="text-lg font-semibold text-gray-900 dark:text-white">
 					{$transactionStore.status}
@@ -36,7 +36,7 @@
 				<div
 					class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900"
 				>
-					<h1 class="text-2xl">✅</h1>
+					<h1 class="text-lg md:text-2xl">✅</h1>
 				</div>
 				<div class="flex flex-col gap-2 text-left">
 					<p class="text-lg font-semibold text-gray-900 dark:text-white">
