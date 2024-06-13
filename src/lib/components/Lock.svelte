@@ -104,7 +104,7 @@
 						assets = $balancesStore.wFlrBalance;
 						amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
 					}}
-					class="mx-2 p-1 text-base">MAX</button
+					class="ml-4 p-1 text-base">MAX</button
 				>
 			</div>
 		</div>
