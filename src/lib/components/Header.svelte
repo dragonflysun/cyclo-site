@@ -6,7 +6,7 @@
 	import { base } from '$app/paths';
 </script>
 
-<div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
+<div class="flex h-16 w-screen items-center justify-between bg-[#1C02B8] px-4">
 	<div class="flex items-center justify-center gap-6 pr-4">
 		<button
 			on:click={() => {
@@ -24,7 +24,7 @@
 			}}>App</button
 		>
 		<button
-			class="text-white"
+			class="text-white md:ml-4"
 			class:underline={$page.url.pathname.startsWith('/docs')}
 			on:click={() => {
 				goto(base + '/docs');
