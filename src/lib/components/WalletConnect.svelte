@@ -2,6 +2,7 @@
 	import { targetNetwork, wrongNetwork } from '$lib/stores';
 	import { web3Modal, signerAddress, connected } from 'svelte-wagmi';
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
+	import Button from './Button.svelte';
 </script>
 
 {#if $targetNetwork}

@@ -10,9 +10,9 @@
 </script>
 
 <div
-	class="sticky top-0 z-[999] flex h-[var(--header-height)] flex-row items-center gap-x-2 border-b bg-white px-2 py-4 md:p-4"
+	class="sticky top-0 z-[999] flex h-[var(--header-height)] flex-row items-center gap-x-2 border-b bg-white px-2 py-4 md:hidden md:p-4"
 >
-	<div class="block cursor-pointer md:hidden">
+	<div class="block cursor-pointer">
 		<BarsOutline size="xl" withEvents on:click={toggleMenu} data-testid="menu-icon" />
 	</div>
 </div>

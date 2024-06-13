@@ -9,6 +9,7 @@
 
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import Button from './Button.svelte';
 
 	export let amountToLock = '0.0';
 	let priceRatio = BigInt(0);
