@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { signerAddress, web3Modal } from 'svelte-wagmi';
+	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
 	import { getReceipts } from '$lib/queries/getReceipts';
-	import type { Receipt as ReceiptType } from '$lib/types';
+	import type { Receipt, Receipt as ReceiptType } from '$lib/types';
 	import { formatEther } from 'ethers';
 	import ReceiptsTable from '$lib/components/ReceiptsTable.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import balancesStore from '$lib/balancesStore';
 	import { fade } from 'svelte/transition';
+	import { erc1155Address } from '$lib/stores';
+	import transactionStore from '$lib/transactionStore';
 	let receipts: ReceiptType[] = [];
 	let loading = true;
 
@@ -15,13 +17,13 @@
 		refreshReceipts();
 	}
 
-	const refreshReceipts = async () => {
-		if (!$signerAddress) return;
-		const res = await getReceipts($signerAddress);
-		if (res.items) {
+	const refreshReceipts = async (): Promise<Receipt[]> => {
+		if (!$signerAddress) return [];
+		const res = await getReceipts($signerAddress, $erc1155Address, $wagmiConfig);
+		if (res) {
 			loading = false;
-			return (receipts = res.items);
-		}
+			return (receipts = res);
+		} else return [];
 	};
 </script>
 
