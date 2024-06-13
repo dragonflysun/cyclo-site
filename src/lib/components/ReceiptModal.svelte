@@ -6,10 +6,9 @@
 	import transactionStore from '$lib/transactionStore';
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { formatEther, parseEther } from 'ethers';
+	import Button from '$lib/components/Button.svelte';
 
 	export let receipt: Receipt;
-
-	console.log('receipt', receipt);
 
 	let erc1155balance = BigInt(receipt.balance);
 	let readableAmountToRedeem: string | number = 0.0;
@@ -69,12 +68,12 @@
 				class="h-full w-64 overflow-ellipsis border-none bg-transparent text-end text-2xl font-semibold text-white outline-none"
 			/>
 			<span class="ml-2"> cyFLR</span>
-			<button
+			<Button
 				on:click={() => {
 					amountToRedeem = maxRedeemable;
 					readableAmountToRedeem = Number(formatEther(maxRedeemable.toString())).toFixed(5);
 				}}
-				class="ml-4 p-1 text-base">MAX</button
+				class="ml-4 p-1 text-base">MAX</Button
 			>
 		</div>
 	</div>

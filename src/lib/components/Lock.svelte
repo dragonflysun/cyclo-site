@@ -91,12 +91,12 @@
 					class="flex h-full w-fit rounded-sm border-none bg-white bg-opacity-90 p-0 text-end text-2xl font-semibold text-blue-500 outline-none"
 				/>
 				<span class="ml-2"> FLR</span>
-				<button
+				<Button
 					on:click={() => {
 						assets = $balancesStore.wFlrBalance;
 						amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
 					}}
-					class="ml-4 p-1 text-base">MAX</button
+					class="ml-4 p-1 text-base">MAX</Button
 				>
 			</div>
 		</div>
