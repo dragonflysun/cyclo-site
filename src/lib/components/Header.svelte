@@ -4,11 +4,10 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
-	import Button from '$lib/components/Button.svelte';
 </script>
 
 <div class="flex h-16 w-screen items-center justify-between bg-primary px-4">
-	<div class="flex items-center justify-center gap-4">
+	<div class="flex items-center justify-center gap-6">
 		<a
 			href="/"
 			on:keydown={(e) => {
@@ -23,19 +22,19 @@
 			<img src={logo} alt="Cyclo logo" class="h-10 cursor-pointer" />
 		</a>
 
-		<Button
-			class="w-24"
-			inset={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
+		<button
+			class="ml-4 text-white"
+			class:underline={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
 			on:click={() => {
 				goto(base + '/lock');
-			}}>App</Button
+			}}>App</button
 		>
-		<Button
-			class="w-24"
-			inset={$page.url.pathname.startsWith('/docs')}
+		<button
+			class="text-white"
+			class:underline={$page.url.pathname.startsWith('/docs')}
 			on:click={() => {
 				goto(base + '/docs');
-			}}>Docs</Button
+			}}>Docs</button
 		>
 	</div>
 	<WalletConnect />
