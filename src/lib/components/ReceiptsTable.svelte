@@ -35,7 +35,7 @@
 		<TableHeadCell>Number Held</TableHeadCell>
 		<TableHeadCell>Locked FLR/Receipt</TableHeadCell>
 		<TableHeadCell>Total Locked FLR</TableHeadCell>
-		<TableHeadCell>Redeem</TableHeadCell>
+		<TableHeadCell>Action</TableHeadCell>
 	</TableHead>
 	<TableBody tableBodyClass="bg-opacity-0 text-white">
 		{#each mappedReceipts as receipt}
@@ -52,7 +52,7 @@
 				</TableBodyCell>
 				<TableBodyCell class="text-white">{receipt.readableTotalFlr}</TableBodyCell>
 				<TableBodyCell class="text-white"
-					><Button on:click={() => (selectedReceipt = receipt)}>Redeem</Button></TableBodyCell
+					><Button on:click={() => (selectedReceipt = receipt)}>REDEEM</Button></TableBodyCell
 				>
 			</TableBodyRow>
 		{/each}

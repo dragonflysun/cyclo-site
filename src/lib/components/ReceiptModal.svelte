@@ -13,14 +13,11 @@
 
 	let erc1155balance = BigInt(receipt.balance);
 	let readableAmountToRedeem: string | number = 0.0;
-	console.log(receipt.tokenAddress, receipt.tokenId);
 
 	let amountToRedeem = BigInt(0);
 	let flrToReceive = BigInt(0);
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
-
-	$: console.log(readableAmountToRedeem);
 
 	const checkBalance = () => {
 		if (readableAmountToRedeem === '') {
@@ -40,6 +37,8 @@
 	} else {
 		amountToRedeem = BigInt(0);
 	}
+
+	$: console.log($balancesStore.cyFlrBalance, erc1155balance, amountToRedeem, flrToReceive);
 </script>
 
 <div class="flex w-full flex-col items-center justify-center gap-6 p-6">

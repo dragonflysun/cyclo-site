@@ -6,7 +6,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
-
+	import Input from '$lib/components/Input.svelte';
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import Button from './Button.svelte';
@@ -80,16 +80,8 @@
 		>
 			<span class="align-center content-center">LOCKING</span>
 			<div class="flex flex-row items-center">
-				<input
-					min={0}
-					placeholder="0.0"
-					step="0.1"
-					on:change={checkBalance}
-					type="number"
-					bind:value={amountToLock}
-					class="flex h-full w-fit rounded-sm border-none bg-white bg-opacity-90 p-0 text-end text-2xl font-semibold text-blue-500 outline-none"
-				/>
-				<span class="ml-2"> FLR</span>
+				<Input on:change={checkBalance} bind:amount={amountToLock} unit={'FLR'} />
+
 				<Button
 					on:click={() => {
 						assets = $balancesStore.wFlrBalance;

@@ -10,8 +10,6 @@
 
 	import { flare } from '@wagmi/core/chains';
 
-	$: console.log($wagmiConfig);
-
 	onMount(async () => {
 		if (browser && window.navigator) {
 			const erckit = defaultConfig({
