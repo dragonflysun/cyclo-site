@@ -10,7 +10,8 @@
 	import { erc20PriceOracleReceiptVaultAddress, wrappedFlareAddress } from '$lib/stores';
 	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import Button from './Button.svelte';
-
+	import mintDia from '$lib/images/mint-dia.svg';
+	import ftso from '$lib/images/ftso.svg';
 	export let amountToLock = '0.0';
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0);
@@ -61,7 +62,7 @@
 </script>
 
 <Card size="lg">
-	<div class="flex w-full flex-col items-center justify-center gap-6">
+	<div class="flex w-full flex-col items-center justify-center gap-10">
 		{#if $signerAddress}
 			<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
 				<span>WFLR BALANCE</span>
@@ -115,9 +116,28 @@
 			/>
 		</div>
 
-		<div class=" flex w-full flex-row justify-between text-2xl font-semibold text-white">
-			<span>RECEIVING</span>
-			<div class="flex flex-row items-center gap-2">
+		<div class="flex flex-col gap-2">
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-2xl font-semibold text-white"
+			>
+				<span>{amountToLock}</span>
+
+				<span>FLR</span>
+			</div>
+
+			<div class="flex w-full">
+				<div class="flex w-1/4 flex-col items-end justify-center pb-12 pr-2 text-center text-white">
+					<img src={ftso} alt="ftso" class="w-1/2" />
+					{Number(formatEther(priceRatio.toString())).toFixed(5)}
+				</div>
+				<img src={mintDia} alt="diagram" class="w-1/2" />
+
+				<div class="w-1/4"></div>
+			</div>
+
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-2xl font-semibold text-white"
+			>
 				{#key priceRatio}
 					<span in:fade={{ duration: 700 }}
 						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
@@ -126,10 +146,11 @@
 				<span>cyFLR</span>
 			</div>
 		</div>
+
 		{#if $signerAddress}
 			<Button
 				disabled={insufficientFunds || !assets}
-				customClass="text-xl"
+				customClass="text-2xl w-full bg-white text-primary"
 				on:click={() =>
 					transactionStore.initiateTransaction({
 						signerAddress: $signerAddress,
