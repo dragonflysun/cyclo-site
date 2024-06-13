@@ -26,9 +26,11 @@
 		checkBalance();
 	}
 
+	$: console.log('amount to mint', assets, 'your balance', $balancesStore.wFlrBalance);
+
 	const checkBalance = () => {
 		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
-		assets = bigNumValue;
+		// assets = bigNumValue;
 		if ($balancesStore.wFlrBalance < assets) {
 			insufficientFunds = true;
 		} else {
@@ -168,7 +170,7 @@
 				disabled={insufficientFunds || !assets}
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				on:click={() =>
-					transactionStore.initiateTransaction({
+					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						wrappedFlareAddress: $wrappedFlareAddress,
