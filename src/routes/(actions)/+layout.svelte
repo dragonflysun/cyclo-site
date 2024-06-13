@@ -21,7 +21,6 @@
 	{:else if $wrongNetwork}
 		<Button on:click={() => $web3Modal.open()}>Connect to Flare</Button>
 	{:else}
-		{@const hi = console.log($page.url.pathname === base + '/lock')}
 		<div class="flex h-fit max-w-prose gap-6">
 			<Button
 				class="w-32"
