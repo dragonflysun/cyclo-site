@@ -62,9 +62,9 @@
 				<div
 					class="bg-primary-100 dark:bg-primary-900 mb-4 flex h-16 w-16 items-center justify-center rounded-full"
 				>
-					<Spinner color="blue" size={15} />
+					<Spinner color="blue" size={10} />
 				</div>
-				<p class="text-lg font-semibold text-gray-900 dark:text-white">
+				<p class="text-center text-lg font-semibold text-gray-900 dark:text-white">
 					{$transactionStore.message || $transactionStore.status}
 				</p>
 			{/if}
