@@ -15,7 +15,7 @@
 	class="flex h-full w-fit items-center justify-center rounded-sm border-2 border-white text-lg font-semibold text-primary outline-none md:text-2xl"
 >
 	<input
-		class="m-0 w-24 border-none bg-primary p-0 text-right text-lg text-white outline-none focus:ring-0 md:w-40 md:text-2xl"
+		class="mr-2 w-24 border-none bg-primary p-0 text-right text-lg text-white outline-none [appearance:textfield] focus:ring-0 md:w-40 md:text-2xl [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
 		{...$$restProps}
 		on:change
 		min={0}
