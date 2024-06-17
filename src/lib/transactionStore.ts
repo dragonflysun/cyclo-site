@@ -28,7 +28,7 @@ export enum TransactionStatus {
 	ERROR = 'Something went wrong'
 }
 
-export type InitiateTransactionArgs = {
+export type initiateLockTransactionArgs = {
 	signerAddress: string | null;
 	wrappedFlareAddress: Hex;
 	vaultAddress: Hex;
@@ -91,12 +91,12 @@ const transactionStore = () => {
 			status: TransactionStatus.PENDING_UNLOCK,
 			message: ''
 		}));
-	const transactionSuccess = (hash: string) =>
+	const transactionSuccess = (hash: string, message?: string) =>
 		update((state) => ({
 			...state,
 			status: TransactionStatus.SUCCESS,
 			hash: hash,
-			message: ''
+			message: message || ''
 		}));
 	const transactionError = (message: string) =>
 		update((state) => ({
@@ -105,13 +105,13 @@ const transactionStore = () => {
 			error: message
 		}));
 
-	const initiateTransaction = async ({
+	const initiateLockTransaction = async ({
 		signerAddress,
 		config,
 		wrappedFlareAddress,
 		vaultAddress,
 		assets
-	}: InitiateTransactionArgs) => {
+	}: initiateLockTransactionArgs) => {
 		checkingWalletAllowance();
 		const data = await readErc20Allowance(config, {
 			address: wrappedFlareAddress,
@@ -140,7 +140,10 @@ const transactionStore = () => {
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
 					if (res) {
-						transactionSuccess(hash);
+						transactionSuccess(
+							hash,
+							"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
+						);
 					}
 				}
 			} catch (e) {
@@ -271,7 +274,7 @@ const transactionStore = () => {
 	return {
 		subscribe,
 		reset,
-		initiateTransaction,
+		initiateLockTransaction,
 		initiateUnlockTransaction,
 		awaitWalletConfirmation,
 		awaitApprovalTx,

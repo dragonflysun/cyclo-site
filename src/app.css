@@ -32,8 +32,7 @@ body {
 	}
 }
 
-.card,
-.table {
+.card {
 	@apply border-outset flex  flex-col items-center gap-6 rounded-none border-4 border-white bg-primary p-4 shadow-md;
 	border-style: outset;
 }
