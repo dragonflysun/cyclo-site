@@ -15,4 +15,4 @@ So using Cyclo you bear (almost) no counterparty risk.
 
 All you have done is created your own ledger, as of today gold is this price, set aside my FLR formyself into equal credit/debit halves to be reconciled again later.
 
-Without counterparties the only risk other than smart-contracts and regulation comes from price fluctuations, and nobody is exposed to the price until they attempt to transfer/trade. You might sell the NFT and keep the cFLR. Until you sell there is no risk.
+Without counterparties the only risk other than smart-contracts and regulation comes from price fluctuations, and nobody is exposed to the price until they attempt to transfer/trade. You might sell the NFT and keep the cyFLR. Until you sell there is no risk.
