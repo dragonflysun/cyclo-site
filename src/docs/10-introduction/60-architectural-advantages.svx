@@ -9,21 +9,21 @@ Notably Cyclo avoids or mitigates the following problems found in various stable
 
 - **Liquidation**: Cyclo will never liquidate user's FLR assets for any reason
 - **Centralisation**: There are no admin keys or risk parameters to be tuned, not even a DAO
-- **Under Collateralization**: There is a strict overcollateralization of all FLR collateral and circulating cFLR
-- **Tax complexity**: Minting cFLR is technically akin to wrapping FLR to wFLR, not trading
-- **Gas costs**: Minting/burning cFLR is cheaper than an AMM trade
-- **USD regulations**: cFLR references the FTSO oracle price of FLR not the US dollar, there is no "issuer"
-- **Supply constraints**: cFLR has an unbounded elastic supply
-- **Not time based**: Unlike an option, cFLR never expires and can be held as normal tokens indefinitely
-- **Non-custodial**: Like wrapping wETH, all cFLR is simply a deposit/withdraw to the smart contract
+- **Under Collateralization**: There is a strict overcollateralization of all FLR collateral and circulating cyFLR
+- **Tax complexity**: Minting cyFLR is technically akin to wrapping FLR to wFLR, not trading
+- **Gas costs**: Minting/burning cyFLR is cheaper than an AMM trade
+- **USD regulations**: cyFLR references the FTSO oracle price of FLR not the US dollar, there is no "issuer"
+- **Supply constraints**: cyFLR has an unbounded elastic supply
+- **Not time based**: Unlike an option, cyFLR never expires and can be held as normal tokens indefinitely
+- **Non-custodial**: Like wrapping wETH, all cyFLR is simply a deposit/withdraw to the smart contract
 - **Simplicity**: The entire contract is about 100 lines of code beyond Open Zeppelin standard contracts
-- **Leverage**: The protocol allows users who increase cFLR supply to leverage FLR
+- **Leverage**: The protocol allows users who increase cyFLR supply to leverage FLR
 - **Collateral risk**: Only FLR is allowed as collateral
 - **Front-running/MEV**: No trading or other intrablock hysteresis involved in locking/unlocking
-- **Opportunity cost**: An cFLR mint is fully reversible at any time, unlike selling stables at a local bottom
+- **Opportunity cost**: An cyFLR mint is fully reversible at any time, unlike selling stables at a local bottom
 - **No counterparty**: The smart contracts facilitate internal accounting for each user's own assets for themselves
 - **No KYC**: Users mint/burn tokens for themselves directly on-chain
 - **No fees**: There are no fees for mint or burn
 - **No rebase**: The supply is elastic based on supply/demand rather than algorithmic price targets
 - **Licensing**: Cyclo code is released as public domain using the unlicense
-- **No upgrades**: cFLR can only be migrated to a hypothetical new contract by each user
+- **No upgrades**: cyFLR can only be migrated to a hypothetical new contract by each user

@@ -24,6 +24,6 @@ No.
 
 By avoiding the explicit goal of "stability" or "a peg," and removing all governance or external parameters, expectations, or price goals, there is no need to liquidate any FLR in the Cyclo ecosystem.
 
-The ERC-1155 tokens minted and burned for every ERC-20 token minted and burned guarantee over-collateralization of the system as a whole, without liquidating any individual token holder. If everyone abandoned all their FLR, cFLR would also become valueless. Conversely, a "reverse bank run" would increase cFLR's value, incentivizing mints.
+The ERC-1155 tokens minted and burned for every ERC-20 token minted and burned guarantee over-collateralization of the system as a whole, without liquidating any individual token holder. If everyone abandoned all their FLR, cyFLR would also become valueless. Conversely, a "reverse bank run" would increase cyFLR's value, incentivizing mints.
 
 This requires long-term thinking and conviction in FLR itself, accepting short-term price volatility. However, users must believe in FLR's value to trust significant assets to a smart contract on the Flare network.

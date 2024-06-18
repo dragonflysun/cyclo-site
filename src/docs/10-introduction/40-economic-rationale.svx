@@ -9,18 +9,18 @@ published: true
 
 The Cyclo ecosystem is designed to create a self-regulating economic model by leveraging competing incentives, resulting in cyclical price movements.
 
-- **Price Closer to $1:** When the cFLR price is near $1, new mints are incentivized, increasing leverage by depositing FLR. This can further increase leverage by looping mints (selling minted cFLR for more FLR and then depositing the new FLR to mint more cFLR), applying downward pressure on cFLR price.
-- **Price Approaching $0:** As cFLR approaches $0, Receipt holders are incentivized to buy back cFLR cheaply and burn it to unlock their originally deposited FLR.  At the same time, the leverage achieved by new mints decreases because of the lower cFLR price, which means there is also less cFLR being minted. Together these apply upward pressure on the price of cFLR.
+- **Price Closer to $1:** When the cyFLR price is near $1, new mints are incentivized, increasing leverage by depositing FLR. This can further increase leverage by looping mints (selling minted cyFLR for more FLR and then depositing the new FLR to mint more cyFLR), applying downward pressure on cyFLR price.
+- **Price Approaching $0:** As cyFLR approaches $0, Receipt holders are incentivized to buy back cyFLR cheaply and burn it to unlock their originally deposited FLR.  At the same time, the leverage achieved by new mints decreases because of the lower cyFLR price, which means there is also less cyFLR being minted. Together these apply upward pressure on the price of cyFLR.
 
 <img src={priceMovement} alt="Price Movement" class="w-1/2 mx-auto" />
 
-### Price Ceiling for cFLR
-The cFLR price is inherently capped at $1 due to the minting process. If the cFLR price exceeds $1, arbitrage opportunities will drive the price back down to $1.
+### Price Ceiling for cyFLR
+The cyFLR price is inherently capped at $1 due to the minting process. If the cyFLR price exceeds $1, arbitrage opportunities will drive the price back down to $1.
 
-For example, if the cFLR price were to ever exceed $1, anyone could immediately deposit X FLR to mint Y cFLR and sell the minted cFLR for more than X FLR, causing an economic infinite loop until the cFLR price dropped back to $1.
+For example, if the cyFLR price were to ever exceed $1, anyone could immediately deposit X FLR to mint Y cyFLR and sell the minted cyFLR for more than X FLR, causing an economic infinite loop until the cyFLR price dropped back to $1.
 
 ### Floor Price Mechanism
-While cFLR's price could theoretically approach zero, a natural equilibrium above zero will emerge in practice. Users buying back cFLR at lower prices to redeem their FLR will create demand and support its price.
+While cyFLR's price could theoretically approach zero, a natural equilibrium above zero will emerge in practice. Users buying back cyFLR at lower prices to redeem their FLR will create demand and support its price.
 
 ### Impact of Liquidity
-Higher liquidity in the cFLR/FLR pair on exchanges allows for greater supply, as each mint/burn will have a smaller impact on the cFLR price.
+Higher liquidity in the cyFLR/FLR pair on exchanges allows for greater supply, as each mint/burn will have a smaller impact on the cyFLR price.
