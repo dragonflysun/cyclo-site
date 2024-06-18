@@ -30,33 +30,29 @@
 </script>
 
 <Table
-	divClass="border-outset flex flex-col items-center gap-6 rounded-none border-4 border-white bg-primary p-1 md:p-4 shadow-md"
+	divClass="border-outset flex flex-col items-center gap-6 rounded-none border-4 border-white bg-primary p-1 md:p-4 shadow-md max-w-full"
 >
-	<TableHead class="bg-opacity-0 bg-none p-1 text-white md:p-4">
+	<TableHead class="bg-opacity-0 bg-none p-1 text-white md:p-4 [&_th]:px-2 [&_th]:md:px-6">
 		<TableHeadCell>Locked Price</TableHeadCell>
 		<TableHeadCell>Number Held</TableHeadCell>
-		<TableHeadCell>Locked FLR/Receipt</TableHeadCell>
-		<TableHeadCell>Total Locked FLR</TableHeadCell>
-		<TableHeadCell>Action</TableHeadCell>
+		<TableHeadCell class="hidden md:block">Locked WFLR/Receipt</TableHeadCell>
+		<TableHeadCell>Total Locked WFLR</TableHeadCell>
+		<TableHeadCell></TableHeadCell>
 	</TableHead>
-	<TableBody tableBodyClass="bg-opacity-0 text-white p-1">
+	<TableBody
+		tableBodyClass="bg-opacity-0 [&_td]:text-white p-1 [&_td]:text-left [&_td]:px-2 [&_td]:md:px-6"
+	>
 		{#each mappedReceipts as receipt}
-			<TableBodyRow class="bg-opacity-0 text-white">
-				<TableBodyCell class="px-2 py-4 text-white md:px-6"
-					>{Number(formatEther(receipt.tokenId)).toFixed(5)}</TableBodyCell
-				>
-				<TableBodyCell class="px-2 py-4 text-white md:px-6"
-					>{Number(formatEther(receipt.balance)).toFixed(5)}</TableBodyCell
-				>
+			<TableBodyRow class="bg-opacity-0 ">
+				<TableBodyCell>{Number(formatEther(receipt.tokenId)).toFixed(5)}</TableBodyCell>
+				<TableBodyCell>{Number(formatEther(receipt.balance)).toFixed(5)}</TableBodyCell>
 
-				<TableBodyCell class="px-2 py-4 text-white md:px-6">
+				<TableBodyCell class="hidden md:table-cell">
 					{receipt.readableFlrPerReceipt}
 				</TableBodyCell>
-				<TableBodyCell class="px-2 py-4 text-white md:px-6"
-					>{receipt.readableTotalFlr}</TableBodyCell
-				>
-				<TableBodyCell class="px-2 py-4 text-white md:px-6"
-					><Button on:click={() => (selectedReceipt = receipt)}>REDEEM</Button></TableBodyCell
+				<TableBodyCell class="">{receipt.readableTotalFlr}</TableBodyCell>
+				<TableBodyCell class=""
+					><Button on:click={() => (selectedReceipt = receipt)}>Redeem</Button></TableBodyCell
 				>
 			</TableBodyRow>
 		{/each}

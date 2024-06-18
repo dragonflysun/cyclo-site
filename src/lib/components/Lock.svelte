@@ -114,7 +114,6 @@
 			{/key}
 		</div>
 
-		<!-- How much you want to gild -->
 		<div
 			class=" itens-center flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 		>
@@ -128,26 +127,27 @@
 				}}
 				bind:amount={amountToLock}
 				maxValue={$balancesStore.wFlrBalance}
-				unit={'FLR'}
+				unit={'WFLR'}
 			/>
 		</div>
 
-		<div class="flex flex-col gap-2">
+		<div class="flex w-full flex-col gap-2">
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				<span>{amountToLock}</span>
 
-				<span>FLR</span>
+				<span>WFLR</span>
 			</div>
 
 			<div class="flex w-full">
-				<div class="flex w-1/4 flex-col items-end justify-center pb-12 pr-2 text-center text-white">
+				<div
+					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white"
+				>
 					<img src={ftso} alt="ftso" class="w-1/2" />
 					{Number(formatEther(priceRatio.toString())).toFixed(5)}
 				</div>
 				<img src={mintDia} alt="diagram" class="w-1/2" />
-
 				<div class="w-1/4"></div>
 			</div>
 
