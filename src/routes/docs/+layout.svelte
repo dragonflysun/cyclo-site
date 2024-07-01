@@ -20,7 +20,7 @@
 		data-testid="menu-icon"
 	/>
 </div>
-<div class="z-0 flex flex-col md:flex-row">
+<div class="z-0 flex flex-col bg-white md:flex-row">
 	<div
 		data-testid="side-menu"
 		class:left-0={mobileMenuOpen}
