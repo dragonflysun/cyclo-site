@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Footer from './../lib/components/Footer.svelte';
 	import '../app.css';
 	import { defaultConfig, wagmiConfig } from 'svelte-wagmi';
 	import { injected, walletConnect } from '@wagmi/connectors';
@@ -27,5 +28,6 @@
 	<main>
 		<Header />
 		<slot></slot>
+		<Footer />
 	</main>
 {/if}
