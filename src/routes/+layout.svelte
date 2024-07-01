@@ -25,9 +25,11 @@
 </script>
 
 {#if $wagmiConfig}
-	<main>
+	<div class="flex min-h-screen flex-col">
 		<Header />
-		<slot></slot>
+		<main class="flex-grow bg-[#1C02B8]">
+			<slot></slot>
+		</main>
 		<Footer />
-	</main>
+	</div>
 {/if}

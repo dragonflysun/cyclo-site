@@ -1,23 +1,50 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
 	import { readErc20TotalSupply } from '../../generated';
 	import { onMount } from 'svelte';
-	import { wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
 	import { wagmiConfig } from 'svelte-wagmi';
+	import { formatEther } from 'ethers';
+	import { formatNumberWithAbbreviations } from '$lib/methods';
 	let wrappedFlareSupply;
-	const getWrappedFlareSupply = async () => {
-		const wrappedFlareSupply = await readErc20TotalSupply($wagmiConfig, {
+	let cyFlareSupply;
+
+	const getCyFlrSupply = async () => {
+		const data = await readErc20TotalSupply($wagmiConfig, {
+			address: $cyFlareAddress
+		});
+		console.log('cyFlr', data);
+
+		return (cyFlareSupply = data);
+	};
+
+	const getWrappedFlrSupply = async () => {
+		const data = await readErc20TotalSupply($wagmiConfig, {
 			address: $wrappedFlareAddress
 		});
-		return wrappedFlareSupply;
+		console.log('wrapped', data);
+		return (wrappedFlareSupply = data);
 	};
 
 	onMount(async () => {
-		await getWrappedFlareSupply();
+		await getCyFlrSupply();
+		await getWrappedFlrSupply();
 	});
 
-	$: console.log(wrappedFlareSupply);
+	$: readableSFLRSupply = wrappedFlareSupply
+		? formatNumberWithAbbreviations(formatEther(wrappedFlareSupply))
+		: '';
+
+	$: readableCyFLRSupply = cyFlareSupply
+		? formatNumberWithAbbreviations(formatEther(cyFlareSupply))
+		: '';
 </script>
 
-<footer class="h-24 bg-none">
-	<p>This is the footer component.</p>
+<footer class="flex h-16 flex-col justify-center bg-[#1C02B8] px-2 text-white">
+	{#if readableCyFLRSupply}
+		<div class="flex gap-2" in:fade>Total cyFLR supply <span>{readableCyFLRSupply}</span></div>
+	{/if}
+	{#if readableSFLRSupply}
+		<div class="flex gap-2" in:fade>Total sFLR supply <span>{readableSFLRSupply}</span></div>
+	{/if}
 </footer>
