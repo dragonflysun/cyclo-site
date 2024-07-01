@@ -10,7 +10,7 @@
 	import { base } from '$app/paths';
 
 	$: if ($signerAddress) {
-		balancesStore.refreshWFlr($wagmiConfig, $wrappedFlareAddress, $signerAddress);
+		balancesStore.refreshSflr($wagmiConfig, $wrappedFlareAddress, $signerAddress);
 		balancesStore.refreshCyFlr($wagmiConfig, $cyFlareAddress, $signerAddress);
 	}
 </script>

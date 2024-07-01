@@ -19,11 +19,11 @@ export const ONE = BigInt('1000000000000000000');
 
 export enum TransactionStatus {
 	IDLE = 'Idle',
-	CHECKING_ALLOWANCE = 'Checking your approved wFLR spend...',
+	CHECKING_ALLOWANCE = 'Checking your approved sFLR spend...',
 	PENDING_WALLET = 'Waiting for wallet confirmation...',
-	PENDING_APPROVAL = 'Approving WFLR spend...',
-	PENDING_LOCK = 'Locking WFLR...',
-	PENDING_UNLOCK = 'Unlocking WFLR...',
+	PENDING_APPROVAL = 'Approving SFLR spend...',
+	PENDING_LOCK = 'Locking SFLR...',
+	PENDING_UNLOCK = 'Unlocking SFLR...',
 	SUCCESS = 'Success! Transaction confirmed',
 	ERROR = 'Something went wrong'
 }
@@ -119,7 +119,7 @@ const transactionStore = () => {
 		});
 
 		if (data < assets) {
-			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your WFLR...');
+			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your SFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
 					address: wrappedFlareAddress,
@@ -130,7 +130,7 @@ const transactionStore = () => {
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 
 				if (res) {
-					awaitWalletConfirmation('Awaiting wallet confirmation to lock your WFLR...');
+					awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
 
 					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
 						address: vaultAddress,
@@ -142,7 +142,7 @@ const transactionStore = () => {
 					if (res) {
 						transactionSuccess(
 							hash,
-							"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
+							"Congrats! You've successfully locked your SFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
 						);
 					}
 				}
@@ -154,7 +154,7 @@ const transactionStore = () => {
 			}
 		} else {
 			try {
-				awaitWalletConfirmation('Awaiting wallet confirmation to lock your WFLR...');
+				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
 					address: vaultAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
@@ -183,7 +183,7 @@ const transactionStore = () => {
 	}: InitiateUnlockTransactionArgs) => {
 		const writeUnlock = async () => {
 			try {
-				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your WFLR...');
+				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your SFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
 					address: cyFlareAddress,
 					args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
@@ -203,7 +203,7 @@ const transactionStore = () => {
 		};
 
 		const writeApproveCyFlareSpend = async () => {
-			awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your WFLR...');
+			awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your SFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
 					address: cyFlareAddress,
@@ -220,7 +220,7 @@ const transactionStore = () => {
 			}
 		};
 
-		checkingWalletAllowance('Checking you are approved to unlock your WFLR...');
+		checkingWalletAllowance('Checking you are approved to unlock your SFLR...');
 
 		const isERC1155Approved = await readErc1155IsApprovedForAll(config, {
 			address: erc1155Address,
@@ -229,7 +229,7 @@ const transactionStore = () => {
 
 		if (!isERC1155Approved) {
 			try {
-				awaitWalletConfirmation('You need to approve the cyFLR contract to unlock your WFLR...');
+				awaitWalletConfirmation('You need to approve the cyFLR contract to unlock your SFLR...');
 				const hash = await writeErc1155SetApprovalForAll(config, {
 					address: erc1155Address,
 					args: [cyFlareAddress, true]

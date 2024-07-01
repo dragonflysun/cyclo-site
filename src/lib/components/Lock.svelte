@@ -29,7 +29,7 @@
 	const checkBalance = () => {
 		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
 		assets = bigNumValue;
-		if ($balancesStore.wFlrBalance < assets) {
+		if ($balancesStore.sFlrBalance < assets) {
 			insufficientFunds = true;
 		} else {
 			insufficientFunds = false;
@@ -71,24 +71,24 @@
 				class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>WFLR BALANCE</span>
+					<span>SFLR BALANCE</span>
 					<a
 						href={'https://portal.flare.network'}
-						class="cursor-pointer text-xs font-light hover:underline">How do I get WFLR?</a
+						class="cursor-pointer text-xs font-light hover:underline">How do I get SFLR?</a
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.wFlrBalance}<span in:fade={{ duration: 700 }}
-							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
+					{#key $balancesStore.sFlrBalance}<span in:fade={{ duration: 700 }}
+							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
-					<span>WFLR</span>
+					<span>SFLR</span>
 				</div>
 			</div>
 		{/if}
 
 		<div class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<div class="flex flex-col">
-				<span>WFLR/USD PRICE</span>
+				<span>SFLR/USD PRICE</span>
 				<a href={base + '/docs/why-flare'} class="cursor-pointer text-xs font-light hover:underline"
 					>How does Cyclo use the FTSO?</a
 				>
@@ -122,12 +122,12 @@
 			<Input
 				on:change={checkBalance}
 				on:setValueToMax={() => {
-					assets = $balancesStore.wFlrBalance;
-					amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
+					assets = $balancesStore.sFlrBalance;
+					amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
 				}}
 				bind:amount={amountToLock}
-				maxValue={$balancesStore.wFlrBalance}
-				unit={'WFLR'}
+				maxValue={$balancesStore.sFlrBalance}
+				unit={'SFLR'}
 			/>
 		</div>
 
@@ -137,7 +137,7 @@
 			>
 				<span>{amountToLock}</span>
 
-				<span>WFLR</span>
+				<span>SFLR</span>
 			</div>
 
 			<div class="flex w-full">
@@ -174,7 +174,7 @@
 						wrappedFlareAddress: $wrappedFlareAddress,
 						vaultAddress: $cyFlareAddress,
 						assets: assets
-					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
+					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
 			>
 		{:else}
 			<Button customClass="text-lg" on:click={() => $web3Modal.open()}>CONNECT WALLET</Button>
