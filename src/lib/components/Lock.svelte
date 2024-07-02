@@ -172,6 +172,7 @@
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						wrappedFlareAddress: $wrappedFlareAddress,
+						cyFlareAddress: $cyFlareAddress,
 						vaultAddress: $cyFlareAddress,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button

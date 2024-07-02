@@ -2,12 +2,13 @@
 	import balancesStore from '$lib/balancesStore';
 	import type { Receipt } from '$lib/types';
 	import { fade } from 'svelte/transition';
-	import { cyFlareAddress, erc1155Address } from '$lib/stores';
+	import { cyFlareAddress, erc1155Address, wrappedFlareAddress } from '$lib/stores';
 	import transactionStore from '$lib/transactionStore';
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { formatEther, parseEther } from 'ethers';
 	import burnDia from '$lib/images/burn-dia.svg';
 	import Input from './Input.svelte';
+	import Button from './Button.svelte';
 
 	export let receipt: Receipt;
 
@@ -94,7 +95,7 @@
 		</div>
 	</div>
 
-	<button
+	<Button
 		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white md:text-2xl"
 		disabled={buttonDisabled}
 		on:click={() =>
@@ -102,6 +103,7 @@
 				signerAddress: $signerAddress,
 				config: $wagmiConfig,
 				erc1155Address: $erc1155Address,
+				wrappedFlareAddress: $wrappedFlareAddress,
 				cyFlareAddress: $cyFlareAddress,
 				assets: amountToRedeem,
 				tokenId: receipt.tokenId
@@ -110,6 +112,6 @@
 			? 'INSUFFICIENT RECEIPTS'
 			: $balancesStore.cyFlrBalance < amountToRedeem
 				? 'INSUFFICIENT cyFLR'
-				: 'UNLOCK'}</button
+				: 'UNLOCK'}</Button
 	>
 </div>
