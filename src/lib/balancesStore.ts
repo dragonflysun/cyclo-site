@@ -14,7 +14,6 @@ const cyFlrBalanceStore = () => {
 	const reset = () => set(initialState);
 
 	const refreshWFlr = async (config: Config, wFlrAddress: Hex, signerAddress: string) => {
-		console.log('refreshing WFLR balance');
 		const newWFlrBalance = await readErc20BalanceOf(config, {
 			address: wFlrAddress,
 			args: [signerAddress as Hex]
@@ -27,8 +26,6 @@ const cyFlrBalanceStore = () => {
 	};
 
 	const refreshCyFlr = async (config: Config, cyFlrAddress: Hex, signerAddress: string) => {
-		console.log('refreshing CYFLR balance');
-
 		const newCyFlrBalance = await readErc20BalanceOf(config, {
 			address: cyFlrAddress,
 			args: [signerAddress as Hex]
