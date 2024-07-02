@@ -143,7 +143,7 @@ const transactionStore = () => {
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
 					if (res) {
-						balancesStore.refreshWFlr(config, cyFlareAddress, signerAddress as string);
+						balancesStore.refreshWFlr(config, wrappedFlareAddress, signerAddress as string);
 						transactionSuccess(
 							hash,
 							"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
