@@ -147,7 +147,12 @@ const transactionStore = () => {
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
 					if (res) {
-						balancesStore.refreshWFlr(config, wrappedFlareAddress, signerAddress as string);
+						await balancesStore.refreshBothBalances(
+							config,
+							wrappedFlareAddress,
+							cyFlareAddress,
+							signerAddress as string
+						);
 						transactionSuccess(
 							hash,
 							"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
@@ -171,8 +176,13 @@ const transactionStore = () => {
 				awaitLockTx(hash);
 				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
-					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
-					balancesStore.refreshWFlr(config, wrappedFlareAddress, signerAddress as string);
+					await balancesStore.refreshBothBalances(
+						config,
+						wrappedFlareAddress,
+						cyFlareAddress,
+						signerAddress as string
+					);
+
 					const res = await getReceipts(signerAddress as Hex, erc1155Address, config);
 					if (res) {
 						myReceipts.set(res);
@@ -206,8 +216,12 @@ const transactionStore = () => {
 				awaitUnlockTx(hash);
 				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
-					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
-					balancesStore.refreshWFlr(config, wrappedFlareAddress, signerAddress as string);
+					await balancesStore.refreshBothBalances(
+						config,
+						wrappedFlareAddress,
+						cyFlareAddress,
+						signerAddress as string
+					);
 					const res = await getReceipts(signerAddress as Hex, erc1155Address, config);
 					if (res) {
 						myReceipts.set(res);
