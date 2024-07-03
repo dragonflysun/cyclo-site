@@ -202,8 +202,7 @@ const transactionStore = () => {
 				} else {
 					return transactionError('Transaction timed out... You can see more here' + hash);
 				}
-			} catch (e) {
-				const error = e as WriteContractErrorType;
+			} catch {
 				return transactionError('There was an error unlocking your WFLR. Please try again.');
 			}
 		};
