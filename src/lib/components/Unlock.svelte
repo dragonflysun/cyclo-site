@@ -9,8 +9,9 @@
 	import balancesStore from '$lib/balancesStore';
 	import { fade } from 'svelte/transition';
 	import { erc1155Address } from '$lib/stores';
+	import transactionStore from '$lib/transactionStore';
+	import { myReceipts } from '$lib/stores';
 
-	let receipts: ReceiptType[] = [];
 	let loading = true;
 
 	$: if ($signerAddress) {
@@ -22,7 +23,7 @@
 		const res = await getReceipts($signerAddress, $erc1155Address, $wagmiConfig);
 		if (res) {
 			loading = false;
-			return (receipts = res);
+			$myReceipts = res;
 		} else return [];
 	};
 </script>
@@ -32,7 +33,7 @@
 		>CONNECT WALLET TO VIEW RECEIPTS</Button
 	>
 {:else}
-	{#key receipts}
+	{#key $myReceipts}
 		<Card size="md">
 			<div
 				class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
@@ -52,9 +53,9 @@
 			>
 				LOADING...
 			</div>
-		{:else if receipts.length > 0}
-			<ReceiptsTable {receipts} />
-		{:else if !receipts.length}
+		{:else if $myReceipts.length > 0}
+			<ReceiptsTable receipts={$myReceipts} />
+		{:else if !$myReceipts.length}
 			<div
 				class=" flex w-full items-center justify-center text-center text-lg font-semibold text-white md:text-2xl"
 			>

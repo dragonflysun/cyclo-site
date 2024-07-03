@@ -13,6 +13,8 @@ import {
 	writeErc20PriceOracleReceiptVaultRedeem
 } from '../generated';
 import balancesStore from './balancesStore';
+import { myReceipts } from './stores';
+import { getReceipts } from './queries/getReceipts';
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 export const ONE = BigInt('1000000000000000000');
@@ -33,6 +35,7 @@ export type initiateLockTransactionArgs = {
 	wrappedFlareAddress: Hex;
 	cyFlareAddress: Hex;
 	vaultAddress: Hex;
+	erc1155Address: Hex;
 	assets: bigint;
 	config: Config;
 };
@@ -112,6 +115,7 @@ const transactionStore = () => {
 		config,
 		cyFlareAddress,
 		wrappedFlareAddress,
+		erc1155Address,
 		vaultAddress,
 		assets
 	}: initiateLockTransactionArgs) => {
@@ -163,13 +167,17 @@ const transactionStore = () => {
 					address: vaultAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
 				});
-				console.log('HASH from MINTING', hash);
+
 				awaitLockTx(hash);
 				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
 					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
 					balancesStore.refreshWFlr(config, wrappedFlareAddress, signerAddress as string);
-					transactionSuccess(hash);
+					const res = await getReceipts(signerAddress as Hex, erc1155Address, config);
+					if (res) {
+						myReceipts.set(res);
+					}
+					return transactionSuccess(hash);
 				}
 			} catch (e) {
 				const error = e as WriteContractErrorType;
@@ -200,7 +208,10 @@ const transactionStore = () => {
 				if (res) {
 					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
 					balancesStore.refreshWFlr(config, wrappedFlareAddress, signerAddress as string);
-
+					const res = await getReceipts(signerAddress as Hex, erc1155Address, config);
+					if (res) {
+						myReceipts.set(res);
+					}
 					return transactionSuccess(hash);
 				} else {
 					return transactionError('Transaction timed out... You can see more here' + hash);
