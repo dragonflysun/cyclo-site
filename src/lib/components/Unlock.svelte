@@ -2,14 +2,14 @@
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import Card from '$lib/components/Card.svelte';
 	import { getReceipts } from '$lib/queries/getReceipts';
-	import type { Receipt, Receipt as ReceiptType } from '$lib/types';
+	import type { Receipt } from '$lib/types';
 	import { formatEther } from 'ethers';
 	import ReceiptsTable from '$lib/components/ReceiptsTable.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import balancesStore from '$lib/balancesStore';
 	import { fade } from 'svelte/transition';
 	import { erc1155Address } from '$lib/stores';
-	import transactionStore from '$lib/transactionStore';
+
 	import { myReceipts } from '$lib/stores';
 
 	let loading = true;
@@ -23,8 +23,10 @@
 		const res = await getReceipts($signerAddress, $erc1155Address, $wagmiConfig);
 		if (res) {
 			loading = false;
-			$myReceipts = res;
-		} else return [];
+			return ($myReceipts = res);
+		} else {
+			return [];
+		}
 	};
 </script>
 
