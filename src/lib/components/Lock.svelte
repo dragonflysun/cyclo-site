@@ -14,6 +14,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
+
 	export let amountToLock = '0.0';
 
 	let priceRatio = BigInt(0);
@@ -135,7 +136,7 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock}</span>
+				<span>{amountToLock === null ? 0 : amountToLock}</span>
 
 				<span>WFLR</span>
 			</div>
