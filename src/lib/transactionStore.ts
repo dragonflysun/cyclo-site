@@ -98,11 +98,12 @@ const transactionStore = () => {
 			hash: hash,
 			message: message || ''
 		}));
-	const transactionError = (message: string) =>
+	const transactionError = (message: string, hash?: string) =>
 		update((state) => ({
 			...state,
 			status: TransactionStatus.ERROR,
-			error: message
+			error: message,
+			hash: hash || ''
 		}));
 
 	const initiateLockTransaction = async ({
@@ -137,13 +138,16 @@ const transactionStore = () => {
 						args: [assets, signerAddress as Hex, 0n, '0x']
 					});
 					console.log('HASH from MINTING', hash);
+
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
 					if (res) {
-						transactionSuccess(
+						return transactionSuccess(
 							hash,
 							"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
 						);
+					} else {
+						return transactionError('Transaction failed to lock your WFLR', hash);
 					}
 				}
 			} catch (e) {
@@ -164,6 +168,8 @@ const transactionStore = () => {
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 				if (res) {
 					transactionSuccess(hash);
+				} else {
+					transactionError('Transaction failed to lock your WFLR', hash);
 				}
 			} catch (e) {
 				const error = e as WriteContractErrorType;
@@ -211,6 +217,11 @@ const transactionStore = () => {
 				});
 				awaitApprovalTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
+				if (res) {
+					return res;
+				} else {
+					return transactionError('Transaction failed to approve the cyFLR spend', hash);
+				}
 				return res;
 			} catch (e) {
 				const error = e as WaitForTransactionReceiptErrorType;
@@ -254,6 +265,8 @@ const transactionStore = () => {
 						}
 					}
 					writeUnlock();
+				} else {
+					transactionError('Transaction failed to approve the cyFLR spend', hash);
 				}
 			} catch (error) {
 				transactionError('User rejected transaction');
