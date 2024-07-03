@@ -165,7 +165,7 @@ const transactionStore = () => {
 				});
 				console.log('HASH from MINTING', hash);
 				awaitLockTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
+				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
 					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
 					balancesStore.refreshWFlr(config, wrappedFlareAddress, signerAddress as string);
@@ -196,7 +196,7 @@ const transactionStore = () => {
 					args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
 				});
 				awaitUnlockTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
+				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
 					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
 					balancesStore.refreshWFlr(config, wrappedFlareAddress, signerAddress as string);
