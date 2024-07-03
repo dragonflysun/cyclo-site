@@ -167,7 +167,7 @@ const transactionStore = () => {
 				}
 			} catch (e) {
 				const error = e as WriteContractErrorType;
-				transactionError(error.name);
+				transactionError('There was an error locking your WFLR. Please try again.');
 				console.log('err', error);
 			}
 		}
@@ -198,7 +198,7 @@ const transactionStore = () => {
 				}
 			} catch (e) {
 				const error = e as WriteContractErrorType;
-				return transactionError(error.name);
+				return transactionError('There was an error unlocking your WFLR. Please try again.');
 			}
 		};
 
@@ -215,7 +215,9 @@ const transactionStore = () => {
 			} catch (e) {
 				const error = e as WaitForTransactionReceiptErrorType;
 				return transactionError(
-					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
+					error.name === 'UserRejectedRequestError'
+						? 'User rejected transaction'
+						: 'There was an error approving the cyFLR spend. Please try again.'
 				);
 			}
 		};
