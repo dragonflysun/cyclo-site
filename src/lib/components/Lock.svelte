@@ -28,12 +28,14 @@
 	}
 
 	const checkBalance = () => {
-		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
-		assets = bigNumValue;
-		if ($balancesStore.wFlrBalance < assets) {
-			insufficientFunds = true;
-		} else {
-			insufficientFunds = false;
+		if (amountToLock) {
+			const bigNumValue = BigInt(parseEther(amountToLock?.toString()).toString());
+			assets = bigNumValue;
+			if ($balancesStore.wFlrBalance < assets) {
+				insufficientFunds = true;
+			} else {
+				insufficientFunds = false;
+			}
 		}
 	};
 
@@ -63,6 +65,8 @@
 	onDestroy(() => {
 		stopGettingPriceRatio();
 	});
+
+	$: console.log('insufficientFunds', insufficientFunds, 'assets', assets);
 </script>
 
 <Card size="lg">
@@ -121,7 +125,10 @@
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
 			<Input
-				on:change={checkBalance}
+				on:change={(event) => {
+					amountToLock = event.detail.value;
+					checkBalance();
+				}}
 				on:setValueToMax={() => {
 					assets = $balancesStore.wFlrBalance;
 					amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
