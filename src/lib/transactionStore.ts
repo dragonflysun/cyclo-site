@@ -126,7 +126,7 @@ const transactionStore = () => {
 					address: wrappedFlareAddress,
 					args: [vaultAddress, assets]
 				});
-				console.log('HASH from APPROVAL', hash);
+
 				awaitApprovalTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 
@@ -137,7 +137,6 @@ const transactionStore = () => {
 						address: vaultAddress,
 						args: [assets, signerAddress as Hex, 0n, '0x']
 					});
-					console.log('HASH from MINTING', hash);
 
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
@@ -163,7 +162,7 @@ const transactionStore = () => {
 					address: vaultAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
 				});
-				console.log('HASH from MINTING', hash);
+
 				awaitLockTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 				if (res) {
