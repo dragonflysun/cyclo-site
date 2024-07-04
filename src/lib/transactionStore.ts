@@ -13,6 +13,8 @@ import {
 	writeErc20PriceOracleReceiptVaultRedeem
 } from '../generated';
 import balancesStore from './balancesStore';
+import { myReceipts } from './stores';
+import { getReceipts } from './queries/getReceipts';
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 export const ONE = BigInt('1000000000000000000');
@@ -31,7 +33,9 @@ export enum TransactionStatus {
 export type initiateLockTransactionArgs = {
 	signerAddress: string | null;
 	wrappedFlareAddress: Hex;
+	cyFlareAddress: Hex;
 	vaultAddress: Hex;
+	erc1155Address: Hex;
 	assets: bigint;
 	config: Config;
 };
@@ -39,6 +43,7 @@ export type initiateLockTransactionArgs = {
 export type InitiateUnlockTransactionArgs = {
 	signerAddress: string | null;
 	cyFlareAddress: Hex;
+	wrappedFlareAddress: Hex;
 	erc1155Address: Hex;
 	assets: bigint;
 	config: Config;
@@ -108,7 +113,9 @@ const transactionStore = () => {
 	const initiateLockTransaction = async ({
 		signerAddress,
 		config,
+		cyFlareAddress,
 		wrappedFlareAddress,
+		erc1155Address,
 		vaultAddress,
 		assets
 	}: initiateLockTransactionArgs) => {
@@ -140,6 +147,12 @@ const transactionStore = () => {
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
 					if (res) {
+						await balancesStore.refreshBothBalances(
+							config,
+							wrappedFlareAddress,
+							cyFlareAddress,
+							signerAddress as string
+						);
 						transactionSuccess(
 							hash,
 							"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
@@ -159,11 +172,22 @@ const transactionStore = () => {
 					address: vaultAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
 				});
-				console.log('HASH from MINTING', hash);
+
 				awaitLockTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
+				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
-					transactionSuccess(hash);
+					await balancesStore.refreshBothBalances(
+						config,
+						wrappedFlareAddress,
+						cyFlareAddress,
+						signerAddress as string
+					);
+
+					const res = await getReceipts(signerAddress as Hex, erc1155Address, config);
+					if (res) {
+						myReceipts.set(res);
+					}
+					return transactionSuccess(hash);
 				}
 			} catch (e) {
 				const error = e as WriteContractErrorType;
@@ -177,6 +201,7 @@ const transactionStore = () => {
 		signerAddress,
 		config,
 		cyFlareAddress,
+		wrappedFlareAddress,
 		erc1155Address,
 		tokenId,
 		assets
@@ -189,9 +214,18 @@ const transactionStore = () => {
 					args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
 				});
 				awaitUnlockTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
+				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
-					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
+					await balancesStore.refreshBothBalances(
+						config,
+						wrappedFlareAddress,
+						cyFlareAddress,
+						signerAddress as string
+					);
+					const res = await getReceipts(signerAddress as Hex, erc1155Address, config);
+					if (res) {
+						myReceipts.set(res);
+					}
 					return transactionSuccess(hash);
 				} else {
 					return transactionError('Transaction timed out... You can see more here' + hash);
