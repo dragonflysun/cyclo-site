@@ -28,9 +28,16 @@
 				<p class="text-lg font-semibold text-gray-900 dark:text-white">
 					{$transactionStore.status}
 				</p>
-				<p class="text-sm font-normal text-gray-900 dark:text-white">
+				<p class="font-normal text-gray-900 dark:text-white">
 					{$transactionStore.error}
 				</p>
+				{#if $transactionStore.hash}
+					<a
+						class="text-center text-sm text-primary hover:underline"
+						href={`https://flarescan.com/tx/${$transactionStore.hash}`}
+						>View transaction on Flarescan</a
+					>
+				{/if}
 				<Button on:click={() => handleClose()} class="mt-4">DISMISS</Button>
 			{:else if $transactionStore.status === TransactionStatus.SUCCESS}
 				<div
