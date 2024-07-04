@@ -50,6 +50,7 @@
 
 					{#if $transactionStore.hash}
 						<a
+							target="_blank"
 							class="text-center hover:underline"
 							href={`https://flarescan.com/tx/${$transactionStore.hash}`}
 							>View transaction on Flarescan</a
