@@ -37,11 +37,45 @@ const cyFlrBalanceStore = () => {
 		}));
 	};
 
+	const refreshBothBalances = async (
+		config: Config,
+		wFlrAddress: Hex,
+		cyFlrAddress: Hex,
+		signerAddress: string
+	) => {
+		try {
+			const [newWFlrBalance, newCyFlrBalance] = await Promise.all([
+				readErc20BalanceOf(config, {
+					address: wFlrAddress,
+					args: [signerAddress as Hex]
+				}),
+				readErc20BalanceOf(config, {
+					address: cyFlrAddress,
+					args: [signerAddress as Hex]
+				})
+			]);
+
+			update((state) => ({
+				...state,
+				wFlrBalance: newWFlrBalance,
+				cyFlrBalance: newCyFlrBalance,
+				status: 'Ready'
+			}));
+		} catch (error) {
+			console.error('Error refreshing balances:', error);
+			update((state) => ({
+				...state,
+				status: 'Error'
+			}));
+		}
+	};
+
 	return {
 		subscribe,
 		reset,
 		refreshCyFlr,
-		refreshWFlr
+		refreshWFlr,
+		refreshBothBalances
 	};
 };
 
