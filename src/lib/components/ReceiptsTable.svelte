@@ -70,9 +70,3 @@
 		<ReceiptModal receipt={selectedReceipt} />
 	</Modal>
 {/if}
-
-<style lang="postcss">
-	.tableCell {
-		@apply text-white;
-	}
-</style>
