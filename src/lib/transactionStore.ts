@@ -187,7 +187,10 @@ const transactionStore = () => {
 					if (res) {
 						myReceipts.set(res);
 					}
-					return transactionSuccess(hash);
+					return transactionSuccess(
+						hash,
+						'You may need to wait a minute or two for your receipt to appear in the list view.'
+					);
 				}
 			} catch (e) {
 				const error = e as WriteContractErrorType;
