@@ -173,7 +173,6 @@ const transactionStore = () => {
 			} catch (e) {
 				const error = e as WriteContractErrorType;
 				transactionError('There was an error locking your WFLR. Please try again.');
-				console.log('err', error);
 			}
 		}
 	};
@@ -259,7 +258,6 @@ const transactionStore = () => {
 							writeUnlock();
 						} catch (error) {
 							transactionError('User rejected transaction');
-							console.log('err', error);
 						}
 					}
 					writeUnlock();
@@ -268,7 +266,6 @@ const transactionStore = () => {
 				}
 			} catch (error) {
 				transactionError('User rejected transaction');
-				console.log('err', error);
 			}
 		} else {
 			const cyFlareSpendAllowance = await readErc20Allowance(config, {

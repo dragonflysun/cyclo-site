@@ -65,8 +65,6 @@
 	onDestroy(() => {
 		stopGettingPriceRatio();
 	});
-
-	$: console.log('insufficientFunds', insufficientFunds, 'assets', assets);
 </script>
 
 <Card size="lg">
