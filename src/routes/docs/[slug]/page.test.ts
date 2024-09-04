@@ -46,5 +46,5 @@ test('page component should render', async () => {
 	expect(title).toHaveTextContent('Introduction');
 
 	const body = screen.getByTestId('body');
-	expect(body).toHaveTextContent('Cyclo leverages FLR (Flare) tokens in a novel way:');
+	expect(body).toHaveTextContent('Cyclo leverages sFLR (Flare) tokens in a novel way');
 });
