@@ -73,6 +73,7 @@
 				<div class="flex flex-col">
 					<span>WFLR BALANCE</span>
 					<a
+						target="_blank"
 						href={'https://portal.flare.network'}
 						class="cursor-pointer text-xs font-light hover:underline">How do I get WFLR?</a
 					>
@@ -89,8 +90,10 @@
 		<div class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<div class="flex flex-col">
 				<span>WFLR/USD PRICE</span>
-				<a href={base + '/docs/why-flare'} class="cursor-pointer text-xs font-light hover:underline"
-					>How does Cyclo use the FTSO?</a
+				<a
+					href={base + '/docs/why-flare'}
+					class="cursor-pointer text-xs font-light hover:underline"
+					target="_blank">How does Cyclo use the FTSO?</a
 				>
 			</div>
 			{#key priceRatio}
