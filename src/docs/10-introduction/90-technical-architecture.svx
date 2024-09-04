@@ -5,13 +5,16 @@ published: true
 
 ### System Components
 Smart Contract for Token Lock-up
-This contract handles the deposit of FLR tokens, issues cFLR and receipt tokens to the depositor, and manages the redemption process. It interacts with the Flare Time Series Oracle (FTSO) to determine the current FLR-USD price.
+This contract handles the deposit of sFLR tokens, issues cysFLR and receipt tokens to the depositor, and manages the redemption process. It interacts with the Flare Time Series Oracle (FTSO) and the sFLR staking contract to determine the current FLR-USD price.
 
-### cFLR Tokens
-Represent leverage obtained by locking FLR. The quantity of cFLR is equivalent to the USD value of the deposited FLR, as determined by the FTSO at the transaction time.
+### cysFLR Tokens
+Represent leverage obtained by locking sFLR. The quantity of cysFLR is equivalent to the USD value of the deposited sFLR, as determined by the FTSO and sFLR exchange rate at the transaction time.
 
 ### Receipt Tokens (ERC-1155)
-These tokens act as a proof of the locked FLR and its USD value at the deposit time. The token ID corresponds to the FLR-USD price, ensuring uniqueness and traceability.
+These tokens act as a proof of the locked sFLR and its USD value at the deposit time. The token ID corresponds to the sFLR-USD price, ensuring uniqueness and traceability.
 
 ### Flare Time Series Oracle (FTSO)
-Provides a reliable FLR-USD price feed to the smart contract, ensuring accurate valuation of deposited FLR and issued cFLR.
+Provides a reliable FLR-USD price feed to the smart contract, ensuring accurate valuation of deposited sFLR and issued cysFLR.
+
+### sFLR staking contract
+Provides the exchange rate for FLR-sFLR, enabling the smart contract to calculate the USD value of the locked sFLR. 
