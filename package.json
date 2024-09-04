@@ -3,6 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
+		"nix-dev": "nix develop --extra-experimental-features nix-command --extra-experimental-features flakes",
 		"codegen": "wagmi generate",
 		"dev": "vite dev",
 		"build": "vite build",
