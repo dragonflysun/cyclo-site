@@ -89,7 +89,7 @@
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis">
-				{Number(formatEther(flrToReceive)).toFixed(5)} WFLR
+				{Number(formatEther(flrToReceive)).toFixed(5)} SFLR
 			</span>
 		</div>
 	</div>
