@@ -98,11 +98,12 @@ const transactionStore = () => {
 			hash: hash,
 			message: message || ''
 		}));
-	const transactionError = (message: string) =>
+	const transactionError = (message: string, hash?: string) =>
 		update((state) => ({
 			...state,
 			status: TransactionStatus.ERROR,
-			error: message
+			error: message,
+			hash: hash || ''
 		}));
 
 	const initiateLockTransaction = async ({
@@ -125,7 +126,7 @@ const transactionStore = () => {
 					address: wrappedFlareAddress,
 					args: [vaultAddress, assets]
 				});
-				console.log('HASH from APPROVAL', hash);
+
 				awaitApprovalTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 
@@ -136,14 +137,16 @@ const transactionStore = () => {
 						address: vaultAddress,
 						args: [assets, signerAddress as Hex, 0n, '0x']
 					});
-					console.log('HASH from MINTING', hash);
+
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
 					if (res) {
-						transactionSuccess(
+						return transactionSuccess(
 							hash,
 							"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
 						);
+					} else {
+						return transactionError('Transaction failed to lock your WFLR', hash);
 					}
 				}
 			} catch (e) {
@@ -159,7 +162,7 @@ const transactionStore = () => {
 					address: vaultAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
 				});
-				console.log('HASH from MINTING', hash);
+
 				awaitLockTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 				if (res) {
@@ -170,7 +173,7 @@ const transactionStore = () => {
 				}
 			} catch (e) {
 				const error = e as WriteContractErrorType;
-				transactionError(error.name);
+				transactionError('There was an error locking your WFLR. Please try again.');
 				console.log('err', error);
 			}
 		}
@@ -199,9 +202,8 @@ const transactionStore = () => {
 				} else {
 					return transactionError('Transaction timed out... You can see more here' + hash);
 				}
-			} catch (e) {
-				const error = e as WriteContractErrorType;
-				return transactionError(error.name);
+			} catch {
+				return transactionError('There was an error unlocking your WFLR. Please try again.');
 			}
 		};
 
@@ -214,11 +216,18 @@ const transactionStore = () => {
 				});
 				awaitApprovalTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
+				if (res) {
+					return res;
+				} else {
+					return transactionError('Transaction failed to approve the cyFLR spend', hash);
+				}
 				return res;
 			} catch (e) {
 				const error = e as WaitForTransactionReceiptErrorType;
 				return transactionError(
-					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
+					error.name === 'UserRejectedRequestError'
+						? 'User rejected transaction'
+						: 'There was an error approving the cyFLR spend. Please try again.'
 				);
 			}
 		};
@@ -255,6 +264,8 @@ const transactionStore = () => {
 						}
 					}
 					writeUnlock();
+				} else {
+					transactionError('Transaction failed to approve the cyFLR spend', hash);
 				}
 			} catch (error) {
 				transactionError('User rejected transaction');
