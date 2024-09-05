@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-import type { Hex, WaitForTransactionReceiptErrorType, WriteContractErrorType } from 'viem';
+import type { Hex, WaitForTransactionReceiptErrorType } from 'viem';
 
 import type { Config } from '@wagmi/core';
 import { waitForTransactionReceipt } from '@wagmi/core';
@@ -170,8 +170,7 @@ const transactionStore = () => {
 				} else {
 					transactionError('Transaction failed to lock your WFLR', hash);
 				}
-			} catch (e) {
-				const error = e as WriteContractErrorType;
+			} catch {
 				transactionError('There was an error locking your WFLR. Please try again.');
 			}
 		}
@@ -256,7 +255,7 @@ const transactionStore = () => {
 						try {
 							await writeApproveCyFlareSpend();
 							writeUnlock();
-						} catch (error) {
+						} catch {
 							transactionError('User rejected transaction');
 						}
 					}
@@ -264,7 +263,7 @@ const transactionStore = () => {
 				} else {
 					transactionError('Transaction failed to approve the cyFLR spend', hash);
 				}
-			} catch (error) {
+			} catch {
 				transactionError('User rejected transaction');
 			}
 		} else {
