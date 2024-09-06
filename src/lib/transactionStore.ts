@@ -148,7 +148,6 @@ const transactionStore = () => {
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
 					if (res) {
-
 						await balancesStore.refreshBothBalances(
 							config,
 							wrappedFlareAddress,
