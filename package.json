@@ -54,6 +54,8 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.1",
+		"@wagmi/connectors": "^5.0.14",
+		"@wagmi/core": "^2.6.17",
 		"axios": "^1.7.2",
 		"ethers": "^6.13.0",
 		"lodash-es": "^4.17.21",
