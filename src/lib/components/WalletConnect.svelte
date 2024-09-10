@@ -5,7 +5,7 @@
 	import Button from './Button.svelte';
 </script>
 
-<Button on:click={() => $web3Modal.open()} tabindex={0}>
+<Button on:click={() => $web3Modal.open()} tabindex={0} data-testid="wallet-connect">
 	{#if $wrongNetwork || !$signerAddress || !$connected}
 		<CloseCircleSolid color="red" class="hidden md:inline" />
 		<span>Connect</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
