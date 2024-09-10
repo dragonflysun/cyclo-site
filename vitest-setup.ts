@@ -6,7 +6,6 @@ const { mockWagmiConfigStore, mockSignerAddressStore, mockChainIdStore } = await
 
 vi.mock('svelte-wagmi', async () => {
 	return {
-		// ...((await importOriginal()) as object),
 		wagmiConfig: mockWagmiConfigStore,
 		signerAddress: mockSignerAddressStore,
 		chainId: mockChainIdStore
