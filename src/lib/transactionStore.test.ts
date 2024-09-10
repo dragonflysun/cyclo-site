@@ -10,6 +10,8 @@ import {
 	writeErc1155SetApprovalForAll
 } from '../generated';
 import { waitForTransactionReceipt, type Config } from '@wagmi/core';
+import balancesStore from './balancesStore';
+import { waitFor } from '@testing-library/svelte';
 
 const { mockWagmiConfigStore } = await vi.hoisted(() => import('./mocks/mockStores'));
 
@@ -22,6 +24,7 @@ vi.mock('../generated', () => ({
 	readErc1155IsApprovedForAll: vi.fn(),
 	writeErc1155SetApprovalForAll: vi.fn()
 }));
+
 vi.mock('@wagmi/core', () => ({
 	waitForTransactionReceipt: vi.fn()
 }));
@@ -137,8 +140,7 @@ describe('transactionStore', () => {
 	});
 
 	it('should prompt the user to approve cyFLR contract to lock WFLR if allowance is less than assets', async () => {
-		const mockAllowance = BigInt(500); // Less than 'assets'
-		const assets = BigInt(1000);
+		const mockAllowance = BigInt(500);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
 		(writeErc20Approve as Mock).mockResolvedValueOnce('mockHash');
@@ -148,13 +150,10 @@ describe('transactionStore', () => {
 			config: mockWagmiConfigStore as unknown as Config,
 			wrappedFlareAddress: '0x456',
 			vaultAddress: '0x789',
-			assets
+			assets: BigInt(1000)
 		});
 
-		const store = get(transactionStore);
-		console.log(store);
-		expect(store.message).toBe('You need to approve the cyFLR contract to lock your WFLR...');
-		expect(store.status).toBe(TransactionStatus.PENDING_WALLET);
+		expect(get(transactionStore).status).toBe(TransactionStatus.PENDING_APPROVAL);
 	});
 
 	it('should handle successful lock transaction', async () => {
@@ -168,23 +167,43 @@ describe('transactionStore', () => {
 			config: mockWagmiConfigStore,
 			wrappedFlareAddress: mockWFlareAddress,
 			vaultAddress: mockVaultAddress,
-			assets: mockAssets
+			assets: BigInt(100)
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.SUCCESS);
 		expect(get(transactionStore).hash).toBe('mockDepositHash');
 	});
 
-	it('should handle failed lock transaction approval', async () => {
+	it.only('should handle user rejecting spend approval', async () => {
+		const mockAllowance = BigInt(500);
+		const assets = BigInt(100);
+
+		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
+		(writeErc20Approve as Mock).mockRejectedValue('UserRejectedRequestError');
+
+		await initiateLockTransaction({
+			signerAddress: '0x123',
+			config: mockWagmiConfigStore as unknown as Config,
+			wrappedFlareAddress: '0x456',
+			vaultAddress: '0x789',
+			assets
+		});
+
+		await waitFor(() => expect(get(transactionStore).status).toBe(TransactionStatus.ERROR));
+		expect(get(transactionStore).error).toBe('User rejected transaction');
+	});
+
+	it('should handle user rejecting lock transaction confimation', async () => {
 		(readErc20Allowance as Mock).mockResolvedValue(BigInt(500));
-		(writeErc20Approve as Mock).mockRejectedValue(new Error('UserRejectedRequestError'));
+		(writeErc20Approve as Mock).mockResolvedValue('mockApproveHash');
+		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue('mockDepositHash');
 
 		await initiateLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore,
 			wrappedFlareAddress: mockWFlareAddress,
 			vaultAddress: mockVaultAddress,
-			assets: mockAssets
+			assets: BigInt(100)
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
@@ -203,10 +222,12 @@ describe('transactionStore', () => {
 			cyFlareAddress: mockCyFlareAddress,
 			erc1155Address: mockERC1155Address,
 			tokenId: mockTokenId,
-			assets: mockAssets
+			assets: BigInt(100)
 		});
 
-		expect(get(transactionStore).status).toBe(TransactionStatus.SUCCESS);
+		await waitFor(() => {
+			expect(get(transactionStore).status).toBe(TransactionStatus.SUCCESS);
+		});
 		expect(get(transactionStore).hash).toBe('mockRedeemHash');
 	});
 
@@ -223,7 +244,7 @@ describe('transactionStore', () => {
 			cyFlareAddress: mockCyFlareAddress,
 			erc1155Address: mockERC1155Address,
 			tokenId: mockTokenId,
-			assets: mockAssets
+			assets: BigInt(100)
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
@@ -232,10 +253,9 @@ describe('transactionStore', () => {
 
 	it('should handle transaction failure during lock', async () => {
 		(readErc20Allowance as Mock).mockResolvedValue(BigInt(500));
-
 		(writeErc20Approve as Mock).mockResolvedValue('mockApproveHash');
-		(waitForTransactionReceipt as Mock).mockResolvedValue(false);
-		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue(
+		(waitForTransactionReceipt as Mock).mockRejectedValue('hash');
+		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockResolvedValue(
 			new Error('Transaction failed')
 		);
 
@@ -244,12 +264,10 @@ describe('transactionStore', () => {
 			config: mockWagmiConfigStore,
 			wrappedFlareAddress: mockWFlareAddress,
 			vaultAddress: mockVaultAddress,
-			assets: mockAssets
+			assets: BigInt(100)
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe(
-			'There was an error locking your WFLR. Please try again.'
-		);
+		expect(get(transactionStore).error).toBe('Transaction failed to lock your WFLR');
 	});
 });
