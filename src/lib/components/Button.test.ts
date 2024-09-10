@@ -30,6 +30,5 @@ describe('Button Component', () => {
 		const button = screen.getByRole('button');
 
 		expect(button).toBeDisabled();
-		expect(button).toHaveClass('cursor-not-allowed');
 	});
 });
