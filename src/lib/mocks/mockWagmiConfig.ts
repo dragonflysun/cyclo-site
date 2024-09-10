@@ -1,8 +1,8 @@
-import { createConfig, http, fallback } from '@wagmi/core';
+import { createConfig, http, fallback, type Config } from '@wagmi/core';
 import { mock } from '@wagmi/connectors';
 import { polygonAmoy } from '@wagmi/core/chains';
 
-export const mockWeb3Config = createConfig({
+export const mockWeb3Config: Config = createConfig({
 	multiInjectedProviderDiscovery: true,
 	chains: [polygonAmoy],
 	connectors: [
