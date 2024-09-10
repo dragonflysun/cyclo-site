@@ -9,9 +9,10 @@ import {
 	readErc1155IsApprovedForAll,
 	writeErc1155SetApprovalForAll
 } from '../generated';
-import { waitForTransactionReceipt } from '@wagmi/core';
+import { waitForTransactionReceipt, type Config } from '@wagmi/core';
 
 const { mockWagmiConfigStore } = await vi.hoisted(() => import('./mocks/mockStores'));
+
 vi.mock('../generated', () => ({
 	readErc20BalanceOf: vi.fn(),
 	readErc20Allowance: vi.fn(),
@@ -37,8 +38,8 @@ describe('transactionStore', () => {
 	const { reset, initiateLockTransaction, initiateUnlockTransaction } = transactionStore;
 
 	beforeEach(() => {
-		vi.resetAllMocks();
 		reset();
+		vi.resetAllMocks();
 	});
 
 	it('should initialize with the correct default state', () => {
@@ -72,9 +73,34 @@ describe('transactionStore', () => {
 		});
 	});
 
+	it('should prompt the user to approve cyFLR contract to lock WFLR if allowance is less than assets', async () => {
+		// Set up the mock for readErc20Allowance to return a value less than assets
+		const mockAllowance = BigInt(500); // Less than 'assets'
+		const assets = BigInt(1000);
+
+		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
+		// (writeErc20Approve as Mock).mockResolvedValueOnce('mockHash');
+		// (waitForTransactionReceipt as Mock).mockResolvedValueOnce(true);
+		const store1 = get(transactionStore);
+
+		console.log(store1);
+
+		await initiateLockTransaction({
+			signerAddress: '0x123',
+			config: mockWagmiConfigStore as unknown as Config,
+			wrappedFlareAddress: '0x456',
+			vaultAddress: '0x789',
+			assets
+		});
+
+		const store = get(transactionStore);
+		console.log(store);
+		expect(store.message).toBe('You need to approve the cyFLR contract to lock your WFLR...');
+		expect(store.status).toBe(TransactionStatus.PENDING_WALLET);
+	});
+
 	it('should handle successful lock transaction', async () => {
 		(readErc20Allowance as Mock).mockResolvedValue(BigInt(500));
-
 		(writeErc20Approve as Mock).mockResolvedValue('mockApproveHash');
 		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockResolvedValue('mockDepositHash');
 		(waitForTransactionReceipt as Mock).mockResolvedValue(true);
@@ -92,10 +118,7 @@ describe('transactionStore', () => {
 	});
 
 	it('should handle failed lock transaction approval', async () => {
-		// Mock the allowance check to be below the asset amount
 		(readErc20Allowance as Mock).mockResolvedValue(BigInt(500));
-
-		// Mock the write functions and waitForTransactionReceipt
 		(writeErc20Approve as Mock).mockRejectedValue(new Error('UserRejectedRequestError'));
 
 		await initiateLockTransaction({
@@ -111,9 +134,7 @@ describe('transactionStore', () => {
 	});
 
 	it('should handle successful unlock transaction', async () => {
-		// Mock isApprovedForAll to return true
 		(readErc1155IsApprovedForAll as Mock).mockResolvedValue(true);
-		// Mock the allowance check and write functions
 		(readErc20Allowance as Mock).mockResolvedValue(mockAssets);
 		(writeErc20PriceOracleReceiptVaultRedeem as Mock).mockResolvedValue('mockRedeemHash');
 		(waitForTransactionReceipt as Mock).mockResolvedValue(true);
@@ -132,10 +153,8 @@ describe('transactionStore', () => {
 	});
 
 	it('should handle unlock approval rejection', async () => {
-		// Mock isApprovedForAll to return false, requiring approval
 		(readErc1155IsApprovedForAll as Mock).mockResolvedValue(false);
 
-		// Mock the write functions and waitForTransactionReceipt
 		(writeErc1155SetApprovalForAll as Mock).mockRejectedValue(
 			new Error('UserRejectedRequestError')
 		);
@@ -157,6 +176,7 @@ describe('transactionStore', () => {
 		(readErc20Allowance as Mock).mockResolvedValue(BigInt(500));
 
 		(writeErc20Approve as Mock).mockResolvedValue('mockApproveHash');
+		(waitForTransactionReceipt as Mock).mockResolvedValue(false);
 		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue(
 			new Error('Transaction failed')
 		);

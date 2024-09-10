@@ -114,12 +114,14 @@ const transactionStore = () => {
 		assets
 	}: initiateLockTransactionArgs) => {
 		checkingWalletAllowance();
-		const data = await readErc20Allowance(config, {
+
+		const erc20Allowance = await readErc20Allowance(config, {
 			address: wrappedFlareAddress,
 			args: [signerAddress as Hex, vaultAddress]
 		});
 
-		if (data < assets) {
+		// Test 1, readErc20Allowance returns less than 'assets', then check that transactionStore.message is 'You need to approve the cyFLR contract to lock your WFLR...
+		if (erc20Allowance < assets) {
 			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your WFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
@@ -257,18 +259,16 @@ const transactionStore = () => {
 						try {
 							await writeApproveCyFlareSpend();
 							writeUnlock();
-						} catch (error) {
+						} catch {
 							transactionError('User rejected transaction');
-							console.log('err', error);
 						}
 					}
 					writeUnlock();
 				} else {
 					transactionError('Transaction failed to approve the cyFLR spend', hash);
 				}
-			} catch (error) {
+			} catch {
 				transactionError('User rejected transaction');
-				console.log('err', error);
 			}
 		} else {
 			const cyFlareSpendAllowance = await readErc20Allowance(config, {
