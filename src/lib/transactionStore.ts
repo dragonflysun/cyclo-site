@@ -129,27 +129,31 @@ const transactionStore = () => {
 					args: [vaultAddress, assets]
 				});
 
-				awaitApprovalTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
+				try {
+					awaitApprovalTx(hash);
+					const res = await waitForTransactionReceipt(config, { hash: hash });
 
-				if (res) {
-					awaitWalletConfirmation('Awaiting wallet confirmation to lock your WFLR...');
+					if (res) {
+						awaitWalletConfirmation('Awaiting wallet confirmation to lock your WFLR...');
 
-					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
-						address: vaultAddress,
-						args: [assets, signerAddress as Hex, 0n, '0x']
-					});
+						const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
+							address: vaultAddress,
+							args: [assets, signerAddress as Hex, 0n, '0x']
+						});
 
-					try {
-						awaitLockTx(hash);
-						await waitForTransactionReceipt(config, { hash: hash });
-						transactionSuccess(
-							hash,
-							"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
-						);
-					} catch {
-						transactionError('Transaction failed to lock your WFLR', hash);
+						try {
+							awaitLockTx(hash);
+							await waitForTransactionReceipt(config, { hash: hash });
+							transactionSuccess(
+								hash,
+								"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
+							);
+						} catch {
+							transactionError('Transaction failed to lock your WFLR', hash);
+						}
 					}
+				} catch {
+					return transactionError('Transaction failed to approve the cyFLR spend', hash);
 				}
 			} catch {
 				return transactionError('User rejected transaction');
@@ -170,7 +174,7 @@ const transactionStore = () => {
 					transactionError('Transaction failed to lock your WFLR', hash);
 				}
 			} catch {
-				transactionError('User rejected transaction');
+				return transactionError('User rejected transaction');
 			}
 		}
 	};

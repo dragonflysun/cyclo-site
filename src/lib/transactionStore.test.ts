@@ -52,8 +52,8 @@ describe('transactionStore', () => {
 	} = transactionStore;
 
 	beforeEach(() => {
-		reset();
 		vi.resetAllMocks();
+		reset();
 	});
 
 	it('should update status to CHECKING_ALLOWANCE', () => {
@@ -179,7 +179,7 @@ describe('transactionStore', () => {
 		const assets = BigInt(100);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
-		(writeErc20Approve as Mock).mockRejectedValue('UserRejectedRequestError');
+		(writeErc20Approve as Mock).mockRejectedValue(new Error('UserRejectedRequestError'));
 
 		await initiateLockTransaction({
 			signerAddress: '0x123',
@@ -189,10 +189,11 @@ describe('transactionStore', () => {
 			assets
 		});
 
-		await waitFor(() => expect(get(transactionStore).status).toBe(TransactionStatus.ERROR));
-		expect(get(transactionStore).error).toBe('User rejected transaction');
+		await waitFor(() => {
+			expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
+			expect(get(transactionStore).error).toBe('User rejected transaction');
+		});
 	});
-
 	it('should handle user rejecting lock transaction confimation', async () => {
 		(readErc20Allowance as Mock).mockResolvedValue(BigInt(500));
 		(writeErc20Approve as Mock).mockResolvedValue('mockApproveHash');
