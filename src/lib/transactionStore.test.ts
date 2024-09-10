@@ -35,11 +35,75 @@ describe('transactionStore', () => {
 	const mockTokenId = '1';
 	const mockAssets = BigInt(1000);
 
-	const { reset, initiateLockTransaction, initiateUnlockTransaction } = transactionStore;
+	const {
+		reset,
+		checkingWalletAllowance,
+		initiateLockTransaction,
+		initiateUnlockTransaction,
+		awaitWalletConfirmation,
+		awaitApprovalTx,
+		awaitLockTx,
+		awaitUnlockTx,
+		transactionSuccess,
+		transactionError
+	} = transactionStore;
 
 	beforeEach(() => {
 		reset();
 		vi.resetAllMocks();
+	});
+
+	it('should update status to CHECKING_ALLOWANCE', () => {
+		checkingWalletAllowance('');
+		expect(get(transactionStore).status).toBe(TransactionStatus.CHECKING_ALLOWANCE);
+	});
+
+	it('should update status to PENDING_WALLET with message', () => {
+		awaitWalletConfirmation('Waiting for wallet confirmation...');
+		expect(get(transactionStore).status).toBe(TransactionStatus.PENDING_WALLET);
+		expect(get(transactionStore).message).toBe('Waiting for wallet confirmation...');
+	});
+
+	it('should update status to PENDING_APPROVAL', () => {
+		awaitApprovalTx('mockHash');
+		expect(get(transactionStore).status).toBe(TransactionStatus.PENDING_APPROVAL);
+		expect(get(transactionStore).hash).toBe('mockHash');
+		expect(get(transactionStore).message).toBe('');
+	});
+
+	it('should update status to PENDING_LOCK', () => {
+		awaitLockTx('mockLockHash');
+		expect(get(transactionStore).status).toBe(TransactionStatus.PENDING_LOCK);
+		expect(get(transactionStore).hash).toBe('mockLockHash');
+		expect(get(transactionStore).message).toBe('');
+	});
+
+	it('should update status to PENDING_UNLOCK', () => {
+		awaitUnlockTx('mockUnlockHash');
+		expect(get(transactionStore).status).toBe(TransactionStatus.PENDING_UNLOCK);
+		expect(get(transactionStore).hash).toBe('mockUnlockHash');
+		expect(get(transactionStore).message).toBe('');
+	});
+
+	it('should update status to SUCCESS', () => {
+		transactionSuccess('mockSuccessHash', 'Transaction completed successfully');
+		expect(get(transactionStore).status).toBe(TransactionStatus.SUCCESS);
+		expect(get(transactionStore).hash).toBe('mockSuccessHash');
+		expect(get(transactionStore).message).toBe('Transaction completed successfully');
+	});
+
+	it('should update status to ERROR', () => {
+		transactionError('Transaction failed', 'mockErrorHash');
+		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
+		expect(get(transactionStore).error).toBe('Transaction failed');
+		expect(get(transactionStore).hash).toBe('mockErrorHash');
+	});
+
+	it('should update status to ERROR without hash', () => {
+		transactionError('Transaction failed');
+		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
+		expect(get(transactionStore).error).toBe('Transaction failed');
+		expect(get(transactionStore).hash).toBe('');
 	});
 
 	it('should initialize with the correct default state', () => {
@@ -54,7 +118,6 @@ describe('transactionStore', () => {
 	});
 
 	it('should reset the store to its initial state', () => {
-		// Modify store state and reset
 		initiateLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore,
@@ -74,16 +137,11 @@ describe('transactionStore', () => {
 	});
 
 	it('should prompt the user to approve cyFLR contract to lock WFLR if allowance is less than assets', async () => {
-		// Set up the mock for readErc20Allowance to return a value less than assets
 		const mockAllowance = BigInt(500); // Less than 'assets'
 		const assets = BigInt(1000);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
-		// (writeErc20Approve as Mock).mockResolvedValueOnce('mockHash');
-		// (waitForTransactionReceipt as Mock).mockResolvedValueOnce(true);
-		const store1 = get(transactionStore);
-
-		console.log(store1);
+		(writeErc20Approve as Mock).mockResolvedValueOnce('mockHash');
 
 		await initiateLockTransaction({
 			signerAddress: '0x123',

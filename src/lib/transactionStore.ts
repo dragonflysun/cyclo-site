@@ -124,15 +124,19 @@ const transactionStore = () => {
 		if (erc20Allowance < assets) {
 			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your WFLR...');
 			try {
+				console.log('STEP !');
 				const hash = await writeErc20Approve(config, {
 					address: wrappedFlareAddress,
 					args: [vaultAddress, assets]
 				});
-
+				console.log('STEP !');
 				awaitApprovalTx(hash);
+				console.log('STEP !');
 				const res = await waitForTransactionReceipt(config, { hash: hash });
+				console.log('STEP !');
 
 				if (res) {
+					console.log('STEP !');
 					awaitWalletConfirmation('Awaiting wallet confirmation to lock your WFLR...');
 
 					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
@@ -287,6 +291,7 @@ const transactionStore = () => {
 	return {
 		subscribe,
 		reset,
+		checkingWalletAllowance,
 		initiateLockTransaction,
 		initiateUnlockTransaction,
 		awaitWalletConfirmation,
