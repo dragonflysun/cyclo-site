@@ -173,12 +173,13 @@ describe('transactionStore', () => {
 		expect(get(transactionStore).hash).toBe('mockDepositHash');
 	});
 
-	it.only('should handle user rejecting spend approval', async () => {
+	it('should handle user rejecting spend approval', async () => {
 		const mockAllowance = BigInt(500);
 		const assets = BigInt(100);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
 		(writeErc20Approve as Mock).mockRejectedValue(new Error('UserRejectedRequestError'));
+		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue('mockDepositHash');
 
 		await initiateLockTransaction({
 			signerAddress: '0x123',
