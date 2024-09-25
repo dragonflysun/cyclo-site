@@ -10,7 +10,6 @@ import {
 	writeErc1155SetApprovalForAll
 } from '../generated';
 import { waitForTransactionReceipt, type Config } from '@wagmi/core';
-import balancesStore from './balancesStore';
 import { waitFor } from '@testing-library/svelte';
 
 const { mockWagmiConfigStore } = await vi.hoisted(() => import('./mocks/mockStores'));
@@ -123,7 +122,7 @@ describe('transactionStore', () => {
 	it('should reset the store to its initial state', () => {
 		initiateLockTransaction({
 			signerAddress: mockSignerAddress,
-			config: mockWagmiConfigStore,
+			config: mockWagmiConfigStore as unknown as Config,
 			wrappedFlareAddress: mockWFlareAddress,
 			vaultAddress: mockVaultAddress,
 			assets: mockAssets
@@ -164,7 +163,7 @@ describe('transactionStore', () => {
 
 		await initiateLockTransaction({
 			signerAddress: mockSignerAddress,
-			config: mockWagmiConfigStore,
+			config: mockWagmiConfigStore as unknown as Config,
 			wrappedFlareAddress: mockWFlareAddress,
 			vaultAddress: mockVaultAddress,
 			assets: BigInt(100)
@@ -201,7 +200,7 @@ describe('transactionStore', () => {
 
 		await initiateLockTransaction({
 			signerAddress: mockSignerAddress,
-			config: mockWagmiConfigStore,
+			config: mockWagmiConfigStore as unknown as Config,
 			wrappedFlareAddress: mockWFlareAddress,
 			vaultAddress: mockVaultAddress,
 			assets: BigInt(100)
@@ -219,7 +218,7 @@ describe('transactionStore', () => {
 
 		await initiateUnlockTransaction({
 			signerAddress: mockSignerAddress,
-			config: mockWagmiConfigStore,
+			config: mockWagmiConfigStore as unknown as Config,
 			cyFlareAddress: mockCyFlareAddress,
 			erc1155Address: mockERC1155Address,
 			tokenId: mockTokenId,
@@ -241,7 +240,7 @@ describe('transactionStore', () => {
 
 		await initiateUnlockTransaction({
 			signerAddress: mockSignerAddress,
-			config: mockWagmiConfigStore,
+			config: mockWagmiConfigStore as unknown as Config,
 			cyFlareAddress: mockCyFlareAddress,
 			erc1155Address: mockERC1155Address,
 			tokenId: mockTokenId,
@@ -262,7 +261,7 @@ describe('transactionStore', () => {
 
 		await initiateLockTransaction({
 			signerAddress: mockSignerAddress,
-			config: mockWagmiConfigStore,
+			config: mockWagmiConfigStore as unknown as Config,
 			wrappedFlareAddress: mockWFlareAddress,
 			vaultAddress: mockVaultAddress,
 			assets: BigInt(100)
