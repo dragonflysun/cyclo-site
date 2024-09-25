@@ -25,7 +25,6 @@ describe('TransactionModal Component', () => {
 	});
 
 	it('should display an error when transaction fails', async () => {
-		// Set mockTransactionStore to ERROR state
 		mockTransactionStore.mockSetSubscribeValue({
 			status: TransactionStatus.ERROR,
 			error: 'Transaction failed',
@@ -50,7 +49,6 @@ describe('TransactionModal Component', () => {
 	});
 
 	it('should display success message when transaction succeeds', async () => {
-		// Set mockTransactionStore to SUCCESS state
 		mockTransactionStore.mockSetSubscribeValue({
 			status: TransactionStatus.SUCCESS,
 			message: 'Transaction succeeded',
@@ -68,14 +66,12 @@ describe('TransactionModal Component', () => {
 			);
 		});
 
-		// Test dismiss button click using userEvent
 		const dismissButton = screen.getByTestId('dismiss-button');
 		await userEvent.click(dismissButton);
 		expect(resetSpy).toHaveBeenCalled();
 	});
 
 	it('should display pending state with a spinner for pending transactions', async () => {
-		// Set mockTransactionStore to PENDING_WALLET state
 		mockTransactionStore.mockSetSubscribeValue({
 			status: TransactionStatus.PENDING_WALLET,
 			message: 'Waiting for wallet confirmation...'
@@ -87,7 +83,7 @@ describe('TransactionModal Component', () => {
 			expect(screen.getByTestId('pending-message')).toHaveTextContent(
 				'Waiting for wallet confirmation...'
 			);
-			expect(screen.getByTestId('spinner')).toBeInTheDocument(); // Spinner
+			expect(screen.getByTestId('spinner')).toBeInTheDocument();
 		});
 	});
 
