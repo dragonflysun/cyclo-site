@@ -55,6 +55,7 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.1",
+		"@testing-library/user-event": "^14.5.2",
 		"@wagmi/connectors": "^5.0.14",
 		"@wagmi/core": "^2.6.17",
 		"axios": "^1.7.2",

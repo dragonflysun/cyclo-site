@@ -33,6 +33,7 @@
 		>
 	{/if}
 	<button
+		data-testid={'set-val-to-max'}
 		on:click={setValueToMax}
 		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base">MAX</button
 	>

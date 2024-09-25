@@ -9,7 +9,7 @@ const initialState = {
 	status: 'Checking'
 };
 
-const cyFlrBalanceStore = () => {
+const balancesStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
@@ -45,4 +45,4 @@ const cyFlrBalanceStore = () => {
 	};
 };
 
-export default cyFlrBalanceStore();
+export default balancesStore();
