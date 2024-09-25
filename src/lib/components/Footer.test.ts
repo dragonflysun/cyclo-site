@@ -8,33 +8,25 @@ vi.mock('../../generated', () => ({
 }));
 
 describe('Footer.svelte', () => {
-	const mockWrappedFlareAddress = '0xwrappedFlare';
-	const mockCyFlareAddress = '0xcyFlare';
-
 	beforeEach(() => {
 		vi.spyOn(global, 'fetch').mockResolvedValue({} as Response);
-
-		// wrappedFlareAddress.set(mockWrappedFlareAddress);
-		// cyFlareAddress.set(mockCyFlareAddress);
 	});
 
 	it('should display cyFLR and sFLR supplies correctly when fetched', async () => {
-		// Mock the return value of readErc20TotalSupply
 		(readErc20TotalSupply as Mock)
-			.mockResolvedValueOnce(BigInt(2000000000000000000)) // Mock for cyFLR
-			.mockResolvedValueOnce(BigInt(5000000000000000000)); // Mock for sFLR
+			.mockResolvedValueOnce(BigInt(2000000000000000000))
+			.mockResolvedValueOnce(BigInt(5000000000000000000));
 
 		render(Footer);
 
-		// Ensure the DOM updates after the supplies are fetched and rendered
 		await waitFor(() => {
 			expect(screen.getByTestId('cyFLR-supply')).toBeInTheDocument();
-			expect(screen.getByText('2')).toBeInTheDocument(); // cyFLR formatted value
+			expect(screen.getByText('2')).toBeInTheDocument();
 		});
 
 		await waitFor(() => {
 			expect(screen.getByTestId('sFlr-supply')).toBeInTheDocument();
-			expect(screen.getByText('5')).toBeInTheDocument(); // sFLR formatted value
+			expect(screen.getByText('5')).toBeInTheDocument();
 		});
 	});
 
