@@ -2,9 +2,18 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import Lock from './Lock.svelte';
 import transactionStore from '$lib/transactionStore';
 import userEvent from '@testing-library/user-event';
-import { vi, describe, beforeEach, it } from 'vitest';
+import { vi, describe, beforeEach, it, expect } from 'vitest';
 
 const { mockBalancesStore } = await vi.hoisted(() => import('$lib/mocks/mockStores'));
+
+vi.mock('../../generated', async (importOriginal) => {
+	return {
+		...((await importOriginal()) as object),
+		readErc20PriceOracleReceiptVaultPreviewDeposit: vi.fn(() => {
+			return 14920000000000000n;
+		})
+	};
+});
 
 vi.mock('$lib/transactionStore', async (importOriginal) => ({
 	default: {
@@ -17,17 +26,21 @@ describe('Lock Component', () => {
 	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'initiateLockTransaction');
 
 	beforeEach(() => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(1000000000000000000), 'Ready');
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(1000000000000000000),
+			BigInt(1000000000000000000),
+			'Ready'
+		);
 		initiateLockTransactionSpy.mockClear();
 	});
 
 	it.only('should render WFLR balance and price ratio correctly', async () => {
 		render(Lock);
 		screen.debug();
-		// await waitFor(() => {
-		// 	expect(screen.getByTestId('wflr-balance')).toHaveTextContent('1.0000');
-		// 	expect(screen.getByTestId('price-ratio')).toBeInTheDocument();
-		// });
+		await waitFor(() => {
+			expect(screen.getByTestId('wflr-balance')).toHaveTextContent('1.0000');
+			expect(screen.getByTestId('price-ratio')).toBeInTheDocument();
+		});
 	});
 
 	it('should calculate the correct cyFLR amount based on input', async () => {
