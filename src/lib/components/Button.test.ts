@@ -1,7 +1,6 @@
-import { render, fireEvent, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import { describe, it, expect } from 'vitest';
 import Button from './Button.svelte';
-import { vi } from 'vitest';
 
 describe('Button Component', () => {
 	it('should render with default class as "outset"', () => {
