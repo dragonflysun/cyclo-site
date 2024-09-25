@@ -144,12 +144,12 @@ const transactionStore = () => {
 						try {
 							awaitLockTx(hash);
 							await waitForTransactionReceipt(config, { hash: hash });
-							transactionSuccess(
+							return transactionSuccess(
 								hash,
 								"Congrats! You've successfully locked your WFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
 							);
 						} catch {
-							transactionError('Transaction failed to lock your WFLR', hash);
+							return transactionError('Transaction failed to lock your WFLR', hash);
 						}
 					}
 				} catch {
@@ -169,9 +169,9 @@ const transactionStore = () => {
 				try {
 					awaitLockTx(hash);
 					await waitForTransactionReceipt(config, { hash: hash });
-					transactionSuccess(hash);
+					return transactionSuccess(hash); // Adding return here
 				} catch {
-					transactionError('Transaction failed to lock your WFLR', hash);
+					return transactionError('Transaction failed to lock your WFLR', hash);
 				}
 			} catch {
 				return transactionError('User rejected transaction');
@@ -258,15 +258,15 @@ const transactionStore = () => {
 							await writeApproveCyFlareSpend();
 							writeUnlock();
 						} catch {
-							transactionError('User rejected transaction');
+							return transactionError('User rejected transaction');
 						}
 					}
 					writeUnlock();
 				} else {
-					transactionError('Transaction failed to approve the cyFLR spend', hash);
+					return transactionError('Transaction failed to approve the cyFLR spend', hash);
 				}
 			} catch {
-				transactionError('User rejected transaction');
+				return transactionError('User rejected transaction');
 			}
 		} else {
 			const cyFlareSpendAllowance = await readErc20Allowance(config, {
