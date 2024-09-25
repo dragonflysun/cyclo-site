@@ -66,21 +66,24 @@
 </script>
 
 <Card size="lg">
-	<div class="flex w-full flex-col items-center justify-center gap-10">
+	<div class="flex w-full flex-col items-center justify-center gap-10" data-testid="lock-container">
 		{#if $signerAddress}
 			<div
-				class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
+				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
 					<span>WFLR BALANCE</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
-						class="cursor-pointer text-xs font-light hover:underline">How do I get WFLR?</a
+						class="cursor-pointer text-xs font-light hover:underline"
+						data-testid="get-wflr-link">How do I get WFLR?</a
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.wFlrBalance}<span in:fade={{ duration: 700 }}
+					{#key $balancesStore.wFlrBalance}<span
+							in:fade={{ duration: 700 }}
+							data-testid="wflr-balance"
 							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
 						>{/key}
 					<span>WFLR</span>
@@ -88,17 +91,21 @@
 			</div>
 		{/if}
 
-		<div class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
+		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<div class="flex flex-col">
 				<span>WFLR/USD PRICE</span>
 				<a
 					href={base + '/docs/why-flare'}
 					class="cursor-pointer text-xs font-light hover:underline"
-					target="_blank">How does Cyclo use the FTSO?</a
+					target="_blank"
+					data-testid="price-ratio-link">How does Cyclo use the FTSO?</a
 				>
 			</div>
 			{#key priceRatio}
-				<span in:fade={{ duration: 700 }} class="flex flex-row items-center gap-2"
+				<span
+					in:fade={{ duration: 700 }}
+					class="flex flex-row items-center gap-2"
+					data-testid="price-ratio"
 					>{Number(formatEther(priceRatio.toString())).toFixed(5)}
 
 					<svg width="20" height="20" viewBox="0 0 100 100">
@@ -118,12 +125,11 @@
 			{/key}
 		</div>
 
-		<div
-			class=" itens-center flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
-		>
+		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
 			<Input
+				data-testid="lock-input"
 				on:change={checkBalance}
 				on:setValueToMax={() => {
 					assets = $balancesStore.wFlrBalance;
@@ -139,8 +145,7 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock === null ? 0 : amountToLock}</span>
-
+				<span data-testid="amount-to-lock">{amountToLock === null ? 0 : amountToLock}</span>
 				<span>WFLR</span>
 			</div>
 
@@ -159,7 +164,7 @@
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				{#key priceRatio}
-					<span in:fade={{ duration: 700 }}
+					<span in:fade={{ duration: 700 }} data-testid="calculated-cyflr"
 						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
 					>
 				{/key}
@@ -171,6 +176,7 @@
 			<Button
 				disabled={insufficientFunds || !assets}
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
+				data-testid="lock-button"
 				on:click={() =>
 					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
@@ -181,7 +187,11 @@
 					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
 			>
 		{:else}
-			<Button customClass="text-lg" on:click={() => $web3Modal.open()}>CONNECT WALLET</Button>
+			<Button
+				customClass="text-lg"
+				data-testid="connect-wallet-button"
+				on:click={() => $web3Modal.open()}>CONNECT WALLET</Button
+			>
 		{/if}
 	</div>
 </Card>
