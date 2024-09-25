@@ -4,7 +4,7 @@ import { type Config } from '@wagmi/core';
 import { mockWeb3Config } from './mockWagmiConfig';
 
 // Mock writable stores
-export const web3ModalStore = writable<null | Web3Modal>(null);
+export const web3ModalStore = writable<null>(null);
 const mockWrongNetworkWritable = writable<boolean>(false);
 const mockSignerAddressWritable = writable<string>('');
 const mockChainIdWritable = writable<number>(0);
