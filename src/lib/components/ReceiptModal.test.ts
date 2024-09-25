@@ -4,7 +4,7 @@ import ReceiptModal from './ReceiptModal.svelte';
 import transactionStore from '$lib/transactionStore';
 
 import { formatEther } from 'ethers';
-import { mockReceipt } from '$lib/mocks/mockReceipt'; // Mock for receipt data
+import { mockReceipt } from '$lib/mocks/mockReceipt';
 import userEvent from '@testing-library/user-event';
 
 const { mockBalancesStore, mockErc1155AddressStore, mockCyFlrAddressStore } = await vi.hoisted(
