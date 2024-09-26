@@ -5,22 +5,23 @@
 	import Header from '$lib/components/Header.svelte';
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
 
-	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
 	import { flare } from '@wagmi/core/chains';
+	const initWallet = async () => {
+		const erckit = defaultConfig({
+			autoConnect: true,
+			appName: 'cyclo',
+			walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
+			chains: [flare],
+			connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]
+		});
+		await erckit.init();
+	};
 
-	onMount(async () => {
-		if (browser && window.navigator) {
-			const erckit = defaultConfig({
-				appName: 'cyclo',
-				walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
-				chains: [flare],
-				connectors: [injected(), walletConnect({ projectId: PUBLIC_WALLETCONNECT_ID })]
-			});
-			await erckit.init();
-		}
-	});
+	$: if (browser && window.navigator) {
+		initWallet();
+	}
 </script>
 
 {#if $wagmiConfig}
