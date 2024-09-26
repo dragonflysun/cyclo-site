@@ -31,10 +31,13 @@
 		checkBalance();
 	}
 
+	$: console.log($balancesStore.wFlrBalance);
+
 	const checkBalance = () => {
 		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
 		assets = bigNumValue;
 		if ($balancesStore.wFlrBalance < assets) {
+			console.log('insufficient funds', $balancesStore.wFlrBalance, assets);
 			insufficientFunds = true;
 		} else {
 			insufficientFunds = false;
