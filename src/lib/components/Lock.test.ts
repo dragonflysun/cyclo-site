@@ -56,6 +56,7 @@ describe('Lock Component', () => {
 
 		const input = screen.getByTestId('lock-input');
 		await userEvent.type(input, '0.5');
+		console.log('INPUT', input);
 		await waitFor(() => {
 			expect(screen.getByTestId('calculated-cyflr')).toHaveTextContent('0.500');
 		});

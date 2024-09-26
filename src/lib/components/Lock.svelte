@@ -15,7 +15,7 @@
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
 
-	export let amountToLock = '0.0';
+	export let amountToLock = '0.00';
 
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0);
