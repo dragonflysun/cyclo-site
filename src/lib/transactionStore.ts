@@ -170,10 +170,8 @@ const transactionStore = () => {
 				} else {
 					transactionError('Transaction failed to lock your SFLR', hash);
 				}
-
 			} catch {
-				transactionError('There was an error locking your WFLR. Please try again.');
-
+				transactionError('There was an error locking your SFLR. Please try again.');
 			}
 		}
 	};
