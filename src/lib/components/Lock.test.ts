@@ -3,6 +3,7 @@ import Lock from './Lock.svelte';
 import transactionStore from '$lib/transactionStore';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
+import { mockSignerAddressStore } from '$lib/mocks/mockStores';
 
 const { mockBalancesStore } = await vi.hoisted(() => import('$lib/mocks/mockStores'));
 
@@ -12,6 +13,12 @@ vi.mock('../../generated', async (importOriginal) => {
 		readErc20PriceOracleReceiptVaultPreviewDeposit: vi.fn(() => {
 			return 14920000000000000n;
 		})
+	};
+});
+
+vi.mock('$lib/balancesStore', async () => {
+	return {
+		default: mockBalancesStore
 	};
 });
 
@@ -26,15 +33,16 @@ describe('Lock Component', () => {
 	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'initiateLockTransaction');
 
 	beforeEach(() => {
+		initiateLockTransactionSpy.mockClear();
+	});
+
+	it.only('should render WFLR balance and price ratio correctly', async () => {
 		mockBalancesStore.mockSetSubscribeValue(
 			BigInt(1000000000000000000),
 			BigInt(1000000000000000000),
 			'Ready'
 		);
-		initiateLockTransactionSpy.mockClear();
-	});
 
-	it.only('should render WFLR balance and price ratio correctly', async () => {
 		render(Lock);
 		screen.debug();
 		await waitFor(() => {
@@ -43,7 +51,7 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it('should calculate the correct cyFLR amount based on input', async () => {
+	it.only('should calculate the correct cyFLR amount based on input', async () => {
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');

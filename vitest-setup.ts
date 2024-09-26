@@ -14,6 +14,8 @@ vi.mock('svelte-wagmi', async () => {
 	};
 });
 
+mockSignerAddressStore.mockSetSubscribeValue('0x1234');
+
 vi.mock('$app/stores', async () => {
 	const { readable, writable } = await import('svelte/store');
 	/**

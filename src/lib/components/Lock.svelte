@@ -27,6 +27,10 @@
 		checkBalance();
 	}
 
+	$: if (amountToLock) {
+		checkBalance();
+	}
+
 	const checkBalance = () => {
 		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
 		assets = bigNumValue;
@@ -41,7 +45,7 @@
 		startGettingPriceRatio();
 	});
 
-	$: console.log('blancestore', $balancesStore.wFlrBalance);
+	$: console.log('blancestore wflr', $balancesStore.wFlrBalance);
 
 	const getPriceRatio = async () => {
 		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
@@ -135,7 +139,7 @@
 
 			<Input
 				data-testid="lock-input"
-				on:change={checkBalance}
+				on:input={checkBalance}
 				on:setValueToMax={() => {
 					assets = $balancesStore.wFlrBalance;
 					amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
