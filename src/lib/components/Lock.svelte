@@ -3,7 +3,7 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cyFlareAddress, erc1155Address, wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, erc1155Address, sFlareAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
@@ -175,7 +175,7 @@
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						erc1155Address: $erc1155Address,
-						wrappedFlareAddress: $wrappedFlareAddress,
+						sFlareAddress: $sFlareAddress,
 						cyFlareAddress: $cyFlareAddress,
 						vaultAddress: $cyFlareAddress,
 						assets: assets
