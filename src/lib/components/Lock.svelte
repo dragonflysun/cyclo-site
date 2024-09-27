@@ -31,8 +31,6 @@
 		checkBalance();
 	}
 
-	$: console.log($balancesStore.wFlrBalance);
-
 	const checkBalance = () => {
 		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
 		assets = bigNumValue;
@@ -48,17 +46,13 @@
 		startGettingPriceRatio();
 	});
 
-	$: console.log('blancestore wflr', $balancesStore.wFlrBalance);
-
 	const getPriceRatio = async () => {
 		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
 			args: [BigInt(1e18)]
 		});
-		console.log('ratio!', priceRatio);
+		console.log('Fetched price ratio:', priceRatio); // Debug log
 	};
-
-	$: console.log('ratio!', priceRatio);
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
@@ -71,10 +65,6 @@
 	function stopGettingPriceRatio() {
 		clearInterval(intervalId);
 	}
-
-	onDestroy(() => {
-		stopGettingPriceRatio();
-	});
 </script>
 
 <Card size="lg">

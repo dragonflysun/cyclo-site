@@ -36,7 +36,7 @@ describe('Lock Component', () => {
 		initiateLockTransactionSpy.mockClear();
 	});
 
-	it.only('should render WFLR balance and price ratio correctly', async () => {
+	it('should render WFLR balance and price ratio correctly', async () => {
 		mockBalancesStore.mockSetSubscribeValue(
 			BigInt(1000000000000000000),
 			BigInt(1000000000000000000),
@@ -51,14 +51,17 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it.only('should calculate the correct cyFLR amount based on input', async () => {
+	it('should calculate the correct cyFLR amount based on input', async () => {
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
 		await userEvent.type(input, '0.5');
-		console.log('INPUT', input);
+
 		await waitFor(() => {
-			expect(screen.getByTestId('calculated-cyflr')).toHaveTextContent('0.500');
+			const priceRatio = screen.getByTestId('price-ratio');
+			expect(priceRatio).toBeInTheDocument();
+			const calculatedCyflr = screen.getByTestId('calculated-cyflr');
+			expect(calculatedCyflr).toHaveTextContent('0.500');
 		});
 	});
 
