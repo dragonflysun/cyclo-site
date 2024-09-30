@@ -3,7 +3,7 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, erc1155Address, sFlareAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
@@ -14,7 +14,6 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
-
 	export let amountToLock = '0.0';
 
 	let priceRatio = BigInt(0);
@@ -144,7 +143,7 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock === null ? 0 : amountToLock}</span>
+				<span>{amountToLock}</span>
 
 				<span>SFLR</span>
 			</div>
@@ -180,7 +179,9 @@
 					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
-						wrappedFlareAddress: $wrappedFlareAddress,
+						erc1155Address: $erc1155Address,
+						sFlareAddress: $sFlareAddress,
+						cyFlareAddress: $cyFlareAddress,
 						vaultAddress: $cyFlareAddress,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button

@@ -2,7 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import { readErc20TotalSupply } from '../../generated';
 	import { onMount } from 'svelte';
-	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, sFlareAddress } from '$lib/stores';
 	import { wagmiConfig } from 'svelte-wagmi';
 	import { formatEther } from 'ethers';
 	import { formatNumberWithAbbreviations } from '$lib/methods';
@@ -18,7 +18,7 @@
 
 	const getWrappedFlrSupply = async () => {
 		const data = await readErc20TotalSupply($wagmiConfig, {
-			address: $wrappedFlareAddress
+			address: $sFlareAddress
 		});
 		return (wrappedFlareSupply = data);
 	};
