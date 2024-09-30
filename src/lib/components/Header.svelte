@@ -16,13 +16,13 @@
 			<img src={logo} alt="Cyclo logo" class="h-8 cursor-pointer" />
 		</button>
 
-		<!-- <button
+		<button
 			class="text-white md:ml-4"
 			class:underline={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
 			on:click={() => {
 				goto(base + '/lock');
 			}}>App</button
-		> -->
+		>
 		<button
 			class="text-white md:ml-4"
 			class:underline={$page.url.pathname.startsWith('/docs')}
