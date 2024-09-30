@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-import type { Hex, WaitForTransactionReceiptErrorType, WriteContractErrorType } from 'viem';
+import type { Hex, WaitForTransactionReceiptErrorType } from 'viem';
 
 import type { Config } from '@wagmi/core';
 import { waitForTransactionReceipt } from '@wagmi/core';
@@ -171,10 +171,8 @@ const transactionStore = () => {
 						'You may need to wait a minute or two for your receipt to appear in the list view.'
 					);
 				}
-			} catch (e) {
-				const error = e as WriteContractErrorType;
+			} catch {
 				transactionError('There was an error locking your SFLR. Please try again.');
-				console.log('err', error);
 			}
 		}
 	};
@@ -258,18 +256,16 @@ const transactionStore = () => {
 						try {
 							await writeApproveCyFlareSpend();
 							writeUnlock();
-						} catch (error) {
+						} catch {
 							transactionError('User rejected transaction');
-							console.log('err', error);
 						}
 					}
 					writeUnlock();
 				} else {
 					transactionError('Transaction failed to approve the cyFLR spend', hash);
 				}
-			} catch (error) {
+			} catch {
 				transactionError('User rejected transaction');
-				console.log('err', error);
 			}
 		} else {
 			const cyFlareSpendAllowance = await readErc20Allowance(config, {

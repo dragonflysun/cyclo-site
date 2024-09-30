@@ -28,12 +28,14 @@
 	}
 
 	const checkBalance = () => {
-		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
-		assets = bigNumValue;
-		if ($balancesStore.sflrBalance < assets) {
-			insufficientFunds = true;
-		} else {
-			insufficientFunds = false;
+		if (amountToLock) {
+			const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
+			assets = bigNumValue;
+			if ($balancesStore.sFlrBalance < assets) {
+				insufficientFunds = true;
+			} else {
+				insufficientFunds = false;
+			}
 		}
 	};
 
@@ -80,8 +82,8 @@
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.sflrBalance}<span in:fade={{ duration: 700 }}
-							>{Number(formatEther($balancesStore.sflrBalance)).toFixed(4)}</span
+					{#key $balancesStore.sFlrBalance}<span in:fade={{ duration: 700 }}
+							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
 					<span>SFLR</span>
 				</div>
@@ -124,13 +126,16 @@
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
 			<Input
-				on:change={checkBalance}
+				on:change={(event) => {
+					amountToLock = event.detail.value;
+					checkBalance();
+				}}
 				on:setValueToMax={() => {
-					assets = $balancesStore.sflrBalance;
-					amountToLock = Number(formatEther($balancesStore.sflrBalance.toString())).toFixed(5);
+					assets = $balancesStore.sFlrBalance;
+					amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
 				}}
 				bind:amount={amountToLock}
-				maxValue={$balancesStore.sflrBalance}
+				maxValue={$balancesStore.sFlrBalance}
 				unit={'SFLR'}
 			/>
 		</div>
