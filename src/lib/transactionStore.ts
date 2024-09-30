@@ -166,9 +166,10 @@ const transactionStore = () => {
 				awaitLockTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 				if (res) {
-					transactionSuccess(hash);
-				} else {
-					transactionError('Transaction failed to lock your SFLR', hash);
+					return transactionSuccess(
+						hash,
+						'You may need to wait a minute or two for your receipt to appear in the list view.'
+					);
 				}
 			} catch {
 				transactionError('There was an error locking your SFLR. Please try again.');
