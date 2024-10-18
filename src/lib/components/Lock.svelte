@@ -9,7 +9,7 @@
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 
-	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -44,18 +44,20 @@
 	});
 
 	const getPriceRatio = async () => {
-		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		 const priceRatio = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
-			args: [BigInt(1e18)]
+			args: [BigInt(1e18), BigInt(1e18)]
 		});
+		console.log('priceRatio', priceRatio);
 	};
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
-		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		const priceRatio = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
-			args: [BigInt(1e18)]
+			args: [BigInt(1e18), BigInt(1e18)]
 		});
+		console.log('priceRatio', priceRatio);
 	};
 
 	function stopGettingPriceRatio() {
