@@ -6,7 +6,7 @@
 	import { wagmiConfig } from 'svelte-wagmi';
 	import { formatEther } from 'ethers';
 	import { formatNumberWithAbbreviations } from '$lib/methods';
-	let wrappedFlareSupply: bigint | null = null;
+	let stakedFlareSupply: bigint | null = null;
 	let cyFlareSupply: bigint | null = null;
 
 	const getCyFlrSupply = async () => {
@@ -16,20 +16,20 @@
 		return (cyFlareSupply = data);
 	};
 
-	const getWrappedFlrSupply = async () => {
+	const getStakedFlareSupply = async () => {
 		const data = await readErc20TotalSupply($wagmiConfig, {
 			address: $stakedFlareAddress
 		});
-		return (wrappedFlareSupply = data);
+		return (stakedFlareSupply = data);
 	};
 
 	onMount(async () => {
 		await getCyFlrSupply();
-		await getWrappedFlrSupply();
+		await getStakedFlareSupply();
 	});
 
-	$: readableSFLRSupply = wrappedFlareSupply
-		? formatNumberWithAbbreviations(+formatEther(wrappedFlareSupply))
+	$: readableSFLRSupply = stakedFlareSupply
+		? formatNumberWithAbbreviations(+formatEther(stakedFlareSupply))
 		: '';
 
 	$: readableCyFLRSupply = cyFlareSupply
