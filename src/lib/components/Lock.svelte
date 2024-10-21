@@ -3,7 +3,7 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, stakedFlareAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
@@ -182,7 +182,7 @@
 					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
-						wrappedFlareAddress: $wrappedFlareAddress,
+						stakedFlareAddress: $stakedFlareAddress,
 						vaultAddress: $cyFlareAddress,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button

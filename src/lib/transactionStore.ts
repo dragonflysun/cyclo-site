@@ -30,7 +30,7 @@ export enum TransactionStatus {
 
 export type initiateLockTransactionArgs = {
 	signerAddress: string | null;
-	wrappedFlareAddress: Hex;
+	stakedFlareAddress: Hex;
 	vaultAddress: Hex;
 	assets: bigint;
 	config: Config;
@@ -109,13 +109,13 @@ const transactionStore = () => {
 	const initiateLockTransaction = async ({
 		signerAddress,
 		config,
-		wrappedFlareAddress,
+		stakedFlareAddress,
 		vaultAddress,
 		assets
 	}: initiateLockTransactionArgs) => {
 		checkingWalletAllowance();
 		const data = await readErc20Allowance(config, {
-			address: wrappedFlareAddress,
+			address: stakedFlareAddress,
 			args: [signerAddress as Hex, vaultAddress]
 		});
 
@@ -123,7 +123,7 @@ const transactionStore = () => {
 			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your SFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
-					address: wrappedFlareAddress,
+					address: stakedFlareAddress,
 					args: [vaultAddress, assets]
 				});
 
