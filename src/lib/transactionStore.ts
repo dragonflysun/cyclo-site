@@ -118,44 +118,8 @@ const transactionStore = () => {
 			address: stakedFlareAddress,
 			args: [signerAddress as Hex, vaultAddress]
 		});
-
-		if (data < assets) {
-			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your SFLR...');
-			try {
-				const hash = await writeErc20Approve(config, {
-					address: stakedFlareAddress,
-					args: [vaultAddress, assets]
-				});
-
-				awaitApprovalTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
-
-				if (res) {
-					awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
-
-					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
-						address: vaultAddress,
-						args: [assets, signerAddress as Hex, 0n, '0x']
-					});
-
-					awaitLockTx(hash);
-					const res = await waitForTransactionReceipt(config, { hash: hash });
-					if (res) {
-						return transactionSuccess(
-							hash,
-							"Congrats! You've successfully locked your SFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
-						);
-					} else {
-						return transactionError('Transaction failed to lock your SFLR', hash);
-					}
-				}
-			} catch (e) {
-				const error = e as WaitForTransactionReceiptErrorType;
-				transactionError(
-					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
-				);
-			}
-		} else {
+		const writeLock = async () => {
+			console.log('wrting Lock');
 			try {
 				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
@@ -171,7 +135,38 @@ const transactionStore = () => {
 						'You may need to wait a minute or two for your receipt to appear in the list view.'
 					);
 				}
-			} catch {
+			} catch (e) {
+				console.log(e);
+				transactionError('There was an error locking your SFLR. Please try again.');
+			}
+		};
+
+		if (data < assets) {
+			console.log('data2', data < assets);
+			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your SFLR...');
+			try {
+				const hash = await writeErc20Approve(config, {
+					address: stakedFlareAddress,
+					args: [vaultAddress, assets]
+				});
+
+				awaitApprovalTx(hash);
+				const res = await waitForTransactionReceipt(config, { hash: hash });
+
+				if (res) {
+					writeLock();
+				}
+			} catch (e) {
+				const error = e as WaitForTransactionReceiptErrorType;
+				transactionError(
+					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
+				);
+			}
+		} else {
+			try {
+				writeLock();
+			} catch (e) {
+				console.log(e);
 				transactionError('There was an error locking your SFLR. Please try again.');
 			}
 		}
@@ -276,7 +271,6 @@ const transactionStore = () => {
 				await writeApproveCyFlareSpend();
 				writeUnlock();
 			}
-
 			writeUnlock();
 		}
 	};

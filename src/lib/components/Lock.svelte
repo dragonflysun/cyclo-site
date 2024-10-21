@@ -44,20 +44,20 @@
 	});
 
 	const getPriceRatio = async () => {
-		 const priceRatio = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cyFlareAddress,
-			args: [BigInt(1e18), BigInt(1e18)]
-		});
-		console.log('priceRatio', priceRatio);
+		//  const priceRatio = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		// 	address: $cyFlareAddress,
+		// 	args: [BigInt(1e18), BigInt(1e18)]
+		// });
+		// console.log('priceRatio', priceRatio);
 	};
 
 	const startGettingPriceRatio = async () => {
-		intervalId = setInterval(getPriceRatio, 5000);
-		const priceRatio = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cyFlareAddress,
-			args: [BigInt(1e18), BigInt(1e18)]
-		});
-		console.log('priceRatio', priceRatio);
+		// intervalId = setInterval(getPriceRatio, 5000);
+		// const priceRatio = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		// 	address: $cyFlareAddress,
+		// 	args: [BigInt(1e18), BigInt(1e18)]
+		// });
+		// console.log('priceRatio', priceRatio);
 	};
 
 	function stopGettingPriceRatio() {
