@@ -9,7 +9,7 @@
 	let wrappedFlareSupply: bigint | null = null;
 	let cyFlareSupply: bigint | null = null;
 
-	const getCyFlrSupply = async () => {
+	const getcysFLRSupply = async () => {
 		const data = await readErc20TotalSupply($wagmiConfig, {
 			address: $cyFlareAddress
 		});
@@ -24,7 +24,7 @@
 	};
 
 	onMount(async () => {
-		await getCyFlrSupply();
+		await getcysFLRSupply();
 		await getWrappedFlrSupply();
 	});
 
@@ -32,14 +32,14 @@
 		? formatNumberWithAbbreviations(+formatEther(wrappedFlareSupply))
 		: '';
 
-	$: readableCyFLRSupply = cyFlareSupply
+	$: readablecysFLRSupply = cyFlareSupply
 		? formatNumberWithAbbreviations(+formatEther(cyFlareSupply))
 		: '';
 </script>
 
 <footer class="flex h-16 flex-col justify-center bg-[#1C02B8] px-2 text-white">
-	{#if readableCyFLRSupply}
-		<div class="flex gap-2" in:fade>Total cyFLR supply <span>{readableCyFLRSupply}</span></div>
+	{#if readablecysFLRSupply}
+		<div class="flex gap-2" in:fade>Total cysFLR supply <span>{readablecysFLRSupply}</span></div>
 	{/if}
 	{#if readableSFLRSupply}
 		<div class="flex gap-2" in:fade>Total sFLR supply <span>{readableSFLRSupply}</span></div>
