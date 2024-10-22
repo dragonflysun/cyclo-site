@@ -11,7 +11,7 @@
 
 	$: if ($signerAddress) {
 		balancesStore.refreshSflr($wagmiConfig, $wrappedFlareAddress, $signerAddress);
-		balancesStore.refreshCyFlr($wagmiConfig, $cyFlareAddress, $signerAddress);
+		balancesStore.refreshcysFLR($wagmiConfig, $cyFlareAddress, $signerAddress);
 	}
 </script>
 

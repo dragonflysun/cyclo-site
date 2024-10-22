@@ -4,12 +4,12 @@ import { writable } from 'svelte/store';
 import type { Hex } from 'viem';
 
 const initialState = {
-	cyFlrBalance: BigInt(0),
+	cysFLRBalance: BigInt(0),
 	sFlrBalance: BigInt(0),
 	status: 'Checking'
 };
 
-const cyFlrBalanceStore = () => {
+const cysFLRBalanceStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
@@ -25,14 +25,14 @@ const cyFlrBalanceStore = () => {
 		}));
 	};
 
-	const refreshCyFlr = async (config: Config, cyFlrAddress: Hex, signerAddress: string) => {
-		const newCyFlrBalance = await readErc20BalanceOf(config, {
-			address: cyFlrAddress,
+	const refreshcysFLR = async (config: Config, cysFLRAddress: Hex, signerAddress: string) => {
+		const newcysFLRBalance = await readErc20BalanceOf(config, {
+			address: cysFLRAddress,
 			args: [signerAddress as Hex]
 		});
 		update((state) => ({
 			...state,
-			cyFlrBalance: newCyFlrBalance,
+			cysFLRBalance: newcysFLRBalance,
 			status: 'Ready'
 		}));
 	};
@@ -40,9 +40,9 @@ const cyFlrBalanceStore = () => {
 	return {
 		subscribe,
 		reset,
-		refreshCyFlr,
+		refreshcysFLR,
 		refreshSflr
 	};
 };
 
-export default cyFlrBalanceStore();
+export default cysFLRBalanceStore();
