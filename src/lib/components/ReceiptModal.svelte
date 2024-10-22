@@ -27,7 +27,7 @@
 	};
 
 	$: maxRedeemable =
-		$balancesStore?.cyFlrBalance < erc1155balance ? $balancesStore.cyFlrBalance : erc1155balance;
+		$balancesStore?.cysFLRBalance < erc1155balance ? $balancesStore.cysFLRBalance : erc1155balance;
 
 	$: buttonDisabled = erc1155balance < amountToRedeem || amountToRedeem <= 0;
 
@@ -82,7 +82,7 @@
 				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
 			>
 			<span class="w-1/2 text-center"
-				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cyFLR</span
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
 			>
 		</div>
 		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
@@ -108,8 +108,8 @@
 			})}
 		>{erc1155balance < amountToRedeem
 			? 'INSUFFICIENT RECEIPTS'
-			: $balancesStore.cyFlrBalance < amountToRedeem
-				? 'INSUFFICIENT cyFLR'
+			: $balancesStore.cysFLRBalance < amountToRedeem
+				? 'INSUFFICIENT cysFLR'
 				: 'UNLOCK'}</button
 	>
 </div>

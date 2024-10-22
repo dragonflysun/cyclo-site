@@ -168,7 +168,7 @@
 						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
 					>
 				{/key}
-				<span>cyFLR</span>
+				<span>cysFLR</span>
 			</div>
 		</div>
 

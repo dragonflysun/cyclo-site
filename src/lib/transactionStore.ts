@@ -120,7 +120,7 @@ const transactionStore = () => {
 		});
 
 		if (data < assets) {
-			awaitWalletConfirmation('You need to approve the cyFLR contract to lock your SFLR...');
+			awaitWalletConfirmation('You need to approve the cysFLR contract to lock your SFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
 					address: wrappedFlareAddress,
@@ -143,7 +143,7 @@ const transactionStore = () => {
 					if (res) {
 						return transactionSuccess(
 							hash,
-							"Congrats! You've successfully locked your SFLR in return for cyFLR. You can burn your cyFLR and receipts to redeem your original FLR at any time, or trade your cyFLR on the Flare Network."
+							"Congrats! You've successfully locked your SFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original FLR at any time, or trade your cysFLR on the Flare Network."
 						);
 					} else {
 						return transactionError('Transaction failed to lock your SFLR', hash);
@@ -195,7 +195,7 @@ const transactionStore = () => {
 				awaitUnlockTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 				if (res) {
-					balancesStore.refreshCyFlr(config, cyFlareAddress, signerAddress as string);
+					balancesStore.refreshcysFLR(config, cyFlareAddress, signerAddress as string);
 					return transactionSuccess(hash);
 				} else {
 					return transactionError('Transaction timed out... You can see more here' + hash);
@@ -206,7 +206,7 @@ const transactionStore = () => {
 		};
 
 		const writeApproveCyFlareSpend = async () => {
-			awaitWalletConfirmation('You need to approve the cyFLR spend to unlock your SFLR...');
+			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your SFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
 					address: cyFlareAddress,
@@ -217,7 +217,7 @@ const transactionStore = () => {
 				if (res) {
 					return res;
 				} else {
-					return transactionError('Transaction failed to approve the cyFLR spend', hash);
+					return transactionError('Transaction failed to approve the cysFLR spend', hash);
 				}
 				return res;
 			} catch (e) {
@@ -225,7 +225,7 @@ const transactionStore = () => {
 				return transactionError(
 					error.name === 'UserRejectedRequestError'
 						? 'User rejected transaction'
-						: 'There was an error approving the cyFLR spend. Please try again.'
+						: 'There was an error approving the cysFLR spend. Please try again.'
 				);
 			}
 		};
@@ -239,7 +239,7 @@ const transactionStore = () => {
 
 		if (!isERC1155Approved) {
 			try {
-				awaitWalletConfirmation('You need to approve the cyFLR contract to unlock your SFLR...');
+				awaitWalletConfirmation('You need to approve the cysFLR contract to unlock your SFLR...');
 				const hash = await writeErc1155SetApprovalForAll(config, {
 					address: erc1155Address,
 					args: [cyFlareAddress, true]
@@ -262,7 +262,7 @@ const transactionStore = () => {
 					}
 					writeUnlock();
 				} else {
-					transactionError('Transaction failed to approve the cyFLR spend', hash);
+					transactionError('Transaction failed to approve the cysFLR spend', hash);
 				}
 			} catch {
 				transactionError('User rejected transaction');
