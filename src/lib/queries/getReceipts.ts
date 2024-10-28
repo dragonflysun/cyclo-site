@@ -33,7 +33,6 @@ export const getReceipts = async (address: string, erc1155Address: string, confi
 			}))
 		);
 		data = data.filter((item: Receipt) => Number(item.balance) > 0);
-		console.log(data);
 		return data;
 	} catch (error) {
 		console.error(error);
