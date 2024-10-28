@@ -6,13 +6,17 @@
 	import { ArrowsRepeatCountOutline, LockOpenOutline, LockOutline } from 'flowbite-svelte-icons';
 
 	let loadingDots = '.';
-	// setInterval(updateLoadingDots, 500);
+
+	function updateLoadingDots() {
+		loadingDots = loadingDots.length >= 3 ? '.' : loadingDots + '.';
+	}
+
+	setInterval(updateLoadingDots, 500);
 </script>
 
 
 
-<main class="min-h-screen bg-[#1C02B8] p-4 font-mono text-white">
-	
+<main class="min-h-screen bg-[#1C02B8] p-4 font-mono text-white mt-8 mb-8">
 	<div class="mx-auto max-w-4xl border-2 border-white bg-primary p-8">
 		<div class="mb-6 flex flex-col items-center justify-between gap-4">
 			<img src={logo} alt="Cyclo logo" class="w-full max-w-[400px]" />
