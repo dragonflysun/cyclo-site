@@ -138,8 +138,8 @@ const transactionStore = () => {
 				} else {
 					return transactionError('Transaction failed to lock your SFLR', hash);
 				}
-			} catch(error) {
-				console.log(error)
+			} catch (error) {
+				console.log(error);
 				return transactionError('An error occurred during the transaction process');
 			}
 		};
