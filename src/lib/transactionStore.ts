@@ -31,7 +31,7 @@ export enum TransactionStatus {
 export type initiateLockTransactionArgs = {
 	signerAddress: string | null;
 	stakedFlareAddress: Hex;
-	vaultAddress: Hex;
+	cysFlareAddress: Hex;
 	assets: bigint;
 	config: Config;
 };
@@ -110,21 +110,21 @@ const transactionStore = () => {
 		signerAddress,
 		config,
 		stakedFlareAddress,
-		vaultAddress,
+		cysFlareAddress,
 		assets
 	}: initiateLockTransactionArgs) => {
 		checkingWalletAllowance();
 
 		const allowance = await readErc20Allowance(config, {
 			address: stakedFlareAddress,
-			args: [signerAddress as Hex, vaultAddress]
+			args: [signerAddress as Hex, cysFlareAddress]
 		});
 
 		const writeLock = async () => {
 			try {
 				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
-					address: vaultAddress,
+					address: cysFlareAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
 				});
 
@@ -148,7 +148,7 @@ const transactionStore = () => {
 			try {
 				const hash = await writeErc20Approve(config, {
 					address: stakedFlareAddress,
-					args: [vaultAddress, assets]
+					args: [cysFlareAddress, assets]
 				});
 
 				awaitApprovalTx(hash);

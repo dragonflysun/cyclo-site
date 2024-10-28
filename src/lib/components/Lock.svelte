@@ -183,7 +183,7 @@
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						stakedFlareAddress: $stakedFlareAddress,
-						vaultAddress: $cysFlareAddress,
+						cysFlareAddress: $cysFlareAddress,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
 			>
