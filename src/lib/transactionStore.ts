@@ -114,10 +114,16 @@ const transactionStore = () => {
 		assets
 	}: initiateLockTransactionArgs) => {
 		checkingWalletAllowance();
+
 		const allowance = await readErc20Allowance(config, {
 			address: wrappedFlareAddress,
 			args: [signerAddress as Hex, vaultAddress]
 		});
+
+		console.log("VAULT", vaultAddress)
+		console.log("ASSETS", assets)
+		console.log("ALLOWANCE", allowance)
+		console.log(assets < allowance)
 
 		const writeLock = async () => {
 			try {
