@@ -114,13 +114,48 @@ const transactionStore = () => {
 		assets
 	}: initiateLockTransactionArgs) => {
 		checkingWalletAllowance();
-
-		const allowance = await readErc20Allowance(config, {
+		const data = await readErc20Allowance(config, {
 			address: stakedFlareAddress,
 			args: [signerAddress as Hex, cysFlareAddress]
 		});
 
-		const writeLock = async () => {
+		if (data < assets) {
+			awaitWalletConfirmation('You need to approve the cysFLR contract to lock your SFLR...');
+			try {
+				const hash = await writeErc20Approve(config, {
+					address: stakedFlareAddress,
+					args: [cysFlareAddress, assets]
+				});
+
+				awaitApprovalTx(hash);
+				const res = await waitForTransactionReceipt(config, { hash: hash });
+
+				if (res) {
+					awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
+
+					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
+						address: cysFlareAddress,
+						args: [assets, signerAddress as Hex, 0n, '0x']
+					});
+
+					awaitLockTx(hash);
+					const res = await waitForTransactionReceipt(config, { hash: hash });
+					if (res) {
+						return transactionSuccess(
+							hash,
+							"Congrats! You've successfully locked your SFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original FLR at any time, or trade your cysFLR on the Flare Network."
+						);
+					} else {
+						return transactionError('Transaction failed to lock your SFLR', hash);
+					}
+				}
+			} catch (e) {
+				const error = e as WaitForTransactionReceiptErrorType;
+				transactionError(
+					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
+				);
+			}
+		} else {
 			try {
 				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
@@ -133,38 +168,12 @@ const transactionStore = () => {
 				if (res) {
 					return transactionSuccess(
 						hash,
-						"Congrats! You've successfully locked your SFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original FLR at any time, or trade your cysFLR on the Flare Network."
+						'You may need to wait a minute or two for your receipt to appear in the list view.'
 					);
-				} else {
-					return transactionError('Transaction failed to lock your SFLR', hash);
 				}
 			} catch {
-				return transactionError('An error occurred during the transaction process');
+				transactionError('There was an error locking your SFLR. Please try again.');
 			}
-		};
-
-		if (allowance < assets) {
-			awaitWalletConfirmation('You need to approve the cysFLR contract to lock your SFLR...');
-			try {
-				const hash = await writeErc20Approve(config, {
-					address: stakedFlareAddress,
-					args: [cysFlareAddress, assets]
-				});
-
-				awaitApprovalTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
-
-				if (res) {
-					writeLock();
-				}
-			} catch (e) {
-				const error = e as WaitForTransactionReceiptErrorType;
-				transactionError(
-					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
-				);
-			}
-		} else {
-			writeLock();
 		}
 	};
 
