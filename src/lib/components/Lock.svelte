@@ -3,13 +3,13 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, stakedFlareAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 
-	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -44,18 +44,20 @@
 	});
 
 	const getPriceRatio = async () => {
-		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
-			args: [BigInt(1e18)]
+			args: [BigInt(1e18), 0n]
 		});
+		priceRatio = result;
 	};
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
-		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
-			args: [BigInt(1e18)]
+			args: [BigInt(1e18), 0n]
 		});
+		priceRatio = result;
 	};
 
 	function stopGettingPriceRatio() {
@@ -180,7 +182,7 @@
 					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
-						wrappedFlareAddress: $wrappedFlareAddress,
+						stakedFlareAddress: $stakedFlareAddress,
 						vaultAddress: $cyFlareAddress,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
