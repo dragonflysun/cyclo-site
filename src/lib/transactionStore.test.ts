@@ -30,7 +30,7 @@ vi.mock('@wagmi/core', () => ({
 
 describe('transactionStore', () => {
 	const mockSignerAddress = '0x1234567890abcdef';
-	const mockWFlareAddress = '0xabcdef1234567890';
+	const mockStakedFlareAddress = '0xabcdef1234567890';
 	const mockVaultAddress = '0xabcdefabcdef1234';
 	const mockCyFlareAddress = '0xcdef1234abcdef5678';
 	const mockERC1155Address = '0xabcdefabcdef1234';
@@ -123,7 +123,7 @@ describe('transactionStore', () => {
 		initiateLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
-			wrappedFlareAddress: mockWFlareAddress,
+			stakedFlareAddress: mockStakedFlareAddress,
 			vaultAddress: mockVaultAddress,
 			assets: mockAssets
 		});
@@ -147,7 +147,7 @@ describe('transactionStore', () => {
 		await initiateLockTransaction({
 			signerAddress: '0x123',
 			config: mockWagmiConfigStore as unknown as Config,
-			wrappedFlareAddress: '0x456',
+			stakedFlareAddress: '0x456',
 			vaultAddress: '0x789',
 			assets: BigInt(1000)
 		});
@@ -164,7 +164,7 @@ describe('transactionStore', () => {
 		await initiateLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
-			wrappedFlareAddress: mockWFlareAddress,
+			stakedFlareAddress: mockStakedFlareAddress,
 			vaultAddress: mockVaultAddress,
 			assets: BigInt(100)
 		});
@@ -184,31 +184,37 @@ describe('transactionStore', () => {
 		await initiateLockTransaction({
 			signerAddress: '0x123',
 			config: mockWagmiConfigStore as unknown as Config,
-			wrappedFlareAddress: '0x456',
+			stakedFlareAddress: '0x456',
 			vaultAddress: '0x789',
 			assets
 		});
 
 		await waitFor(() => {
 			expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-			expect(get(transactionStore).error).toBe('User rejected transaction');
+			expect(get(transactionStore).error).toBe(
+				'There was an error locking your SFLR. Please try again.'
+			);
 		});
 	});
 	it('should handle user rejecting lock transaction confimation', async () => {
 		(readErc20Allowance as Mock).mockResolvedValue(BigInt(500));
 		(writeErc20Approve as Mock).mockResolvedValue('mockApproveHash');
-		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue('mockDepositHash');
+		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue(
+			new Error('UserRejectedRequestError')
+		);
 
 		await initiateLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
-			wrappedFlareAddress: mockWFlareAddress,
+			stakedFlareAddress: mockStakedFlareAddress,
 			vaultAddress: mockVaultAddress,
 			assets: BigInt(100)
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe('User rejected transaction');
+		expect(get(transactionStore).error).toBe(
+			'There was an error locking your SFLR. Please try again.'
+		);
 	});
 
 	it('should handle successful unlock transaction', async () => {
@@ -263,12 +269,14 @@ describe('transactionStore', () => {
 		await initiateLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
-			wrappedFlareAddress: mockWFlareAddress,
+			stakedFlareAddress: mockStakedFlareAddress,
 			vaultAddress: mockVaultAddress,
 			assets: BigInt(100)
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe('Transaction failed to lock your WFLR');
+		expect(get(transactionStore).error).toBe(
+			'There was an error locking your SFLR. Please try again.'
+		);
 	});
 });
