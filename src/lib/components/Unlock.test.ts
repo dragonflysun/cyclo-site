@@ -28,9 +28,9 @@ describe('Unlock Component', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockBalancesStore.mockSetSubscribeValue(
-			BigInt(1000000000000000000), // cyFlrBalance
-			BigInt(1000000000000000000), // wFlrBalance
-			'Ready' // status
+			BigInt(1000000000000000000), 
+			BigInt(1000000000000000000), 
+			'Ready' 
 		);
 	});
 
@@ -42,7 +42,7 @@ describe('Unlock Component', () => {
 		expect(screen.getByText('CONNECT WALLET TO VIEW RECEIPTS')).toBeInTheDocument();
 	});
 
-	it('should display cyFLR balance correctly when wallet is connected', async () => {
+	it('should display cysFLR balance correctly when wallet is connected', async () => {
 		mockConnectedStore.mockSetSubscribeValue(true);
 		mockSignerAddressStore.mockSetSubscribeValue('mockWalletAddress');
 		render(Unlock);
@@ -50,7 +50,7 @@ describe('Unlock Component', () => {
 		await waitFor(() => {
 			const balanceText = screen.getByText('1.0000');
 			expect(balanceText).toBeInTheDocument();
-			expect(screen.getByText('cyFLR')).toBeInTheDocument();
+			expect(screen.getByText('cysFLR')).toBeInTheDocument();
 		});
 	});
 
