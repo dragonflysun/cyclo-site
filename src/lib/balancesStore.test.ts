@@ -23,7 +23,7 @@ describe('cysFlrBalanceStore', () => {
 		reset();
 	});
 
-	it.only('should initialize with the correct default state', () => {
+	it('should initialize with the correct default state', () => {
 		expect(get(cysFlrBalanceStore)).toEqual({
 			cysFLRBalance: BigInt(0),
 			sFlrBalance: BigInt(0),
@@ -31,7 +31,7 @@ describe('cysFlrBalanceStore', () => {
 		});
 	});
 
-	it.only('should refresh sFlrBalance correctly', async () => {
+	it('should refresh sFlrBalance correctly', async () => {
 		const mockWFlrBalance = BigInt(1000);
 		(readErc20BalanceOf as Mock).mockResolvedValue(mockWFlrBalance);
 
@@ -46,7 +46,7 @@ describe('cysFlrBalanceStore', () => {
 		expect(storeValue.status).toBe('Ready');
 	});
 
-	it.only('should refresh cysFLRBalance correctly', async () => {
+	it('should refresh cysFLRBalance correctly', async () => {
 		const mockCyFlrBalance = BigInt(2000);
 		(readErc20BalanceOf as Mock).mockResolvedValue(mockCyFlrBalance);
 
@@ -61,7 +61,7 @@ describe('cysFlrBalanceStore', () => {
 		expect(storeValue.status).toBe('Ready');
 	});
 
-	it.only('should reset the store to its initial state', () => {
+	it('should reset the store to its initial state', () => {
 		const mockWFlrBalance = BigInt(1000);
 		(readErc20BalanceOf as Mock).mockResolvedValue(mockWFlrBalance);
 		refreshSflr(mockWagmiConfigStore as unknown as Config, mocksFlrAddress, mockSignerAddress);
