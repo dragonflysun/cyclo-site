@@ -3,13 +3,13 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, stakedFlareAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 
-	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -28,12 +28,14 @@
 	}
 
 	const checkBalance = () => {
-		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
-		assets = bigNumValue;
-		if ($balancesStore.wFlrBalance < assets) {
-			insufficientFunds = true;
-		} else {
-			insufficientFunds = false;
+		if (amountToLock) {
+			const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
+			assets = bigNumValue;
+			if ($balancesStore.sFlrBalance < assets) {
+				insufficientFunds = true;
+			} else {
+				insufficientFunds = false;
+			}
 		}
 	};
 
@@ -44,21 +46,22 @@
 	$: console.log('blancestore', $balancesStore.wFlrBalance);
 
 	const getPriceRatio = async () => {
-		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
-			args: [BigInt(1e18)]
+			args: [BigInt(1e18), 0n]
 		});
-		console.log('ratio!', priceRatio);
+		priceRatio = result;
 	};
 
 	$: console.log('ratio!', priceRatio);
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
-		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
-			args: [BigInt(1e18)]
+			args: [BigInt(1e18), 0n]
 		});
+		priceRatio = result;
 	};
 
 	function stopGettingPriceRatio() {
@@ -77,28 +80,25 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>WFLR BALANCE</span>
+					<span>SFLR BALANCE</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
-						class="cursor-pointer text-xs font-light hover:underline"
-						data-testid="get-wflr-link">How do I get WFLR?</a
+						class="cursor-pointer text-xs font-light hover:underline">How do I get SFLR?</a
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.wFlrBalance}<span
-							in:fade={{ duration: 700 }}
-							data-testid="wflr-balance"
-							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
+					{#key $balancesStore.sFlrBalance}<span in:fade={{ duration: 700 }}
+							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
-					<span>WFLR</span>
+					<span>SFLR</span>
 				</div>
 			</div>
 		{/if}
 
 		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<div class="flex flex-col">
-				<span>WFLR/USD PRICE</span>
+				<span>SFLR/USD PRICE</span>
 				<a
 					href={base + '/docs/why-flare'}
 					class="cursor-pointer text-xs font-light hover:underline"
@@ -134,15 +134,17 @@
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
 			<Input
-				data-testid="lock-input"
-				on:change={checkBalance}
+				on:change={(event) => {
+					amountToLock = event.detail.value;
+					checkBalance();
+				}}
 				on:setValueToMax={() => {
-					assets = $balancesStore.wFlrBalance;
-					amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
+					assets = $balancesStore.sFlrBalance;
+					amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
 				}}
 				bind:amount={amountToLock}
-				maxValue={$balancesStore.wFlrBalance}
-				unit={'WFLR'}
+				maxValue={$balancesStore.sFlrBalance}
+				unit={'SFLR'}
 			/>
 		</div>
 
@@ -150,8 +152,9 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span data-testid="amount-to-lock">{amountToLock === null ? 0 : amountToLock}</span>
-				<span>WFLR</span>
+				<span>{amountToLock === null ? 0 : amountToLock}</span>
+
+				<span>SFLR</span>
 			</div>
 
 			<div class="flex w-full">
@@ -173,7 +176,7 @@
 						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
 					>
 				{/key}
-				<span>cyFLR</span>
+				<span>cysFLR</span>
 			</div>
 		</div>
 
@@ -186,10 +189,10 @@
 					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
-						wrappedFlareAddress: $wrappedFlareAddress,
+						stakedFlareAddress: $stakedFlareAddress,
 						vaultAddress: $cyFlareAddress,
 						assets: assets
-					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
+					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
 			>
 		{:else}
 			<Button

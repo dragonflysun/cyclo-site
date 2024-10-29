@@ -9,6 +9,11 @@
 	function setValueToMax() {
 		dispatch('setValueToMax');
 	}
+
+	function handleInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		dispatch('change', { value: target.value });
+	}
 </script>
 
 <div
@@ -17,7 +22,7 @@
 	<input
 		class="mr-2 w-24 border-none bg-primary p-0 text-right text-lg text-white outline-none [appearance:textfield] focus:ring-0 md:w-40 md:text-2xl [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
 		{...$$restProps}
-		on:change
+		on:input={handleInput}
 		min={0}
 		placeholder="0.0"
 		step="0.1"
