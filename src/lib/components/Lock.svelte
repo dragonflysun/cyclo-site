@@ -43,8 +43,6 @@
 		startGettingPriceRatio();
 	});
 
-	$: console.log('blancestore', $balancesStore.wFlrBalance);
-
 	const getPriceRatio = async () => {
 		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
@@ -52,8 +50,6 @@
 		});
 		priceRatio = result;
 	};
-
-	$: console.log('ratio!', priceRatio);
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
