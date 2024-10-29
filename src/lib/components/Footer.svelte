@@ -39,7 +39,7 @@
 
 <footer class="flex h-16 flex-col justify-center bg-[#1C02B8] px-2 text-white">
 	{#if readablecysFLRSupply}
-		<div class="flex gap-2" in:fade>Total cysFLR supply <span>{readablecysFLRSupply}</span></div>
+		<div class="flex gap-2" in:fade data-testId="cysFlr-supply">Total cysFLR supply <span>{readablecysFLRSupply}</span></div>
 	{/if}
 	{#if readableSFLRSupply}
 		<div class="flex gap-2" in:fade data-testId="sFlr-supply">
