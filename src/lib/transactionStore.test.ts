@@ -191,13 +191,17 @@ describe('transactionStore', () => {
 
 		await waitFor(() => {
 			expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-			expect(get(transactionStore).error).toBe('There was an error locking your SFLR. Please try again.');
+			expect(get(transactionStore).error).toBe(
+				'There was an error locking your SFLR. Please try again.'
+			);
 		});
 	});
 	it('should handle user rejecting lock transaction confimation', async () => {
 		(readErc20Allowance as Mock).mockResolvedValue(BigInt(500));
 		(writeErc20Approve as Mock).mockResolvedValue('mockApproveHash');
-		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue(new Error('UserRejectedRequestError'));
+		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue(
+			new Error('UserRejectedRequestError')
+		);
 
 		await initiateLockTransaction({
 			signerAddress: mockSignerAddress,
@@ -208,7 +212,9 @@ describe('transactionStore', () => {
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe('There was an error locking your SFLR. Please try again.');
+		expect(get(transactionStore).error).toBe(
+			'There was an error locking your SFLR. Please try again.'
+		);
 	});
 
 	it('should handle successful unlock transaction', async () => {
@@ -269,6 +275,8 @@ describe('transactionStore', () => {
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe('There was an error locking your SFLR. Please try again.');
+		expect(get(transactionStore).error).toBe(
+			'There was an error locking your SFLR. Please try again.'
+		);
 	});
 });
