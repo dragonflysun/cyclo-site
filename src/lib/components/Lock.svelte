@@ -3,13 +3,13 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cyFlareAddress, wrappedFlareAddress } from '$lib/stores';
+	import { cyFlareAddress, stakedFlareAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 
-	import { readErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -32,13 +32,14 @@
 	}
 
 	const checkBalance = () => {
-		const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
-		assets = bigNumValue;
-		if ($balancesStore.wFlrBalance < assets) {
-			console.log('insufficient funds', $balancesStore.wFlrBalance, assets);
-			insufficientFunds = true;
-		} else {
-			insufficientFunds = false;
+		if (amountToLock) {
+			const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
+			assets = bigNumValue;
+			if ($balancesStore.sFlrBalance < assets) {
+				insufficientFunds = true;
+			} else {
+				insufficientFunds = false;
+			}
 		}
 	};
 
@@ -47,19 +48,20 @@
 	});
 
 	const getPriceRatio = async () => {
-		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
-			args: [BigInt(1e18)]
+			args: [BigInt(1e18), 0n]
 		});
-		console.log('Fetched price ratio:', priceRatio); // Debug log
+		priceRatio = result;
 	};
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
-		priceRatio = await readErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 			address: $cyFlareAddress,
-			args: [BigInt(1e18)]
+			args: [BigInt(1e18), 0n]
 		});
+		priceRatio = result;
 	};
 
 	function stopGettingPriceRatio() {
@@ -83,10 +85,8 @@
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.wFlrBalance}<span
-							in:fade={{ duration: 700 }}
-							data-testid="wflr-balance"
-							>{Number(formatEther($balancesStore.wFlrBalance)).toFixed(4)}</span
+					{#key $balancesStore.sFlrBalance}<span in:fade={{ duration: 700 }}
+							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
 					<span>WFLR</span>
 				</div>
@@ -131,15 +131,17 @@
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
 			<Input
-				data-testid="lock-input"
-				on:input={checkBalance}
+				on:change={(event) => {
+					amountToLock = event.detail.value;
+					checkBalance();
+				}}
 				on:setValueToMax={() => {
-					assets = $balancesStore.wFlrBalance;
-					amountToLock = Number(formatEther($balancesStore.wFlrBalance.toString())).toFixed(5);
+					assets = $balancesStore.sFlrBalance;
+					amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
 				}}
 				bind:amount={amountToLock}
-				maxValue={$balancesStore.wFlrBalance}
-				unit={'WFLR'}
+				maxValue={$balancesStore.sFlrBalance}
+				unit={'SFLR'}
 			/>
 		</div>
 
@@ -170,7 +172,7 @@
 						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
 					>
 				{/key}
-				<span>cyFLR</span>
+				<span>cysFLR</span>
 			</div>
 		</div>
 
@@ -183,7 +185,7 @@
 					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
-						wrappedFlareAddress: $wrappedFlareAddress,
+						stakedFlareAddress: $stakedFlareAddress,
 						vaultAddress: $cyFlareAddress,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button

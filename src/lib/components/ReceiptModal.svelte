@@ -36,7 +36,7 @@
 	}
 
 	$: maxRedeemable =
-		$balancesStore?.cyFlrBalance < erc1155balance ? $balancesStore.cyFlrBalance : erc1155balance;
+		$balancesStore?.cysFLRBalance < erc1155balance ? $balancesStore.cysFLRBalance : erc1155balance;
 
 	$: if (amountToRedeem) {
 		if (erc1155balance < amountToRedeem) {
@@ -98,12 +98,12 @@
 		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white md:text-2xl"
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
-			<span class="w-1/2 text-center" data-testid="redeem-receipts">
-				{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS
-			</span>
-			<span class="w-1/2 text-center" data-testid="redeem-cyflr">
-				{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cyFLR
-			</span>
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
+			>
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
+			>
 		</div>
 		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
 
@@ -127,6 +127,11 @@
 				assets: amountToRedeem,
 				tokenId: receipt.tokenId
 			})}
+		>{erc1155balance < amountToRedeem
+			? 'INSUFFICIENT RECEIPTS'
+			: $balancesStore.cysFLRBalance < amountToRedeem
+				? 'INSUFFICIENT cysFLR'
+				: 'UNLOCK'}</button
 	>
 		{buttonStatus}
 	</button>

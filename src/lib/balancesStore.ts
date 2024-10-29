@@ -4,35 +4,35 @@ import { writable } from 'svelte/store';
 import type { Hex } from 'viem';
 
 const initialState = {
-	cyFlrBalance: BigInt(0),
-	wFlrBalance: BigInt(0),
+	cysFLRBalance: BigInt(0),
+	sFlrBalance: BigInt(0),
 	status: 'Checking'
 };
 
-const balancesStore = () => {
+const cysFLRBalanceStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
-	const refreshWFlr = async (config: Config, wFlrAddress: Hex, signerAddress: string) => {
-		const newWFlrBalance = await readErc20BalanceOf(config, {
-			address: wFlrAddress,
+	const refreshSflr = async (config: Config, sFlrAddress: Hex, signerAddress: string) => {
+		const newSflrBalance = await readErc20BalanceOf(config, {
+			address: sFlrAddress,
 			args: [signerAddress as Hex]
 		});
 		update((state) => ({
 			...state,
-			wFlrBalance: newWFlrBalance,
+			sFlrBalance: newSflrBalance,
 			status: 'Ready'
 		}));
 	};
 
-	const refreshCyFlr = async (config: Config, cyFlrAddress: Hex, signerAddress: string) => {
-		const newCyFlrBalance = await readErc20BalanceOf(config, {
-			address: cyFlrAddress,
+	const refreshcysFLR = async (config: Config, cysFLRAddress: Hex, signerAddress: string) => {
+		const newcysFLRBalance = await readErc20BalanceOf(config, {
+			address: cysFLRAddress,
 			args: [signerAddress as Hex]
 		});
 		update((state) => ({
 			...state,
-			cyFlrBalance: newCyFlrBalance,
+			cysFLRBalance: newcysFLRBalance,
 			status: 'Ready'
 		}));
 	};
@@ -40,9 +40,9 @@ const balancesStore = () => {
 	return {
 		subscribe,
 		reset,
-		refreshCyFlr,
-		refreshWFlr
+		refreshcysFLR,
+		refreshSflr
 	};
 };
 
-export default balancesStore();
+export default cysFLRBalanceStore();
