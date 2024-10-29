@@ -67,6 +67,10 @@
 	function stopGettingPriceRatio() {
 		clearInterval(intervalId);
 	}
+
+	onDestroy(() => {
+		stopGettingPriceRatio();
+	});
 </script>
 
 <Card size="lg">
@@ -76,7 +80,7 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>WFLR BALANCE</span>
+					<span>SFLR BALANCE</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
@@ -84,10 +88,10 @@
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.sFlrBalance}<span in:fade={{ duration: 700 }}
+					{#key $balancesStore.sFlrBalance}<span data-testid="sflr-balance" in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
-					<span>WFLR</span>
+					<span >SFLR</span>
 				</div>
 			</div>
 		{/if}
@@ -130,6 +134,7 @@
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
 			<Input
+			data-testid="lock-input"
 				on:change={(event) => {
 					amountToLock = event.detail.value;
 					checkBalance();
