@@ -36,12 +36,12 @@
 	}
 
 	$: maxRedeemable =
-		$balancesStore?.cyFlrBalance < erc1155balance ? $balancesStore.cyFlrBalance : erc1155balance;
+		$balancesStore?.cysFLRBalance < erc1155balance ? $balancesStore.cysFLRBalance : erc1155balance;
 
 	$: if (amountToRedeem) {
 		if (erc1155balance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
-		} else if ($balancesStore.cyFlrBalance < amountToRedeem) {
+		} else if ($balancesStore.cysFLRBalance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_cyFLR;
 		} else {
 			buttonStatus = ButtonStatus.READY;
@@ -98,18 +98,18 @@
 		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white md:text-2xl"
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
-			<span class="w-1/2 text-center" data-testid="redeem-receipts">
-				{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS
-			</span>
-			<span class="w-1/2 text-center" data-testid="redeem-cyflr">
-				{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cyFLR
-			</span>
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
+			>
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
+			>
 		</div>
 		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(flrToReceive)).toFixed(5)} WFLR
+				{Number(formatEther(flrToReceive)).toFixed(5)} SFLR
 			</span>
 		</div>
 	</div>

@@ -33,16 +33,11 @@
 	divClass="border-outset flex flex-col items-center gap-6 rounded-none border-4 border-white bg-primary p-1 md:p-4 shadow-md max-w-full"
 	data-testid="receipts-table"
 >
-	<TableHead
-		class="bg-opacity-0 bg-none p-1 text-white md:p-4 [&_th]:px-2 [&_th]:md:px-6"
-		data-testid="table-head"
-	>
-		<TableHeadCell data-testid="header-locked-price">Locked Price</TableHeadCell>
-		<TableHeadCell data-testid="header-number-held">Number Held</TableHeadCell>
-		<TableHeadCell class="hidden md:block" data-testid="header-wflr-per-receipt"
-			>Locked WFLR/Receipt</TableHeadCell
-		>
-		<TableHeadCell data-testid="header-total-locked-wflr">Total Locked WFLR</TableHeadCell>
+	<TableHead class="bg-opacity-0 bg-none p-1 text-white md:p-4 [&_th]:px-2 [&_th]:md:px-6">
+		<TableHeadCell>Locked Price</TableHeadCell>
+		<TableHeadCell>Number Held</TableHeadCell>
+		<TableHeadCell class="hidden md:block">Locked SFLR/Receipt</TableHeadCell>
+		<TableHeadCell>Total Locked SFLR</TableHeadCell>
 		<TableHeadCell></TableHeadCell>
 	</TableHead>
 	<TableBody
