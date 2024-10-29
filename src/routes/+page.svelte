@@ -14,7 +14,40 @@
 	setInterval(updateLoadingDots, 500);
 </script>
 
+<style>
+  .typing-animation {
+    overflow: hidden;
+    border-right: 2px solid rgba(255,255,255,.75);
+    white-space: nowrap;
+    margin: 0;
+    animation: typing 3.5s steps(40, end),
+               blink-caret .75s step-end infinite;
+  }
 
+  .typing-delay-1 {
+    animation-delay: 0s;
+    width: 0;
+    animation: typing 2s steps(40, end) forwards,
+               blink-caret .75s step-end infinite;
+  }
+
+  .typing-delay-2 {
+    width: 0;
+    animation: typing 3s steps(40, end) forwards,
+               blink-caret .75s step-end infinite;
+    animation-delay: 2s;
+  }
+
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: rgba(255,255,255,.75) }
+  }
+</style>
 
 <main class="min-h-screen bg-[#1C02B8] p-4 font-mono text-white mt-8 mb-8">
 	<div class="mx-auto max-w-4xl border-2 border-white bg-primary p-8">
@@ -30,7 +63,7 @@
 				liquidations.
 			</p>
 			<Button
-				class="bg-white px-4 py-2 text-primary "
+				class="bg-white px-4 py-2 text-primary"
 				on:click={() => {
 					goto('docs');
 				}}>Learn More</Button
@@ -38,15 +71,14 @@
 		</div>
 	</div>
 
-
-	<div class="mx-auto max-w-4xl my-8 ">
-		<div class="mt-4 text-sm opacity-90 w-fit gap-2 flex items-center">
-			<span class="text-green-300">&gt; EXECUTING</span>
-			<span class="typing-animation typing-delay-1">"pure_defi_freedom.exe"</span>
+	<div class="mx-auto max-w-4xl my-8">
+		<div class="mt-4 text-sm opacity-90 gap-2 flex items-center w-fit">
+			<span class="text-green-300">&gt;</span>
+			<span class="typing-animation typing-delay-1 w-fit">EXECUTING "pure_defi_freedom.exe"</span>
 		</div>
 		<div class="mt-4 text-sm opacity-90 w-fit gap-2 flex items-center">
 			<span class="text-green-300">SYSTEM_STATUS:</span> 
-			<span class="typing-animation typing-delay-2">"Powered by the Flare Time Series Oracle (FTSO)"</span>
+			<span class="typing-animation typing-delay-2">Powered by the Flare Time Series Oracle (FTSO)</span>
 		</div>
 	</div>
 
@@ -100,7 +132,7 @@
 		<div class="border-2 border-white bg-primary p-8 flex flex-col">
 			<h2 class="mb-6 text-3xl self-start">READY_PLAYER_ONE{loadingDots}</h2>
 			<div class="flex justify-center gap-4">
-				<Button class=" w-32" on:click={() => goto(base + '/lock')}>LOCK</Button>
+				<Button class="w-32" on:click={() => goto(base + '/lock')}>LOCK</Button>
 				<Button class="w-32" on:click={() => goto(base + '/unlock')}>UNLOCK</Button>
 			</div>
 		</div>
