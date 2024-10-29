@@ -284,6 +284,7 @@ const transactionStore = () => {
 		reset,
 		initiateLockTransaction,
 		initiateUnlockTransaction,
+		checkingWalletAllowance,
 		awaitWalletConfirmation,
 		awaitApprovalTx,
 		awaitLockTx,
