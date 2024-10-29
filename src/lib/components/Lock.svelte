@@ -58,7 +58,7 @@
 			address: $cyFlareAddress,
 			args: [BigInt(1e18), 0n]
 		});
-		priceRatio = result;
+		return priceRatio = result;
 	};
 
 	function stopGettingPriceRatio() {
