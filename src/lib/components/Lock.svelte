@@ -8,7 +8,6 @@
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
-
 	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
