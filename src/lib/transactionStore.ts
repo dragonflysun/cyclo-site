@@ -31,14 +31,14 @@ export enum TransactionStatus {
 export type initiateLockTransactionArgs = {
 	signerAddress: string | null;
 	stakedFlareAddress: Hex;
-	vaultAddress: Hex;
+	cysFlareAddress: Hex;
 	assets: bigint;
 	config: Config;
 };
 
 export type InitiateUnlockTransactionArgs = {
 	signerAddress: string | null;
-	cyFlareAddress: Hex;
+	cysFlareAddress: Hex;
 	erc1155Address: Hex;
 	assets: bigint;
 	config: Config;
@@ -110,13 +110,13 @@ const transactionStore = () => {
 		signerAddress,
 		config,
 		stakedFlareAddress,
-		vaultAddress,
+		cysFlareAddress,
 		assets
 	}: initiateLockTransactionArgs) => {
 		checkingWalletAllowance();
 		const data = await readErc20Allowance(config, {
 			address: stakedFlareAddress,
-			args: [signerAddress as Hex, vaultAddress]
+			args: [signerAddress as Hex, cysFlareAddress]
 		});
 
 		if (data < assets) {
@@ -124,7 +124,7 @@ const transactionStore = () => {
 			try {
 				const hash = await writeErc20Approve(config, {
 					address: stakedFlareAddress,
-					args: [vaultAddress, assets]
+					args: [cysFlareAddress, assets]
 				});
 
 				awaitApprovalTx(hash);
@@ -134,7 +134,7 @@ const transactionStore = () => {
 					awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
 
 					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
-						address: vaultAddress,
+						address: cysFlareAddress,
 						args: [assets, signerAddress as Hex, 0n, '0x']
 					});
 
@@ -159,7 +159,7 @@ const transactionStore = () => {
 			try {
 				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
-					address: vaultAddress,
+					address: cysFlareAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
 				});
 
@@ -180,7 +180,7 @@ const transactionStore = () => {
 	const initiateUnlockTransaction = async ({
 		signerAddress,
 		config,
-		cyFlareAddress,
+		cysFlareAddress,
 		erc1155Address,
 		tokenId,
 		assets
@@ -189,13 +189,13 @@ const transactionStore = () => {
 			try {
 				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your SFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
-					address: cyFlareAddress,
+					address: cysFlareAddress,
 					args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
 				});
 				awaitUnlockTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 				if (res) {
-					balancesStore.refreshcysFLR(config, cyFlareAddress, signerAddress as string);
+					balancesStore.refreshcysFLR(config, cysFlareAddress, signerAddress as string);
 					return transactionSuccess(hash);
 				} else {
 					return transactionError('Transaction timed out... You can see more here' + hash);
@@ -209,8 +209,8 @@ const transactionStore = () => {
 			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your SFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
-					address: cyFlareAddress,
-					args: [cyFlareAddress, assets]
+					address: cysFlareAddress,
+					args: [cysFlareAddress, assets]
 				});
 				awaitApprovalTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
@@ -234,7 +234,7 @@ const transactionStore = () => {
 
 		const isERC1155Approved = await readErc1155IsApprovedForAll(config, {
 			address: erc1155Address,
-			args: [signerAddress as Hex, cyFlareAddress]
+			args: [signerAddress as Hex, cysFlareAddress]
 		});
 
 		if (!isERC1155Approved) {
@@ -242,17 +242,17 @@ const transactionStore = () => {
 				awaitWalletConfirmation('You need to approve the cysFLR contract to unlock your SFLR...');
 				const hash = await writeErc1155SetApprovalForAll(config, {
 					address: erc1155Address,
-					args: [cyFlareAddress, true]
+					args: [cysFlareAddress, true]
 				});
 				awaitApprovalTx(hash);
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 
 				if (res) {
-					const cyFlareSpendAllowance = await readErc20Allowance(config, {
-						address: cyFlareAddress,
-						args: [signerAddress as Hex, cyFlareAddress]
+					const cysFlareSpendAllowance = await readErc20Allowance(config, {
+						address: cysFlareAddress,
+						args: [signerAddress as Hex, cysFlareAddress]
 					});
-					if (cyFlareSpendAllowance < assets) {
+					if (cysFlareSpendAllowance < assets) {
 						try {
 							await writeApproveCyFlareSpend();
 							writeUnlock();
@@ -268,11 +268,11 @@ const transactionStore = () => {
 				transactionError('User rejected transaction');
 			}
 		} else {
-			const cyFlareSpendAllowance = await readErc20Allowance(config, {
-				address: cyFlareAddress,
-				args: [signerAddress as Hex, cyFlareAddress]
+			const cysFlareSpendAllowance = await readErc20Allowance(config, {
+				address: cysFlareAddress,
+				args: [signerAddress as Hex, cysFlareAddress]
 			});
-			if (cyFlareSpendAllowance < assets) {
+			if (cysFlareSpendAllowance < assets) {
 				await writeApproveCyFlareSpend();
 				writeUnlock();
 			}
