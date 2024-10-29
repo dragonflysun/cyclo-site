@@ -108,7 +108,7 @@
 		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
-			<span class="flex overflow-ellipsis">
+			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
 				{Number(formatEther(flrToReceive)).toFixed(5)} SFLR
 			</span>
 		</div>
@@ -127,12 +127,7 @@
 				assets: amountToRedeem,
 				tokenId: receipt.tokenId
 			})}
-		>{erc1155balance < amountToRedeem
-			? 'INSUFFICIENT RECEIPTS'
-			: $balancesStore.cysFLRBalance < amountToRedeem
-				? 'INSUFFICIENT cysFLR'
-				: 'UNLOCK'}</button
-	>
+		>
 		{buttonStatus}
 	</button>
 </div>
