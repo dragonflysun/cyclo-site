@@ -47,10 +47,9 @@ describe('ReceiptModal Component', () => {
 
 		const input = screen.getByTestId('redeem-input');
 		await userEvent.type(input, '0.5');
-		// await userEvent.tab();
 
 		await waitFor(() => {
-			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('0.21664 WFLR');
+			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('0.21664 SFLR');
 		});
 	});
 
@@ -74,7 +73,7 @@ describe('ReceiptModal Component', () => {
 		render(ReceiptModal, { receipt: mockReceipt });
 
 		const input = screen.getByTestId('redeem-input');
-		await userEvent.type(input, '0.5');
+		await userEvent.type(input, '250000000');
 		await userEvent.tab();
 
 		await waitFor(() => {
