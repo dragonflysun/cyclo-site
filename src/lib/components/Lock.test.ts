@@ -11,7 +11,7 @@ vi.mock('../../generated', async (importOriginal) => {
   return {
     ...((await importOriginal()) as object),
     simulateErc20PriceOracleReceiptVaultPreviewDeposit: vi.fn(async () => ({
-      result: 14920000000000000n
+      result: 11114920000000000000n
     }))
   };
 });
@@ -64,7 +64,7 @@ describe('Lock Component', () => {
       const priceRatio = screen.getByTestId('price-ratio');
       expect(priceRatio).toBeInTheDocument();
       const calculatedCyflr = screen.getByTestId('calculated-cyflr');
-      expect(calculatedCyflr).toHaveTextContent('0.001');
+      expect(calculatedCyflr).toHaveTextContent('0.056');
     });
   });
 
