@@ -27,15 +27,15 @@
   .typing-delay-1 {
     animation-delay: 0s;
     width: 0;
-    animation: typing 2s steps(40, end) forwards,
+    animation: typing 1s steps(40, end) forwards,
                blink-caret .75s step-end infinite;
   }
 
   .typing-delay-2 {
     width: 0;
-    animation: typing 3s steps(40, end) forwards,
+    animation: typing 2s steps(40, end) forwards,
                blink-caret .75s step-end infinite;
-    animation-delay: 2s;
+    animation-delay: 1s;
   }
 
   @keyframes typing {
