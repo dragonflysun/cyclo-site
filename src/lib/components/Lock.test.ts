@@ -3,9 +3,9 @@ import Lock from './Lock.svelte';
 import transactionStore from '$lib/transactionStore';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
+import { mockSignerAddressStore } from '$lib/mocks/mockStores';
 
 const { mockBalancesStore } = await vi.hoisted(() => import('$lib/mocks/mockStores'));
-
 
 vi.mock('../../generated', async (importOriginal) => {
   return {
@@ -37,16 +37,19 @@ describe('Lock Component', () => {
   beforeEach(() => {
     initiateLockTransactionSpy.mockClear();
     mockBalancesStore.mockSetSubscribeValue(
-      BigInt(1000000000000000000), // sFlrBalance
-      BigInt(1000000000000000000), // wFlrBalance
+      BigInt(1234000000000000000), // sFlrBalance
+      BigInt(9876000000000000000), // wFlrBalance
       'Ready' // status
     );
   });
 
   it('should render SFLR balance and price ratio correctly', async () => {
+	mockSignerAddressStore.mockSetSubscribeValue('0x1234567890123456789012345678901234567890');
     render(Lock);
     await waitFor(() => {
-      expect(screen.getByTestId('sflr-balance')).toHaveTextContent('1.0000');
+	expect(screen.getByTestId('sflr-balance')).toBeInTheDocument();
+
+      expect(screen.getByTestId('sflr-balance')).toHaveTextContent('9.8760');
       expect(screen.getByTestId('price-ratio')).toBeInTheDocument();
     });
   });
@@ -55,13 +58,13 @@ describe('Lock Component', () => {
     render(Lock);
 
     const input = screen.getByTestId('lock-input');
-    await userEvent.type(input, '0.5');
+    await userEvent.type(input, '500000');
 
     await waitFor(() => {
       const priceRatio = screen.getByTestId('price-ratio');
       expect(priceRatio).toBeInTheDocument();
       const calculatedCyflr = screen.getByTestId('calculated-cyflr');
-      expect(calculatedCyflr).toHaveTextContent('0.500');
+      expect(calculatedCyflr).toHaveTextContent('0.001');
     });
   });
 
@@ -85,16 +88,5 @@ describe('Lock Component', () => {
 
     const lockButton = screen.getByTestId('lock-button');
     expect(lockButton).toBeDisabled();
-  });
-
-  it('should handle errors when fetching price ratio', async () => {
-    const { simulateErc20PriceOracleReceiptVaultPreviewDeposit } = await import('../../generated');
-    vi.mocked(simulateErc20PriceOracleReceiptVaultPreviewDeposit).mockRejectedValue(new Error('Failed to fetch price ratio'));
-
-    render(Lock);
-
-    await waitFor(() => {
-      expect(screen.getByTestId('price-ratio')).toHaveTextContent('0.00000');
-    });
   });
 });

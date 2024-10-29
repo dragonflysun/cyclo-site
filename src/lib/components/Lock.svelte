@@ -51,7 +51,6 @@
 		priceRatio = result;
 	};
 
-	$: console.log('ratio!', priceRatio);
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
@@ -78,14 +77,14 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>SFLR BALANCE</span>
+					<span>SFLR BALANCE!!!</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
 						class="cursor-pointer text-xs font-light hover:underline">How do I get SFLR?</a
 					>
 				</div>
-				<div class="flex flex-row gap-4" data-testid="sflr-balance">
+				<div class="flex flex-row gap-4">
 					{#key $balancesStore.sFlrBalance}<span data-testid="sflr-balance" in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
@@ -132,6 +131,7 @@
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
 			<Input
+			data-testid="lock-input"
 				on:change={(event) => {
 					amountToLock = event.detail.value;
 					checkBalance();
