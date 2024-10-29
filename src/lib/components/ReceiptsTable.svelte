@@ -35,8 +35,8 @@
 	<TableHead class="bg-opacity-0 bg-none p-1 text-white md:p-4 [&_th]:px-2 [&_th]:md:px-6">
 		<TableHeadCell>Locked Price</TableHeadCell>
 		<TableHeadCell>Number Held</TableHeadCell>
-		<TableHeadCell class="hidden md:block">Locked WFLR/Receipt</TableHeadCell>
-		<TableHeadCell>Total Locked WFLR</TableHeadCell>
+		<TableHeadCell class="hidden md:block">Locked SFLR/Receipt</TableHeadCell>
+		<TableHeadCell>Total Locked SFLR</TableHeadCell>
 		<TableHeadCell></TableHeadCell>
 	</TableHead>
 	<TableBody
