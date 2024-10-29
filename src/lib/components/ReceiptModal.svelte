@@ -41,7 +41,7 @@
 	$: if (amountToRedeem) {
 		if (erc1155balance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
-		} else if ($balancesStore.cyFlrBalance < amountToRedeem) {
+		} else if ($balancesStore.cysFLRBalance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_cyFLR;
 		} else {
 			buttonStatus = ButtonStatus.READY;
@@ -127,7 +127,7 @@
 				assets: amountToRedeem,
 				tokenId: receipt.tokenId
 			})}
-		>
+	>
 		{buttonStatus}
 	</button>
 </div>
