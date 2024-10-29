@@ -132,7 +132,6 @@ const transactionStore = () => {
 
 				if (res) {
 					awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
-
 					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
 						address: vaultAddress,
 						args: [assets, signerAddress as Hex, 0n, '0x']
