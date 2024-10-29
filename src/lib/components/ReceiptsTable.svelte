@@ -35,14 +35,12 @@
 >
 	<TableHead
 		class="bg-opacity-0 bg-none p-1 text-white md:p-4 [&_th]:px-2 [&_th]:md:px-6"
-		data-testid="table-head"
+		data-testid="headers"
 	>
-		<TableHeadCell data-testid="header-locked-price">Locked Price</TableHeadCell>
-		<TableHeadCell data-testid="header-number-held">Number Held</TableHeadCell>
-		<TableHeadCell class="hidden md:block" data-testid="header-wflr-per-receipt"
-			>Locked WFLR/Receipt</TableHeadCell
-		>
-		<TableHeadCell data-testid="header-total-locked-wflr">Total Locked WFLR</TableHeadCell>
+		<TableHeadCell>Locked Price</TableHeadCell>
+		<TableHeadCell>Number Held</TableHeadCell>
+		<TableHeadCell class="hidden md:block">Locked SFLR/Receipt</TableHeadCell>
+		<TableHeadCell>Total Locked SFLR</TableHeadCell>
 		<TableHeadCell></TableHeadCell>
 	</TableHead>
 	<TableBody

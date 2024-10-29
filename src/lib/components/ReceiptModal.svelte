@@ -41,7 +41,7 @@
 	$: if (amountToRedeem) {
 		if (erc1155balance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
-		} else if ($balancesStore.cyFlrBalance < amountToRedeem) {
+		} else if ($balancesStore.cysFLRBalance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_cyFLR;
 		} else {
 			buttonStatus = ButtonStatus.READY;
@@ -109,7 +109,7 @@
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(flrToReceive)).toFixed(5)} WFLR
+				{Number(formatEther(flrToReceive)).toFixed(5)} SFLR
 			</span>
 		</div>
 	</div>
@@ -127,11 +127,6 @@
 				assets: amountToRedeem,
 				tokenId: receipt.tokenId
 			})}
-		>{erc1155balance < amountToRedeem
-			? 'INSUFFICIENT RECEIPTS'
-			: $balancesStore.cysFLRBalance < amountToRedeem
-				? 'INSUFFICIENT cysFLR'
-				: 'UNLOCK'}</button
 	>
 		{buttonStatus}
 	</button>

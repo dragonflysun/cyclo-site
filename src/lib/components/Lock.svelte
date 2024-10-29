@@ -80,8 +80,7 @@
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
-						class="cursor-pointer text-xs font-light hover:underline"
-						data-testid="get-wflr-link">How do I get WFLR?</a
+						class="cursor-pointer text-xs font-light hover:underline">How do I get SFLR?</a
 					>
 				</div>
 				<div class="flex flex-row gap-4">
@@ -149,8 +148,9 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span data-testid="amount-to-lock">{amountToLock === null ? 0 : amountToLock}</span>
-				<span>WFLR</span>
+				<span>{amountToLock === null ? 0 : amountToLock}</span>
+
+				<span>SFLR</span>
 			</div>
 
 			<div class="flex w-full">

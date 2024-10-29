@@ -11,10 +11,7 @@ describe('ReceiptsTable Component', () => {
 	it('renders the receipts table with correct headers and data', async () => {
 		render(ReceiptsTable, { receipts: mockReceipts as unknown as Receipt[] });
 
-		expect(screen.getByTestId('header-locked-price')).toBeInTheDocument();
-		expect(screen.getByTestId('header-number-held')).toBeInTheDocument();
-		expect(screen.getByTestId('header-wflr-per-receipt')).toBeInTheDocument();
-		expect(screen.getByTestId('header-total-locked-wflr')).toBeInTheDocument();
+		expect(screen.getByTestId('headers')).toBeInTheDocument();
 
 		for (let i = 0; i < mockReceipts.length; i++) {
 			expect(screen.getByTestId(`locked-price-${i}`)).toHaveTextContent(

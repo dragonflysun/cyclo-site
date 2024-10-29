@@ -16,19 +16,18 @@ const erc1155AddressWritable = writable<Hex>('0x6D6111ab02800aC64f66456874add77F
 const mockCyFlrAddressWritable = writable<Hex>('0x91e3B9820b47c7D4e6765E90F94C1638E7bc53C6');
 
 const mockBalancesWritable = writable({
-	cyFlrBalance: BigInt(100),
-	wFlrBalance: BigInt(100),
+	cysFLRBalance: BigInt(100),
+	sFlrBalance: BigInt(100),
 	status: 'Checking'
 });
 
 export const mockBalancesStore = {
 	subscribe: mockBalancesWritable.subscribe,
 	set: mockBalancesWritable.set,
-	mockSetSubscribeValue: (cyFlrBalance: bigint, wFlrBalance: bigint, status: string): void => {
-		console.log('Mock Balances Store Updated:', { cyFlrBalance, wFlrBalance, status });
+	mockSetSubscribeValue: (cysFLRBalance: bigint, sFlrBalance: bigint, status: string): void => {
 		mockBalancesWritable.set({
-			cyFlrBalance,
-			wFlrBalance,
+			cysFLRBalance,
+			sFlrBalance,
 			status
 		});
 	}

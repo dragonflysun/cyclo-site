@@ -20,7 +20,7 @@ describe('Footer.svelte', () => {
 		render(Footer);
 
 		await waitFor(() => {
-			expect(screen.getByTestId('cyFLR-supply')).toBeInTheDocument();
+			expect(screen.getByTestId('cysFlr-supply')).toBeInTheDocument();
 			expect(screen.getByText('2')).toBeInTheDocument();
 		});
 
