@@ -85,11 +85,11 @@
 						class="cursor-pointer text-xs font-light hover:underline">How do I get SFLR?</a
 					>
 				</div>
-				<div class="flex flex-row gap-4">
-					{#key $balancesStore.sFlrBalance}<span in:fade={{ duration: 700 }}
+				<div class="flex flex-row gap-4" data-testid="sflr-balance">
+					{#key $balancesStore.sFlrBalance}<span data-testid="sflr-balance" in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
-					<span>SFLR</span>
+					<span >SFLR</span>
 				</div>
 			</div>
 		{/if}
