@@ -3,7 +3,6 @@ import Lock from './Lock.svelte';
 import transactionStore from '$lib/transactionStore';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
-import { mockSignerAddressStore } from '$lib/mocks/mockStores';
 
 const { mockBalancesStore } = await vi.hoisted(() => import('$lib/mocks/mockStores'));
 
