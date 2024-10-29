@@ -88,10 +88,12 @@
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.sFlrBalance}<span data-testid="sflr-balance" in:fade={{ duration: 700 }}
+					{#key $balancesStore.sFlrBalance}<span
+							data-testid="sflr-balance"
+							in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
-					<span >SFLR</span>
+					<span>SFLR</span>
 				</div>
 			</div>
 		{/if}
@@ -134,7 +136,7 @@
 			<span class="align-center content-center">LOCK AMOUNT</span>
 
 			<Input
-			data-testid="lock-input"
+				data-testid="lock-input"
 				on:change={(event) => {
 					amountToLock = event.detail.value;
 					checkBalance();

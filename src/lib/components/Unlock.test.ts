@@ -28,9 +28,9 @@ describe('Unlock Component', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockBalancesStore.mockSetSubscribeValue(
-			BigInt(1000000000000000000), 
-			BigInt(1000000000000000000), 
-			'Ready' 
+			BigInt(1000000000000000000),
+			BigInt(1000000000000000000),
+			'Ready'
 		);
 	});
 
@@ -66,7 +66,6 @@ describe('Unlock Component', () => {
 	});
 
 	it('should display receipts table when receipts are available', async () => {
-
 		const { getReceipts } = await import('$lib/queries/getReceipts');
 		vi.mocked(getReceipts).mockResolvedValue(mockReceipts);
 
