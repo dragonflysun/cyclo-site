@@ -271,7 +271,7 @@ const transactionStore = () => {
 				args: [signerAddress as Hex, cysFlareAddress]
 			});
 			if (cysFlareSpendAllowance < assets) {
-				await writeApproveCyFlareSpend();
+				await writeApproveCysFlareSpend();
 				writeUnlock();
 			}
 			writeUnlock();
