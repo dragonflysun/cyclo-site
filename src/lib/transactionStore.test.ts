@@ -32,7 +32,7 @@ describe('transactionStore', () => {
 	const mockSignerAddress = '0x1234567890abcdef';
 	const mockStakedFlareAddress = '0xabcdef1234567890';
 	const mockVaultAddress = '0xabcdefabcdef1234';
-	const mockCyFlareAddress = '0xcdef1234abcdef5678';
+	const mockCysFlareAddress = '0xcdef1234abcdef5678';
 	const mockERC1155Address = '0xabcdefabcdef1234';
 	const mockTokenId = '1';
 	const mockAssets = BigInt(1000);
@@ -124,7 +124,7 @@ describe('transactionStore', () => {
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			stakedFlareAddress: mockStakedFlareAddress,
-			vaultAddress: mockVaultAddress,
+			cysFlareAddress: mockVaultAddress,
 			assets: mockAssets
 		});
 		reset();
@@ -148,7 +148,7 @@ describe('transactionStore', () => {
 			signerAddress: '0x123',
 			config: mockWagmiConfigStore as unknown as Config,
 			stakedFlareAddress: '0x456',
-			vaultAddress: '0x789',
+			cysFlareAddress: '0x789',
 			assets: BigInt(1000)
 		});
 
@@ -165,7 +165,7 @@ describe('transactionStore', () => {
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			stakedFlareAddress: mockStakedFlareAddress,
-			vaultAddress: mockVaultAddress,
+			cysFlareAddress: mockVaultAddress,
 			assets: BigInt(100)
 		});
 
@@ -185,7 +185,7 @@ describe('transactionStore', () => {
 			signerAddress: '0x123',
 			config: mockWagmiConfigStore as unknown as Config,
 			stakedFlareAddress: '0x456',
-			vaultAddress: '0x789',
+			cysFlareAddress: '0x789',
 			assets
 		});
 
@@ -207,7 +207,7 @@ describe('transactionStore', () => {
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			stakedFlareAddress: mockStakedFlareAddress,
-			vaultAddress: mockVaultAddress,
+			cysFlareAddress: mockVaultAddress,
 			assets: BigInt(100)
 		});
 
@@ -226,7 +226,7 @@ describe('transactionStore', () => {
 		await initiateUnlockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
-			cyFlareAddress: mockCyFlareAddress,
+			cysFlareAddress: mockCysFlareAddress,
 			erc1155Address: mockERC1155Address,
 			tokenId: mockTokenId,
 			assets: BigInt(100)
@@ -248,7 +248,7 @@ describe('transactionStore', () => {
 		await initiateUnlockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
-			cyFlareAddress: mockCyFlareAddress,
+			cysFlareAddress: mockCysFlareAddress,
 			erc1155Address: mockERC1155Address,
 			tokenId: mockTokenId,
 			assets: BigInt(100)
@@ -270,7 +270,7 @@ describe('transactionStore', () => {
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			stakedFlareAddress: mockStakedFlareAddress,
-			vaultAddress: mockVaultAddress,
+			cysFlareAddress: mockVaultAddress,
 			assets: BigInt(100)
 		});
 
