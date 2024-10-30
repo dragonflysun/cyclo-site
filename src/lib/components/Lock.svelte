@@ -3,7 +3,7 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cyFlareAddress, stakedFlareAddress } from '$lib/stores';
+	import { cysFlareAddress, stakedFlareAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
@@ -48,7 +48,7 @@
 
 	const getPriceRatio = async () => {
 		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cyFlareAddress,
+			address: $cysFlareAddress,
 			args: [BigInt(1e18), 0n]
 		});
 		priceRatio = result;
@@ -57,7 +57,7 @@
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
 		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cyFlareAddress,
+			address: $cysFlareAddress,
 			args: [BigInt(1e18), 0n]
 		});
 		priceRatio = result;
@@ -192,7 +192,7 @@
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						stakedFlareAddress: $stakedFlareAddress,
-						vaultAddress: $cyFlareAddress,
+						cysFlareAddress: $cysFlareAddress,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
 			>
