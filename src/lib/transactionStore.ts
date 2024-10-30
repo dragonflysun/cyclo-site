@@ -132,7 +132,6 @@ const transactionStore = () => {
 
 				if (res) {
 					awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
-
 					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
 						address: cysFlareAddress,
 						args: [assets, signerAddress as Hex, 0n, '0x']
@@ -205,7 +204,7 @@ const transactionStore = () => {
 			}
 		};
 
-		const writeApproveCyFlareSpend = async () => {
+		const writeApproveCysFlareSpend = async () => {
 			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your SFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
@@ -219,7 +218,6 @@ const transactionStore = () => {
 				} else {
 					return transactionError('Transaction failed to approve the cysFLR spend', hash);
 				}
-				return res;
 			} catch (e) {
 				const error = e as WaitForTransactionReceiptErrorType;
 				return transactionError(
@@ -254,7 +252,7 @@ const transactionStore = () => {
 					});
 					if (cysFlareSpendAllowance < assets) {
 						try {
-							await writeApproveCyFlareSpend();
+							await writeApproveCysFlareSpend();
 							writeUnlock();
 						} catch {
 							transactionError('User rejected transaction');
@@ -273,7 +271,7 @@ const transactionStore = () => {
 				args: [signerAddress as Hex, cysFlareAddress]
 			});
 			if (cysFlareSpendAllowance < assets) {
-				await writeApproveCyFlareSpend();
+				await writeApproveCysFlareSpend();
 				writeUnlock();
 			}
 			writeUnlock();
@@ -285,6 +283,7 @@ const transactionStore = () => {
 		reset,
 		initiateLockTransaction,
 		initiateUnlockTransaction,
+		checkingWalletAllowance,
 		awaitWalletConfirmation,
 		awaitApprovalTx,
 		awaitLockTx,
