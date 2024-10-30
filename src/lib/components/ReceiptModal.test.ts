@@ -12,7 +12,7 @@ const { mockBalancesStore, mockErc1155AddressStore, mockCyFlrAddressStore } = aw
 );
 
 vi.mock('$lib/stores', async () => ({
-	cyFlareAddress: mockCyFlrAddressStore,
+	cysFlareAddress: mockCyFlrAddressStore,
 	erc1155Address: mockErc1155AddressStore
 }));
 
