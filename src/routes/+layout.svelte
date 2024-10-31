@@ -6,6 +6,7 @@
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
 
 	import { browser } from '$app/environment';
+	import { PUBLIC_LAUNCHED } from '$env/static/public';
 
 	import { flare } from '@wagmi/core/chains';
 	const initWallet = async () => {
@@ -26,7 +27,7 @@
 
 {#if $wagmiConfig}
 	<div class="flex min-h-screen flex-col">
-		<Header />
+		<Header launched={PUBLIC_LAUNCHED === 'true'} />
 		<main class="flex-grow bg-[#1C02B8]">
 			<slot></slot>
 		</main>

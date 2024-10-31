@@ -3,6 +3,18 @@ import Footer from './Footer.svelte';
 import { readErc20TotalSupply } from '../../generated';
 import { describe, it, vi, expect, type Mock, beforeEach } from 'vitest';
 
+const { mockWagmiConfigStore, mockSignerAddressStore, mockChainIdStore } = await vi.hoisted(
+	() => import('$lib/mocks/mockStores')
+);
+
+vi.mock('svelte-wagmi', () => {
+	return {
+		wagmiConfig: mockWagmiConfigStore,
+		signerAddress: mockSignerAddressStore,
+		chainId: mockChainIdStore
+	};
+});
+
 vi.mock('../../generated', () => ({
 	readErc20TotalSupply: vi.fn()
 }));
