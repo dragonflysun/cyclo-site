@@ -53,7 +53,7 @@
 					<img src={logo} alt="Cyclo logo" class="w-full max-w-[400px]" />
 					<h1 class="text-lg text-white md:text-2xl">A new way to leverage FLR, coming soon.</h1>
 				</div>
-				<div class="flex flex-col items-center justify-between gap-6">
+				<div class="flex flex-col items-center justify-between gap-6 text-center">
 					<p class="text-xl">
 						Access the power of leverage while keeping your FLR position completely safe from
 						liquidations.
