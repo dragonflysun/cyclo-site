@@ -47,26 +47,31 @@
 
 	{#if showMainContent}
 		<div in:fade class="main-content flex flex-col gap-12">
-			<div class="mx-auto flex max-w-4xl flex-col gap-6">
-				<div class="flex flex-col items-center justify-between gap-12">
-					<img src={logo} alt="Cyclo logo" class="w-full max-w-[400px]" />
-					<h1 class="text-lg text-white md:text-2xl">A new way to leverage FLR, coming soon.</h1>
+			<!-- TOP SECTION -->
+			<div class="mx-auto max-w-4xl border-2 border-white bg-primary p-8">
+				<img src={logo} alt="Cyclo logo" class="mb-4 w-full max-w-[400px]" />
+				<div class="mb-6 flex items-center justify-between">
+					<h1 class="flex items-center gap-3 text-4xl font-bold tracking-wider">
+						LEVERAGE WITHOUT FEAR_
+					</h1>
 				</div>
-				<div class="flex flex-col items-center justify-between gap-6 text-center">
-					<p class="text-xl">
+				<div class="mb-6">
+					<p class="mb-4 text-xl">
 						Access the power of leverage while keeping your FLR position completely safe from
 						liquidations.
 					</p>
-					<button
-						class="flex items-center justify-center gap-2 border-4 border-white bg-primary px-6 py-4 text-xl font-semibold text-white transition-all hover:bg-blue-700 disabled:bg-neutral-600"
-						on:click={() => {
-							goto('docs');
-						}}>Learn More</button
-					>
+					<div class="inline-block border border-dashed border-white p-3 text-lg opacity-80">
+						<span class="text-green-400">&gt; EXECUTING</span> pure_defi_freedom.exe
+					</div>
+					<p class="mt-4 text-sm opacity-90">
+						<span class="text-green-400">SYSTEM_STATUS:</span> Powered by the Flare Time Series Oracle
+						(FTSO)
+					</p>
 				</div>
 			</div>
+			<!-- TOP -->
 
-			<div class="mx-auto mb-8 grid max-w-4xl gap-6 md:grid-cols-2">
+			<div class="mx-auto grid max-w-4xl gap-12 md:grid-cols-2">
 				<div class="group border-2 border-white bg-primary p-6 transition-colors hover:bg-blue-700">
 					<h2 class="mb-4 flex items-center gap-2 text-2xl">
 						[ WHAT YOU GET ]<span class="text-xs opacity-70 group-hover:opacity-100"
@@ -114,6 +119,85 @@
 						</li>
 					</ul>
 				</div>
+				<div class="col-span-2 flex flex-col gap-12">
+				<div
+					class="group mx-auto  w-full max-w-4xl border-2 border-white bg-primary p-6 transition-colors hover:bg-blue-700"
+				>
+					<h2 class="mb-4 flex items-center gap-2 text-2xl">
+						[ PURE DEFI FREEDOM ] <span class="text-xs opacity-70 group-hover:opacity-100"
+							>loading{loadingDots}</span
+						>
+					</h2>
+					<div class="grid gap-6 md:grid-cols-3">
+						<div class="space-y-3">
+							<p class="flex items-center gap-2">
+								<span class="text-green-400">[✓]</span>
+								<span>No Liquidations</span>
+							</p>
+							<p class="flex items-center gap-2">
+								<span class="text-green-400">[✓]</span>
+								<span>Always Solvent</span>
+							</p>
+						</div>
+						<div class="space-y-3">
+							<p class="flex items-center gap-2">
+								<span class="text-green-400">[✓]</span>
+								<span>Non-Custodial</span>
+							</p>
+							<p class="flex items-center gap-2">
+								<span class="text-green-400">[✓]</span>
+								<span>No Governance</span>
+							</p>
+						</div>
+						<div class="space-y-3">
+							<p class="flex items-center gap-2">
+								<span class="text-green-400">[✓]</span>
+								<span>Zero Fees</span>
+							</p>
+							<p class="flex items-center gap-2">
+								<span class="text-green-400">[✓]</span>
+								<span>Permissionless</span>
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div
+					class="group mx-auto mb-8 max-w-4xl border-2 border-white bg-primary p-6 transition-colors hover:bg-blue-700"
+				>
+					<h2 class="mb-4 flex items-center gap-2 text-2xl">
+						[ INTRODUCING cysFLR ] <span class="text-xs opacity-70 group-hover:opacity-100"
+							>installing{loadingDots}</span
+						>
+					</h2>
+					<div class="grid gap-6 md:grid-cols-2">
+						<div class="space-y-4">
+							<p class="flex items-start gap-3">
+								<span class="text-xl text-green-400">►</span>
+								<span>A new token backed by locked sFLR collateral</span>
+							</p>
+							<p class="flex items-start gap-3">
+								<span class="text-xl text-green-400">►</span>
+								<span>Freely tradeable in the open market</span>
+							</p>
+							<p class="flex items-start gap-3">
+								<span class="text-xl text-green-400">►</span>
+								<span>Price moves with market demand for leverage</span>
+							</p>
+						</div>
+						<div class="space-y-4">
+							<p class="flex items-start gap-3">
+								<span class="text-xl text-green-400">►</span>
+								<span>Natural price cycles create trading opportunities</span>
+							</p>
+							<p class="flex items-start gap-3">
+								<span class="text-xl text-green-400">►</span>
+								<span>Backed by real FLR value, not algorithmic</span>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
 			</div>
 		</div>
 	{/if}
