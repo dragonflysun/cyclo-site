@@ -8,7 +8,7 @@ describe('Header.svelte', () => {
 	});
 
 	it('renders the logo and WalletConnect component', async () => {
-		vi.doMock('$env/static/public', () => ({ PUBLIC_LAUNCHED: 'false' }));
+		vi.doMock('$env/static/public', () => ({ LAUNCHED: 'false' }));
 		const { default: Header } = await import('./Header.svelte');
 		render(Header);
 
@@ -19,8 +19,8 @@ describe('Header.svelte', () => {
 		expect(walletConnectComponent).toBeInTheDocument();
 	});
 
-	it('shows the "App" button when PUBLIC_LAUNCHED is "true"', async () => {
-		vi.doMock('$env/static/public', () => ({ PUBLIC_LAUNCHED: 'true' }));
+	it('shows the "App" button when LAUNCHED is "true"', async () => {
+		vi.doMock('$env/static/public', () => ({ LAUNCHED: 'true' }));
 		const { default: Header } = await import('./Header.svelte');
 		render(Header);
 
@@ -28,8 +28,8 @@ describe('Header.svelte', () => {
 		expect(appButton).toBeInTheDocument();
 	});
 
-	it('does not show the "App" button when PUBLIC_LAUNCHED is not "true"', async () => {
-		vi.doMock('$env/static/public', () => ({ PUBLIC_LAUNCHED: 'false' }));
+	it('does not show the "App" button when LAUNCHED is not "true"', async () => {
+		vi.doMock('$env/static/public', () => ({ LAUNCHED: 'false' }));
 		const { default: Header } = await import('./Header.svelte');
 		render(Header);
 
