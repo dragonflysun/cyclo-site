@@ -6,6 +6,7 @@
 	import { wagmiConfig } from 'svelte-wagmi';
 	import { formatEther } from 'ethers';
 	import { formatNumberWithAbbreviations } from '$lib/methods';
+
 	let stakedFlareSupply: bigint | null = null;
 	let cysFlareSupply: bigint | null = null;
 
