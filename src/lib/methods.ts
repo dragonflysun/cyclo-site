@@ -4,7 +4,8 @@ export function readableNumber(number: number) {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 2
 	};
-	const formattedWithOptions = number.toLocaleString('en-US', options);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const formattedWithOptions = number.toLocaleString('en-US', options as any);
 	return formattedWithOptions;
 }
 
