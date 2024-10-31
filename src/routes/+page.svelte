@@ -16,10 +16,10 @@
 
 	setTimeout(() => {
 		hideTerminal = true;
-	}, 4500); 
+	}, 4500);
 	setTimeout(() => {
 		showMainContent = true;
-	}, 5000); 
+	}, 5000);
 </script>
 
 <main class="min-h-screen bg-[#1C02B8] p-4 font-mono text-white">
