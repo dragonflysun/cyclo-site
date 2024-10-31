@@ -42,3 +42,4 @@ jobs:
       - run: nix develop -c npm run svelte-lint-format-check
         env:
           PUBLIC_WALLETCONNECT_ID: ${{ secrets.PUBLIC_WALLETCONNECT_ID }}
+          PUBLIC_LAUNCHED: ${{ vars.PUBLIC_LAUNCHED }}
