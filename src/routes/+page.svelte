@@ -5,7 +5,7 @@
 	import { fade } from 'svelte/transition';
 
 	let loadingDots = '.';
-	let showMainContent = true;
+	let showMainContent = false;
 	let hideTerminal = false;
 
 	function updateLoadingDots() {
