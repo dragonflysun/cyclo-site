@@ -16,11 +16,10 @@
 
 	setTimeout(() => {
 		hideTerminal = true;
-	}, 4500); // Adjust timing based on animations
+	}, 4500); 
 	setTimeout(() => {
 		showMainContent = true;
-		console.log('showing main content');
-	}, 5000); // Adjust timing based on animations
+	}, 5000); 
 </script>
 
 <main class="min-h-screen bg-[#1C02B8] p-4 font-mono text-white">
