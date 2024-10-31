@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 import { web3ModalStore } from './src/lib/mocks/mockStores';
+
 const { mockWagmiConfigStore, mockSignerAddressStore, mockChainIdStore, mockConnectedStore } =
 	await vi.hoisted(() => import('./src/lib/mocks/mockStores'));
 
