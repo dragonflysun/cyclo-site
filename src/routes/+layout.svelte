@@ -4,10 +4,8 @@
 	import { injected, walletConnect } from '@wagmi/connectors';
 	import Header from '$lib/components/Header.svelte';
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
-
 	import { browser } from '$app/environment';
 	import { PUBLIC_LAUNCHED } from '$env/static/public';
-
 	import { flare } from '@wagmi/core/chains';
 
 	const initWallet = async () => {
