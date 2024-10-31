@@ -1,20 +1,33 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import Header from './Header.svelte';
 import '@testing-library/jest-dom/vitest';
-import { describe, it, expect } from 'vitest';
+import Header from './Header.svelte';
 
 describe('Header.svelte', () => {
-	it('renders the logo', () => {
-		render(Header);
+	beforeEach(() => {
+		vi.resetModules();
+	});
+	it('renders the logo and WalletConnect component', async () => {
+		render(Header, { props: { launched: true } });
 
 		const logo = screen.getByAltText('Cyclo logo');
 		expect(logo).toBeInTheDocument();
-	});
-
-	it('renders the WalletConnect component', () => {
-		render(Header);
 
 		const walletConnectComponent = screen.getByTestId('wallet-connect');
 		expect(walletConnectComponent).toBeInTheDocument();
+	});
+
+	it('shows the "App" button when PUBLIC_LAUNCHED is "true"', async () => {
+		render(Header, { props: { launched: true } });
+
+		const appButton = screen.getByRole('button', { name: /App/i });
+		expect(appButton).toBeInTheDocument();
+	});
+
+	it('does not show the "App" button when PUBLIC_LAUNCHED is not "true"', async () => {
+		render(Header, { props: { launched: false } });
+
+		const appButton = screen.queryByRole('button', { name: /App/i });
+		expect(appButton).not.toBeInTheDocument();
 	});
 });
