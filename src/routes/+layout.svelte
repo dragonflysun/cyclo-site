@@ -9,6 +9,7 @@
 	import { PUBLIC_LAUNCHED } from '$env/static/public';
 
 	import { flare } from '@wagmi/core/chains';
+	import Footer from '$lib/components/Footer.svelte';
 	const initWallet = async () => {
 		const erckit = defaultConfig({
 			autoConnect: true,

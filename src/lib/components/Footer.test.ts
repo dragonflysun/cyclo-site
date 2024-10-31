@@ -3,10 +3,15 @@ import Footer from './Footer.svelte';
 import { readErc20TotalSupply } from '../../generated';
 import { describe, it, vi, expect, type Mock, beforeEach } from 'vitest';
 
-
 vi.mock('../../generated', () => ({
 	readErc20TotalSupply: vi.fn()
 }));
+
+vi.mock('ethers', async () => {
+	return {
+		formatEther: vi.fn().mockImplementation((value) => value.toString())
+	};
+});
 
 describe('Footer.svelte', () => {
 	beforeEach(() => {
@@ -22,12 +27,12 @@ describe('Footer.svelte', () => {
 
 		await waitFor(() => {
 			expect(screen.getByTestId('cysFlr-supply')).toBeInTheDocument();
-			expect(screen.getByText('2')).toBeInTheDocument();
+			expect(screen.getByText('2E')).toBeInTheDocument();
 		});
 
 		await waitFor(() => {
 			expect(screen.getByTestId('sFlr-supply')).toBeInTheDocument();
-			expect(screen.getByText('5')).toBeInTheDocument();
+			expect(screen.getByText('5E')).toBeInTheDocument();
 		});
 	});
 

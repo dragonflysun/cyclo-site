@@ -1,11 +1,11 @@
-<script lang='ts'>
+<script lang="ts">
 	import WalletConnect from './WalletConnect.svelte';
 	import logo from '$lib/logo-white.svg';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
 
-	export let launched: boolean
+	export let launched: boolean;
 </script>
 
 <div class="flex h-16 w-screen items-center justify-between bg-[#1C02B8] px-4">
