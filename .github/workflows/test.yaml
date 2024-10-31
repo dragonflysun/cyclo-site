@@ -22,7 +22,7 @@ jobs:
       - run: nix develop -c npm run test
         env:
           PUBLIC_WALLETCONNECT_ID: ${{ secrets.PUBLIC_WALLETCONNECT_ID }}
-          LAUNCHED: ${{ LAUNCHED }}
+          LAUNCHED: ${{ vars.LAUNCHED }}
 
   lint:
     runs-on: ubuntu-latest
