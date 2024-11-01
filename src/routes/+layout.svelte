@@ -8,7 +8,7 @@
 	import { PUBLIC_LAUNCHED } from '$env/static/public';
 	import { flare } from '@wagmi/core/chains';
 
-	const initWallet = async () => {
+	const initWagmiConfig = async () => {
 		const erckit = defaultConfig({
 			appName: 'cyclo',
 			walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
