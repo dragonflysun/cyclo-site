@@ -5,6 +5,7 @@ import { readErc1155BalanceOf } from '../../generated';
 import type { Receipt } from '$lib/types';
 import type { Config } from '@wagmi/core';
 import { formatEther } from 'ethers';
+import { type Hex } from 'viem';
 
 vi.mock('axios');
 vi.mock('../../generated', () => ({
@@ -20,13 +21,13 @@ describe('getReceipts', () => {
 		{
 			chainId: '1',
 			tokenAddress: mockErc1155Address,
-			tokenId: '1000000000000000000', // 1 ether in wei
+			tokenId: '1000000000000000000',
 			balance: BigInt(1)
 		},
 		{
 			chainId: '1',
 			tokenAddress: '0xAnotherERC1155Address' as Hex,
-			tokenId: '2000000000000000000', // 2 ether in wei
+			tokenId: '2000000000000000000',
 			balance: BigInt(0)
 		}
 	];
