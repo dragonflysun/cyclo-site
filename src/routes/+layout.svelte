@@ -5,10 +5,10 @@
 	import Header from '$lib/components/Header.svelte';
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
 	import { browser } from '$app/environment';
-
+	import { PUBLIC_LAUNCHED } from '$env/static/public';
 	import { flare } from '@wagmi/core/chains';
 
-	const initWagmiConfig = async () => {
+	const initWallet = async () => {
 		const erckit = defaultConfig({
 			appName: 'cyclo',
 			walletConnectProjectId: PUBLIC_WALLETCONNECT_ID,
@@ -25,7 +25,7 @@
 
 {#if $wagmiConfig}
 	<div class="flex min-h-screen flex-col">
-		<Header />
+		<Header launched={PUBLIC_LAUNCHED === 'true'} />
 		<main class="flex-grow bg-[#1C02B8]">
 			<slot></slot>
 		</main>
