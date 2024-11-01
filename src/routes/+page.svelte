@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 
 	let loadingDots = '.';
-	let showMainContent = false;
+	let showMainContent = true;
 	let hideTerminal = false;
 
 	function updateLoadingDots() {
@@ -46,18 +46,18 @@
 
 	{#if showMainContent}
 		<div in:fade class="main-content flex flex-col gap-12">
-			<div class="mx-auto max-w-4xl border-2 border-white bg-primary p-8">
+			<div class="mx-auto max-w-4xl border-2 border-white bg-primary p-8 pt-12">
+				<div class="mb-8 flex-col flex gap-6">
 				<img src={logo} alt="Cyclo logo" class="mb-4 w-full max-w-[400px]" />
-				<div class="mb-6 flex items-center justify-between">
 					<h1 class="flex items-center gap-3 text-4xl font-bold tracking-wider">
 						LEVERAGE WITHOUT FEAR_
 					</h1>
-				</div>
-				<div class="mb-6">
 					<p class="mb-4 text-xl">
 						Access the power of leverage while keeping your FLR position completely safe from
 						liquidations.
 					</p>
+				</div>
+				<div class="mb-6">
 					<div class="inline-block border border-dashed border-white p-3 text-lg opacity-80">
 						<span class="text-green-400">&gt; EXECUTING</span> pure_defi_freedom.exe
 					</div>
@@ -71,7 +71,7 @@
 			<div
 				class="group mx-auto w-full max-w-4xl border-2 border-white bg-primary p-6 transition-colors hover:bg-blue-700"
 			>
-				<h2 class="mb-4 flex items-center gap-2 text-2xl">
+				<h2 class="mb-8 flex items-center gap-2 text-2xl">
 					[ PURE DEFI FREEDOM ] <span class="text-xs opacity-70 group-hover:opacity-100"
 						>loading{loadingDots}</span
 					>
@@ -112,7 +112,7 @@
 
 			<div class="mx-auto grid max-w-4xl gap-12 md:grid-cols-2">
 				<div class="group border-2 border-white bg-primary p-6 transition-colors hover:bg-blue-700">
-					<h2 class="mb-4 flex items-center gap-2 text-2xl">
+					<h2 class="mb-8 flex items-center gap-2 text-2xl">
 						[ WHAT YOU GET ]<span class="text-xs opacity-70 group-hover:opacity-100"
 							>{loadingDots}</span
 						>
@@ -138,7 +138,7 @@
 				</div>
 
 				<div class="group border-2 border-white bg-primary p-6 transition-colors hover:bg-blue-700">
-					<h2 class="mb-4 flex items-center gap-2 text-2xl">
+					<h2 class="mb-8 flex items-center gap-2 text-2xl">
 						[ HOW IT WORKS ] <span class="text-xs opacity-70 group-hover:opacity-100"
 							>{loadingDots}</span
 						>
@@ -162,7 +162,7 @@
 					<div
 						class="group mx-auto mb-8 max-w-4xl border-2 border-white bg-primary p-6 transition-colors hover:bg-blue-700"
 					>
-						<h2 class="mb-4 flex items-center gap-2 text-2xl">
+						<h2 class="mb-8 flex items-center gap-2 text-2xl">
 							[ INTRODUCING cysFLR ] <span class="text-xs opacity-70 group-hover:opacity-100"
 								>installing{loadingDots}</span
 							>
