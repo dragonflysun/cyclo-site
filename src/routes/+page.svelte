@@ -47,8 +47,8 @@
 	{#if showMainContent}
 		<div in:fade class="main-content flex flex-col gap-12">
 			<div class="mx-auto max-w-4xl border-2 border-white bg-primary p-8 pt-12">
-				<div class="mb-8 flex-col flex gap-6">
-				<img src={logo} alt="Cyclo logo" class="mb-4 w-full max-w-[400px]" />
+				<div class="mb-8 flex flex-col gap-6">
+					<img src={logo} alt="Cyclo logo" class="mb-4 w-full max-w-[400px]" />
 					<h1 class="flex items-center gap-3 text-4xl font-bold tracking-wider">
 						LEVERAGE WITHOUT FEAR_
 					</h1>
