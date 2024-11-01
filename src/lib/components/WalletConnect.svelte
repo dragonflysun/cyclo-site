@@ -9,15 +9,14 @@
 
 <Button on:click={() => $web3Modal.open()} tabindex={0} data-testid="wallet-connect">
 	{#if $wrongNetwork || !$signerAddress || !$connected}
-	<div data-testid="not-connected">
-		<CloseCircleSolid color="red" class="hidden md:inline" />
-		<span>Connect</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
+		<div data-testid="not-connected">
+			<CloseCircleSolid color="red" class="hidden md:inline" />
+			<span>Connect</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
 		</div>
 	{:else}
-	<div data-testid="connected">
-
-		<CheckCircleSolid color="green" class="hidden md:inline" />
-		<span>Connected</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
+		<div data-testid="connected">
+			<CheckCircleSolid color="green" class="hidden md:inline" />
+			<span>Connected</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
 		</div>
 	{/if}
 </Button>
