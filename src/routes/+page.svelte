@@ -1,7 +1,6 @@
 <script lang="ts">
 	import logo from '$lib/logo-white.svg';
 	import { ArrowsRepeatCountOutline, LockOpenOutline, LockOutline } from 'flowbite-svelte-icons';
-	import { fade } from 'svelte/transition';
 
 	let loadingDots = '.';
 	function updateLoadingDots() {
