@@ -56,7 +56,7 @@
 	}
 </script>
 
-<div class="flex w-full flex-col items-center justify-center gap-6 p-6">
+<div class="flex w-full flex-col items-center justify-center gap-6 p-6" data-testId="receipt-modal">
 	<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 		<span>NUMBER HELD</span>
 		<div class="flex flex-row gap-4">
