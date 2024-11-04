@@ -25,7 +25,6 @@ export const mockBalancesStore = {
 	subscribe: mockBalancesWritable.subscribe,
 	set: mockBalancesWritable.set,
 	mockSetSubscribeValue: (cysFLRBalance: bigint, sFlrBalance: bigint, status: string): void => {
-		console.log('Mock Balances Store Updated:', { cysFLRBalance, sFlrBalance, status });
 		mockBalancesWritable.set({
 			cysFLRBalance,
 			sFlrBalance,
