@@ -3,8 +3,6 @@
 	import { web3Modal, signerAddress, connected } from 'svelte-wagmi';
 	import { CheckCircleSolid, CloseCircleSolid } from 'flowbite-svelte-icons';
 	import Button from './Button.svelte';
-
-	$: console.log($signerAddress, $connected, $wrongNetwork);
 </script>
 
 <Button on:click={() => $web3Modal.open()} tabindex={0} data-testid="wallet-connect">
