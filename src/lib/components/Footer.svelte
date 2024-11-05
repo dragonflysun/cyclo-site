@@ -29,9 +29,7 @@
 		await getsFlrSupply();
 	});
 
-	$: readableSFLRSupply = sFlrSupply
-		? formatNumberWithAbbreviations(+formatEther(sFlrSupply))
-		: '';
+	$: readableSFLRSupply = sFlrSupply ? formatNumberWithAbbreviations(+formatEther(sFlrSupply)) : '';
 
 	$: readablecysFLRSupply = cysFlrSupply
 		? formatNumberWithAbbreviations(+formatEther(cysFlrSupply))

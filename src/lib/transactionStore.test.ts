@@ -188,7 +188,7 @@ describe('transactionStore', () => {
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: '0x456',
 			cysFlrAddress: '0x789',
-						erc1155Address: mockERC1155Address,
+			erc1155Address: mockERC1155Address,
 			assets
 		});
 
@@ -211,7 +211,7 @@ describe('transactionStore', () => {
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
 			cysFlrAddress: mockcysFlrAddress,
-						erc1155Address: mockERC1155Address,
+			erc1155Address: mockERC1155Address,
 
 			assets: BigInt(100)
 		});

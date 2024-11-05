@@ -7,9 +7,8 @@ import { formatEther } from 'ethers';
 import { mockReceipt } from '$lib/mocks/mockReceipt';
 import userEvent from '@testing-library/user-event';
 
-const { mockBalancesStore, mockErc1155AddressStore, mockCyFlrAddressStore, mockSflrAddressStore } = await vi.hoisted(
-	() => import('$lib/mocks/mockStores')
-);
+const { mockBalancesStore, mockErc1155AddressStore, mockCyFlrAddressStore, mockSflrAddressStore } =
+	await vi.hoisted(() => import('$lib/mocks/mockStores'));
 
 vi.mock('$lib/stores', async () => ({
 	cysFlrAddress: mockCyFlrAddressStore,

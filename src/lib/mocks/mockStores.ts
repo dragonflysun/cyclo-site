@@ -85,4 +85,3 @@ export const mockSflrAddressStore = {
 	set: mockSFlrAddressWritable.set,
 	mockSetSubscribeValue: (value: Hex): void => mockSFlrAddressWritable.set(value)
 };
-

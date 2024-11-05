@@ -124,10 +124,10 @@
 				signerAddress: $signerAddress,
 				config: $wagmiConfig,
 				cysFlrAddress: $cysFlrAddress,
-				sFlareAddress: $sFlrAddress,
+				sFlrAddress: $sFlrAddress,
 				erc1155Address: $erc1155Address,
 				tokenId: receipt.tokenId,
-				assets: amountToRedeem,
+				assets: amountToRedeem
 			})}
 	>
 		{buttonStatus}
