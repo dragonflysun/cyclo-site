@@ -7,6 +7,7 @@ import { mockSignerAddressStore } from '$lib/mocks/mockStores';
 
 const { mockBalancesStore } = await vi.hoisted(() => import('$lib/mocks/mockStores'));
 
+// Mock `simulateErc20PriceOracleReceiptVaultPreviewDeposit`
 vi.mock('../../generated', async (importOriginal) => {
 	return {
 		...((await importOriginal()) as object),
@@ -16,18 +17,35 @@ vi.mock('../../generated', async (importOriginal) => {
 	};
 });
 
+// Mock `balancesStore`
 vi.mock('$lib/balancesStore', async () => {
 	return {
 		default: mockBalancesStore
 	};
 });
 
+// Mock `transactionStore`
 vi.mock('$lib/transactionStore', async (importOriginal) => ({
 	default: {
 		...((await importOriginal) as object),
 		initiateLockTransaction: vi.fn().mockResolvedValue({})
 	}
 }));
+
+const mockSimulateContract = vi.fn().mockResolvedValue({
+  result: 14920000000000000n // Mock result for `simulateContract`
+});
+
+
+vi.mock('viem', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual as object,
+    createPublicClient: vi.fn(() => ({
+      simulateContract: mockSimulateContract,
+    })),
+  };
+});
 
 describe('Lock Component', () => {
 	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'initiateLockTransaction');
@@ -87,4 +105,18 @@ describe('Lock Component', () => {
 		const lockButton = screen.getByTestId('lock-button');
 		expect(lockButton).toBeDisabled();
 	});
+
+	it('should call publicClient.simulateContract if there is no signerAddress', async () => {
+		// Set `signerAddress` to null to simulate no wallet connection
+		mockSignerAddressStore.mockSetSubscribeValue('');
+
+		// Render the component
+		render(Lock);
+
+		// Wait for `simulateContract` to be called
+		await waitFor(() => {
+			expect(mockSimulateContract).toHaveBeenCalled();
+		});
+	});
+
 });
