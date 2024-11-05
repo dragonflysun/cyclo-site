@@ -16,7 +16,7 @@ describe('cysFlrBalanceStore', () => {
 	const mocksFlrAddress = '0xabcdef1234567890';
 	const mockCysFlrAddress = '0xabcdefabcdef1234';
 
-	const { reset, refreshcysFlr, refreshSFlr } = balancesStore;
+	const { reset, refreshcysFlr, refreshsFlr } = balancesStore;
 
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -35,7 +35,7 @@ describe('cysFlrBalanceStore', () => {
 		const mockWFlrBalance = BigInt(1000);
 		(readErc20BalanceOf as Mock).mockResolvedValue(mockWFlrBalance);
 
-		await refreshSFlr(
+		await refreshsFlr(
 			mockWagmiConfigStore as unknown as Config,
 			mocksFlrAddress,
 			mockSignerAddress
@@ -64,7 +64,7 @@ describe('cysFlrBalanceStore', () => {
 	it('should reset the store to its initial state', () => {
 		const mockWFlrBalance = BigInt(1000);
 		(readErc20BalanceOf as Mock).mockResolvedValue(mockWFlrBalance);
-		refreshSFlr(mockWagmiConfigStore as unknown as Config, mocksFlrAddress, mockSignerAddress);
+		refreshsFlr(mockWagmiConfigStore as unknown as Config, mocksFlrAddress, mockSignerAddress);
 
 		reset();
 

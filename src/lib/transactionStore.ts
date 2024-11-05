@@ -34,7 +34,6 @@ export type initiateLockTransactionArgs = {
 	signerAddress: string | null;
 	sFlrAddress: Hex;
 	cysFlrAddress: Hex;
-	vaultAddress: Hex;
 	erc1155Address: Hex;
 	assets: bigint;
 	config: Config;

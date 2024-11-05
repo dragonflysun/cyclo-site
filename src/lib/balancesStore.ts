@@ -13,7 +13,7 @@ const cysFLRBalanceStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
-	const refreshSFlr = async (config: Config, sFlrAddress: Hex, signerAddress: string) => {
+	const refreshsFlr = async (config: Config, sFlrAddress: Hex, signerAddress: string) => {
 		const newSflrBalance = await readErc20BalanceOf(config, {
 			address: sFlrAddress,
 			args: [signerAddress as Hex]
@@ -74,7 +74,7 @@ const cysFLRBalanceStore = () => {
 		subscribe,
 		reset,
 		refreshcysFlr,
-		refreshSFlr,
+		refreshsFlr,
 		refreshBothBalances
 	};
 };

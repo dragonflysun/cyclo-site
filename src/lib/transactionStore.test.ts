@@ -31,7 +31,6 @@ vi.mock('@wagmi/core', () => ({
 describe('transactionStore', () => {
 	const mockSignerAddress = '0x1234567890abcdef';
 	const mocksFlrAddress = '0xabcdef1234567890';
-	const mockVaultAddress = '0xabcdefabcdef1234';
 	const mockcysFlrAddress = '0xcdef1234abcdef5678';
 	const mockERC1155Address = '0xabcdefabcdef1234';
 	const mockTokenId = '1';
@@ -124,7 +123,8 @@ describe('transactionStore', () => {
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
-			cysFlrAddress: mockVaultAddress,
+			cysFlrAddress: mockcysFlrAddress,
+			erc1155Address: mockERC1155Address,
 			assets: mockAssets
 		});
 		reset();
@@ -149,6 +149,7 @@ describe('transactionStore', () => {
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: '0x456',
 			cysFlrAddress: '0x789',
+			erc1155Address: '0xabc',
 			assets: BigInt(1000)
 		});
 
@@ -165,7 +166,8 @@ describe('transactionStore', () => {
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
-			cysFlrAddress: mockVaultAddress,
+			cysFlrAddress: mockcysFlrAddress,
+			erc1155Address: mockERC1155Address,
 			assets: BigInt(100)
 		});
 
@@ -186,6 +188,7 @@ describe('transactionStore', () => {
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: '0x456',
 			cysFlrAddress: '0x789',
+						erc1155Address: mockERC1155Address,
 			assets
 		});
 
@@ -207,7 +210,9 @@ describe('transactionStore', () => {
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
-			cysFlrAddress: mockVaultAddress,
+			cysFlrAddress: mockcysFlrAddress,
+						erc1155Address: mockERC1155Address,
+
 			assets: BigInt(100)
 		});
 
@@ -228,7 +233,9 @@ describe('transactionStore', () => {
 			config: mockWagmiConfigStore as unknown as Config,
 			cysFlrAddress: mockcysFlrAddress,
 			erc1155Address: mockERC1155Address,
+			sFlrAddress: mocksFlrAddress,
 			tokenId: mockTokenId,
+
 			assets: BigInt(100)
 		});
 
@@ -251,6 +258,8 @@ describe('transactionStore', () => {
 			cysFlrAddress: mockcysFlrAddress,
 			erc1155Address: mockERC1155Address,
 			tokenId: mockTokenId,
+			sFlrAddress: mocksFlrAddress,
+
 			assets: BigInt(100)
 		});
 
@@ -270,7 +279,8 @@ describe('transactionStore', () => {
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
-			cysFlrAddress: mockVaultAddress,
+			cysFlrAddress: mockcysFlrAddress,
+			erc1155Address: mockERC1155Address,
 			assets: BigInt(100)
 		});
 

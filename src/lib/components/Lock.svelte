@@ -3,7 +3,7 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cysFlrAddress, erc1155Address, sFlareAddress } from '$lib/stores';
+	import { cysFlrAddress, erc1155Address, sFlrAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
@@ -185,7 +185,7 @@
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						cysFlrAddress: $cysFlrAddress,
-						sFlreAddress: $sFlareAddress,
+						sFlrAddress: $sFlrAddress,
 						erc1155Address: $erc1155Address,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
