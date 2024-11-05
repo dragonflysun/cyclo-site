@@ -149,6 +149,7 @@
 			<div class="flex flex-col">
 				
 				<Input
+				data-testid="lock-input"
 				on:change={(event) => {
 					amountToLock = event.detail.value;
 					checkBalance();
@@ -172,7 +173,7 @@
 				<div
 				on:click={() => $web3Modal.open()}
 				class="text-xs font-light text-right my-2 hover:underline cursor-pointer"
-				data-testid="your-balance">Connect a wallet to see SFLR balance</div
+				data-testid="connect-message">Connect a wallet to see SFLR balance</div
 				>
 				{/if}
 			</div>
