@@ -15,9 +15,9 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
 
       - run: nix develop -c npm i
-        working-directory: ./ethgild
+        working-directory: ./cyclo.sol
       - run: nix develop -c forge build
-        working-directory: ./ethgild
+        working-directory: ./cyclo.sol
       - run: nix develop -c npm run codegen
       - run: nix develop -c npm run build
         env:
