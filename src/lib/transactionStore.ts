@@ -236,7 +236,7 @@ const transactionStore = () => {
 			}
 		};
 
-		const writeApproveCysFlareSpend = async () => {
+		const writeApprovecysFlrSpend = async () => {
 			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your SFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
@@ -278,13 +278,13 @@ const transactionStore = () => {
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 
 				if (res) {
-					const cysFlareSpendAllowance = await readErc20Allowance(config, {
+					const cysFlrSpendAllowance = await readErc20Allowance(config, {
 						address: cysFlrAddress,
 						args: [signerAddress as Hex, cysFlrAddress]
 					});
-					if (cysFlareSpendAllowance < assets) {
+					if (cysFlrSpendAllowance < assets) {
 						try {
-							await writeApproveCysFlareSpend();
+							await writeApprovecysFlrSpend();
 							writeUnlock();
 						} catch {
 							transactionError('User rejected transaction');
@@ -298,12 +298,12 @@ const transactionStore = () => {
 				transactionError('User rejected transaction');
 			}
 		} else {
-			const cysFlareSpendAllowance = await readErc20Allowance(config, {
+			const cysFlrSpendAllowance = await readErc20Allowance(config, {
 				address: cysFlrAddress,
 				args: [signerAddress as Hex, cysFlrAddress]
 			});
-			if (cysFlareSpendAllowance < assets) {
-				await writeApproveCysFlareSpend();
+			if (cysFlrSpendAllowance < assets) {
+				await writeApprovecysFlrSpend();
 				writeUnlock();
 			}
 			writeUnlock();
