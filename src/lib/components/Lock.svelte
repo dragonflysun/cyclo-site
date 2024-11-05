@@ -143,38 +143,38 @@
 				>
 			{/key}
 		</div>
-		
+
 		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<span>LOCK AMOUNT</span>
 			<div class="flex flex-col">
-				
 				<Input
-				data-testid="lock-input"
-				on:change={(event) => {
-					amountToLock = event.detail.value;
-					checkBalance();
-				}}
-				on:setValueToMax={() => {
-					assets = $balancesStore.sFlrBalance;
-					amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
-				}}
-				bind:amount={amountToLock}
-				maxValue={$balancesStore.sFlrBalance}
-				unit={'SFLR'}
+					data-testid="lock-input"
+					on:change={(event) => {
+						amountToLock = event.detail.value;
+						checkBalance();
+					}}
+					on:setValueToMax={() => {
+						assets = $balancesStore.sFlrBalance;
+						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
+					}}
+					bind:amount={amountToLock}
+					maxValue={$balancesStore.sFlrBalance}
+					unit={'SFLR'}
 				/>
 				{#if $signerAddress}
-				<p
-				class="text-xs font-light text-right my-2"
-				data-testid="your-balance">SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5)}</p
-				>
+					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
+						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5)}
+					</p>
 				{:else}
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div
-				on:click={() => $web3Modal.open()}
-				class="text-xs font-light text-right my-2 hover:underline cursor-pointer"
-				data-testid="connect-message">Connect a wallet to see SFLR balance</div
-				>
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<div
+						on:click={() => $web3Modal.open()}
+						class="my-2 cursor-pointer text-right text-xs font-light hover:underline"
+						data-testid="connect-message"
+					>
+						Connect a wallet to see SFLR balance
+					</div>
 				{/if}
 			</div>
 		</div>
