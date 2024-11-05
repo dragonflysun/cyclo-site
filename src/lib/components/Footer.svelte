@@ -2,46 +2,51 @@
 	import { fade } from 'svelte/transition';
 	import { readErc20TotalSupply } from '../../generated';
 	import { onMount } from 'svelte';
-	import { cyFlareAddress, sFlareAddress } from '$lib/stores';
+	import { cysFlareAddress, stakedFlareAddress } from '$lib/stores';
 	import { wagmiConfig } from 'svelte-wagmi';
 	import { formatEther } from 'ethers';
 	import { formatNumberWithAbbreviations } from '$lib/methods';
-	let wrappedFlareSupply: bigint | null = null;
-	let cyFlareSupply: bigint | null = null;
 
-	const getCyFlrSupply = async () => {
+	let stakedFlareSupply: bigint | null = null;
+	let cysFlareSupply: bigint | null = null;
+
+	const getcysFLRSupply = async () => {
 		const data = await readErc20TotalSupply($wagmiConfig, {
-			address: $cyFlareAddress
+			address: $cysFlareAddress
 		});
-		return (cyFlareSupply = data);
+		return (cysFlareSupply = data);
 	};
 
-	const getWrappedFlrSupply = async () => {
+	const getStakedFlareSupply = async () => {
 		const data = await readErc20TotalSupply($wagmiConfig, {
-			address: $sFlareAddress
+			address: $stakedFlareAddress
 		});
-		return (wrappedFlareSupply = data);
+		return (stakedFlareSupply = data);
 	};
 
 	onMount(async () => {
-		await getCyFlrSupply();
-		await getWrappedFlrSupply();
+		await getcysFLRSupply();
+		await getStakedFlareSupply();
 	});
 
-	$: readableSFLRSupply = wrappedFlareSupply
-		? formatNumberWithAbbreviations(+formatEther(wrappedFlareSupply))
+	$: readableSFLRSupply = stakedFlareSupply
+		? formatNumberWithAbbreviations(+formatEther(stakedFlareSupply))
 		: '';
 
-	$: readableCyFLRSupply = cyFlareSupply
-		? formatNumberWithAbbreviations(+formatEther(cyFlareSupply))
+	$: readablecysFLRSupply = cysFlareSupply
+		? formatNumberWithAbbreviations(+formatEther(cysFlareSupply))
 		: '';
 </script>
 
 <footer class="flex h-16 flex-col justify-center bg-[#1C02B8] px-2 text-white">
-	{#if readableCyFLRSupply}
-		<div class="flex gap-2" in:fade>Total cyFLR supply <span>{readableCyFLRSupply}</span></div>
+	{#if readablecysFLRSupply}
+		<div class="flex gap-2" in:fade data-testId="cysFlr-supply">
+			Total cysFLR supply <span>{readablecysFLRSupply}</span>
+		</div>
 	{/if}
 	{#if readableSFLRSupply}
-		<div class="flex gap-2" in:fade>Total sFLR supply <span>{readableSFLRSupply}</span></div>
+		<div class="flex gap-2" in:fade data-testId="sFlr-supply">
+			Total sFLR supply <span>{readableSFLRSupply}</span>
+		</div>
 	{/if}
 </footer>

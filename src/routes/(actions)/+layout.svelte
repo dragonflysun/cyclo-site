@@ -4,14 +4,13 @@
 	import { page } from '$app/stores';
 	import balancesStore from '$lib/balancesStore';
 	import TransactionModal from '$lib/components/TransactionModal.svelte';
-	import { cyFlareAddress, sFlareAddress } from '$lib/stores';
+	import { cysFlrAddress, sFlrAddress } from '$lib/stores';
 
 	import Button from '$lib/components/Button.svelte';
 	import { base } from '$app/paths';
 
 	$: if ($signerAddress) {
-		balancesStore.refreshSflr($wagmiConfig, $sFlareAddress, $signerAddress);
-		balancesStore.refreshCyFlr($wagmiConfig, $cyFlareAddress, $signerAddress);
+		balancesStore.refreshBothBalances($wagmiConfig, $sFlrAddress, $cysFlrAddress, $signerAddress);
 	}
 </script>
 

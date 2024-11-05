@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Modal, Spinner } from 'flowbite-svelte';
 	import Button from '$lib/components/Button.svelte';
-
 	import transactionStore from '$lib/transactionStore';
 	import { TransactionStatus } from '$lib/transactionStore';
 
@@ -16,41 +15,52 @@
 	class="bg-opacity-90 backdrop-blur-sm"
 	open={$transactionStore.status !== TransactionStatus.IDLE}
 	on:close={() => handleClose()}
+	data-testid="transaction-modal"
 >
 	{#if $transactionStore.status !== TransactionStatus.IDLE}
 		<div class="flex flex-col items-center justify-center gap-2 p-4">
 			{#if $transactionStore.status === TransactionStatus.ERROR}
 				<div
 					class="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-400 bg-red-100 dark:bg-red-900"
+					data-testid="error-icon"
 				>
 					<h1 class="text-lg md:text-2xl">❌</h1>
 				</div>
-				<p class="text-lg font-semibold text-gray-900 dark:text-white">
+				<p class="text-lg font-semibold text-gray-900 dark:text-white" data-testid="error-status">
 					{$transactionStore.status}
 				</p>
-				<p class="font-normal text-gray-900 dark:text-white">
+				<p class="font-normal text-gray-900 dark:text-white" data-testid="error-message">
 					{$transactionStore.error}
 				</p>
 				{#if $transactionStore.hash}
 					<a
 						class="text-center text-sm text-primary hover:underline"
 						href={`https://flarescan.com/tx/${$transactionStore.hash}`}
-						>View transaction on Flarescan</a
+						data-testid="view-transaction-link">View transaction on Flarescan</a
 					>
 				{/if}
-				<Button on:click={() => handleClose()} class="mt-4">DISMISS</Button>
+				<Button on:click={() => handleClose()} class="mt-4" data-testid="dismiss-button"
+					>DISMISS</Button
+				>
 			{:else if $transactionStore.status === TransactionStatus.SUCCESS}
 				<div
 					class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900"
+					data-testid="success-icon"
 				>
 					<h1 class="text-lg md:text-2xl">✅</h1>
 				</div>
 				<div class="flex flex-col gap-4 text-left">
-					<p class="text-lg font-semibold text-gray-900 dark:text-white">
+					<p
+						class="text-lg font-semibold text-gray-900 dark:text-white"
+						data-testid="success-status"
+					>
 						{$transactionStore.status}
 					</p>
 					{#if $transactionStore.message}
-						<p class="text-sm font-normal text-gray-900 dark:text-white">
+						<p
+							class="text-sm font-normal text-gray-900 dark:text-white"
+							data-testid="success-message"
+						>
 							{$transactionStore.message}
 						</p>
 					{/if}
@@ -60,19 +70,25 @@
 							target="_blank"
 							class="text-center hover:underline"
 							href={`https://flarescan.com/tx/${$transactionStore.hash}`}
-							>View transaction on Flarescan</a
+							data-testid="view-transaction-link">View transaction on Flarescan</a
 						>
 					{/if}
 				</div>
 
-				<Button on:click={() => handleClose()} class="mt-4">DISMISS</Button>
+				<Button on:click={() => handleClose()} class="mt-4" data-testid="dismiss-button"
+					>DISMISS</Button
+				>
 			{:else if $transactionStore.status === TransactionStatus.CHECKING_ALLOWANCE || $transactionStore.status === TransactionStatus.PENDING_WALLET || $transactionStore.status === TransactionStatus.PENDING_LOCK || $transactionStore.status === TransactionStatus.PENDING_UNLOCK || $transactionStore.status === TransactionStatus.PENDING_APPROVAL}
 				<div
 					class="bg-primary-100 dark:bg-primary-900 mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+					data-testid="spinner"
 				>
 					<Spinner color="blue" size={10} />
 				</div>
-				<p class="text-center text-lg font-semibold text-gray-900 dark:text-white">
+				<p
+					class="text-center text-lg font-semibold text-gray-900 dark:text-white"
+					data-testid="pending-message"
+				>
 					{$transactionStore.message || $transactionStore.status}
 				</p>
 			{/if}

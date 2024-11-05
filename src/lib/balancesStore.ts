@@ -4,35 +4,35 @@ import { writable } from 'svelte/store';
 import type { Hex } from 'viem';
 
 const initialState = {
-	cyFlrBalance: BigInt(0),
-	sflrBalance: BigInt(0),
+	cysFLRBalance: BigInt(0),
+	sFlrBalance: BigInt(0),
 	status: 'Checking'
 };
 
-const cyFlrBalanceStore = () => {
+const cysFLRBalanceStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
-	const refreshSflr = async (config: Config, sflrAddress: Hex, signerAddress: string) => {
+	const refreshSflr = async (config: Config, sFlrAddress: Hex, signerAddress: string) => {
 		const newSflrBalance = await readErc20BalanceOf(config, {
-			address: sflrAddress,
+			address: sFlrAddress,
 			args: [signerAddress as Hex]
 		});
 		update((state) => ({
 			...state,
-			sflrBalance: newSflrBalance,
+			sFlrBalance: newSflrBalance,
 			status: 'Ready'
 		}));
 	};
 
-	const refreshCyFlr = async (config: Config, cyFlrAddress: Hex, signerAddress: string) => {
-		const newCyFlrBalance = await readErc20BalanceOf(config, {
-			address: cyFlrAddress,
+	const refreshCysFlr = async (config: Config, cysFLRAddress: Hex, signerAddress: string) => {
+		const newcysFLRBalance = await readErc20BalanceOf(config, {
+			address: cysFLRAddress,
 			args: [signerAddress as Hex]
 		});
 		update((state) => ({
 			...state,
-			cyFlrBalance: newCyFlrBalance,
+			cysFLRBalance: newcysFLRBalance,
 			status: 'Ready'
 		}));
 	};
@@ -40,7 +40,7 @@ const cyFlrBalanceStore = () => {
 	const refreshBothBalances = async (
 		config: Config,
 		sFlrAddress: Hex,
-		cyFlrAddress: Hex,
+		cysFlrAddress: Hex,
 		signerAddress: string
 	) => {
 		try {
@@ -50,7 +50,7 @@ const cyFlrBalanceStore = () => {
 					args: [signerAddress as Hex]
 				}),
 				readErc20BalanceOf(config, {
-					address: cyFlrAddress,
+					address: cysFlrAddress,
 					args: [signerAddress as Hex]
 				})
 			]);
@@ -73,10 +73,10 @@ const cyFlrBalanceStore = () => {
 	return {
 		subscribe,
 		reset,
-		refreshCyFlr,
+		refreshCysFlr,
 		refreshSflr,
 		refreshBothBalances
 	};
 };
 
-export default cyFlrBalanceStore();
+export default cysFLRBalanceStore();

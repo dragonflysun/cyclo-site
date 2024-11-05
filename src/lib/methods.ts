@@ -1,5 +1,6 @@
 export function readableNumber(number: number) {
-	const options = {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const options: any = {
 		style: 'decimal',
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 2

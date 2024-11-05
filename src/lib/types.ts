@@ -6,4 +6,6 @@ export type Receipt = {
 	tokenId: string;
 	balance: bigint;
 	readableTokenId?: string;
+	readableTotalFlr?: string;
+	readableFlrPerReceipt?: string;
 };
