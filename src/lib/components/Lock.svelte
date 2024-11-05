@@ -125,11 +125,12 @@
 				>
 			{/key}
 		</div>
-
+		
 		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
-			<span class="align-center content-center">LOCK AMOUNT</span>
-
-			<Input
+			<span>LOCK AMOUNT</span>
+			<div class="flex flex-col">
+				
+				<Input
 				on:change={(event) => {
 					amountToLock = event.detail.value;
 					checkBalance();
@@ -141,7 +142,22 @@
 				bind:amount={amountToLock}
 				maxValue={$balancesStore.sFlrBalance}
 				unit={'SFLR'}
-			/>
+				/>
+				{#if $signerAddress}
+				<p
+				class="text-xs font-light text-right my-2"
+				data-testid="your-balance">SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5)}</p
+				>
+				{:else}
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div
+				on:click={() => $web3Modal.open()}
+				class="text-xs font-light text-right my-2 hover:underline cursor-pointer"
+				data-testid="your-balance">Connect a wallet to see SFLR balance</div
+				>
+				{/if}
+			</div>
 		</div>
 
 		<div class="flex w-full flex-col gap-2">
