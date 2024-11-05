@@ -9,11 +9,21 @@
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 
-	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import {
+		erc20PriceOracleReceiptVaultAbi,
+		simulateErc20PriceOracleReceiptVaultPreviewDeposit
+	} from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
+	import { createPublicClient, http } from 'viem';
+	import { flare } from 'viem/chains';
+
+	const publicClient = createPublicClient({
+		chain: flare,
+		transport: http()
+	});
 
 	export let amountToLock = '0.0';
 
@@ -22,6 +32,10 @@
 	let insufficientFunds = false;
 
 	let intervalId: ReturnType<typeof setInterval>;
+
+	onMount(() => {
+		startGettingPriceRatio();
+	});
 
 	$: if ($signerAddress) {
 		checkBalance();
@@ -39,25 +53,27 @@
 		}
 	};
 
-	onMount(() => {
-		startGettingPriceRatio();
-	});
-
 	const getPriceRatio = async () => {
-		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cysFlareAddress,
-			args: [BigInt(1e18), 0n]
-		});
+		let result;
+		if ($signerAddress) {
+			({ result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+				address: $cysFlareAddress,
+				args: [BigInt(1e18), 0n]
+			}));
+		} else {
+			({ result } = await publicClient.simulateContract({
+				address: $cysFlareAddress,
+				abi: erc20PriceOracleReceiptVaultAbi,
+				functionName: 'previewDeposit',
+				args: [BigInt(1e18), 0n]
+			}));
+		}
 		priceRatio = result;
 	};
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
-		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cysFlareAddress,
-			args: [BigInt(1e18), 0n]
-		});
-		priceRatio = result;
+		getPriceRatio();
 	};
 
 	function stopGettingPriceRatio() {
@@ -76,7 +92,7 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>SFLR BALANCE</span>
+					<span>SFLR BALANCE!!!</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
@@ -84,7 +100,9 @@
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.sFlrBalance}<span in:fade={{ duration: 700 }}
+					{#key $balancesStore.sFlrBalance}<span
+							data-testid="sflr-balance"
+							in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
 					<span>SFLR</span>
