@@ -33,18 +33,17 @@ vi.mock('$lib/transactionStore', async (importOriginal) => ({
 }));
 
 const mockSimulateContract = vi.fn().mockResolvedValue({
-  result: 14920000000000000n // Mock result for `simulateContract`
+	result: 14920000000000000n // Mock result for `simulateContract`
 });
 
-
 vi.mock('viem', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual as object,
-    createPublicClient: vi.fn(() => ({
-      simulateContract: mockSimulateContract,
-    })),
-  };
+	const actual = await importOriginal();
+	return {
+		...(actual as object),
+		createPublicClient: vi.fn(() => ({
+			simulateContract: mockSimulateContract
+		}))
+	};
 });
 
 describe('Lock Component', () => {
@@ -118,5 +117,4 @@ describe('Lock Component', () => {
 			expect(mockSimulateContract).toHaveBeenCalled();
 		});
 	});
-
 });
