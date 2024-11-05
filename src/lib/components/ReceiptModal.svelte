@@ -8,7 +8,6 @@
 	import { formatEther, parseEther } from 'ethers';
 	import burnDia from '$lib/images/burn-dia.svg';
 	import Input from './Input.svelte';
-	import Button from './Button.svelte';
 
 	enum ButtonStatus {
 		INSUFFICIENT_RECEIPTS = 'INSUFFICIENT RECEIPTS',
