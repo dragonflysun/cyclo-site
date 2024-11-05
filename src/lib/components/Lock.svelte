@@ -63,8 +63,8 @@
 		} else {
 			({ result } = await publicClient.simulateContract({
 				address: $cysFlareAddress,
-				abi: erc20PriceOracleReceiptVaultAbi, 
-				functionName: 'previewDeposit', 
+				abi: erc20PriceOracleReceiptVaultAbi,
+				functionName: 'previewDeposit',
 				args: [BigInt(1e18), 0n]
 			}));
 		}
