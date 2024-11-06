@@ -58,12 +58,12 @@
 		let result;
 		if ($signerAddress) {
 			({ result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-				address: $cysFlareAddress,
+				address: $cysFlrAddress,
 				args: [BigInt(1e18), 0n]
 			}));
 		} else {
 			({ result } = await publicClient.simulateContract({
-				address: $cysFlareAddress,
+				address: $cysFlrAddress,
 				abi: erc20PriceOracleReceiptVaultAbi,
 				functionName: 'previewDeposit',
 				args: [BigInt(1e18), 0n]
