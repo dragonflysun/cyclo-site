@@ -29,6 +29,20 @@ vi.mock('$lib/transactionStore', async (importOriginal) => ({
 	}
 }));
 
+const mockSimulateContract = vi.fn().mockResolvedValue({
+	result: 14920000000000000n
+});
+
+vi.mock('viem', async (importOriginal) => {
+	const actual = await importOriginal();
+	return {
+		...(actual as object),
+		createPublicClient: vi.fn(() => ({
+			simulateContract: mockSimulateContract
+		}))
+	};
+});
+
 describe('Lock Component', () => {
 	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'initiateLockTransaction');
 
@@ -86,5 +100,13 @@ describe('Lock Component', () => {
 
 		const lockButton = screen.getByTestId('lock-button');
 		expect(lockButton).toBeDisabled();
+	});
+
+	it('should call publicClient.simulateContract if there is no signerAddress', async () => {
+		mockSignerAddressStore.mockSetSubscribeValue('');
+		render(Lock);
+		await waitFor(() => {
+			expect(mockSimulateContract).toHaveBeenCalled();
+		});
 	});
 });
