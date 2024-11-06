@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Card from '$lib/components/Card.svelte';
-	import transactionStore, { ADDRESS_ZERO } from '$lib/transactionStore';
+	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
 	import { cysFlareAddress, stakedFlareAddress } from '$lib/stores';
