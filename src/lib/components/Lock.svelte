@@ -9,7 +9,6 @@
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 	import {
-		erc20PriceOracleReceiptVaultAbi,
 		simulateErc20PriceOracleReceiptVaultPreviewDeposit
 	} from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
@@ -49,12 +48,9 @@
 	const getPriceRatio = async () => {
 		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 				address: $cysFlareAddress,
-				abi: erc20PriceOracleReceiptVaultAbi,
-				functionName: 'previewDeposit',
 				args: [BigInt(1e18), 0n],
-				account: ZeroAddress
+				account: ZeroAddress as `0x${string}`
 			})
-		console.log(result)
 		priceRatio = result;
 	};
 
