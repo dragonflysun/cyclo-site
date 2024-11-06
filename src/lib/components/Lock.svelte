@@ -3,7 +3,7 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cysFlareAddress, stakedFlareAddress } from '$lib/stores';
+	import { cysFlrAddress, erc1155Address, sFlrAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
@@ -17,6 +17,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
+
 	import { createPublicClient, http } from 'viem';
 	import { flare } from 'viem/chains';
 
@@ -57,17 +58,18 @@
 		let result;
 		if ($signerAddress) {
 			({ result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-				address: $cysFlareAddress,
+				address: $cysFlrAddress,
 				args: [BigInt(1e18), 0n]
 			}));
 		} else {
 			({ result } = await publicClient.simulateContract({
-				address: $cysFlareAddress,
+				address: $cysFlrAddress,
 				abi: erc20PriceOracleReceiptVaultAbi,
 				functionName: 'previewDeposit',
 				args: [BigInt(1e18), 0n]
 			}));
 		}
+
 		priceRatio = result;
 	};
 
@@ -183,7 +185,7 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock === null ? 0 : amountToLock}</span>
+				<span>{amountToLock}</span>
 
 				<span>SFLR</span>
 			</div>
@@ -220,8 +222,9 @@
 					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
-						stakedFlareAddress: $stakedFlareAddress,
-						cysFlareAddress: $cysFlareAddress,
+						cysFlrAddress: $cysFlrAddress,
+						sFlrAddress: $sFlrAddress,
+						erc1155Address: $erc1155Address,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
 			>
