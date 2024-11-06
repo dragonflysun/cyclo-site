@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Card from '$lib/components/Card.svelte';
-	import transactionStore from '$lib/transactionStore';
+	import transactionStore, { ADDRESS_ZERO } from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
 	import { cysFlareAddress, stakedFlareAddress } from '$lib/stores';
@@ -8,7 +8,6 @@
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
-
 	import {
 		erc20PriceOracleReceiptVaultAbi,
 		simulateErc20PriceOracleReceiptVaultPreviewDeposit
@@ -17,13 +16,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
-	import { createPublicClient, http } from 'viem';
-	import { flare } from 'viem/chains';
-
-	const publicClient = createPublicClient({
-		chain: flare,
-		transport: http()
-	});
+	import { ZeroAddress } from 'ethers';
 
 	export let amountToLock = '0.0';
 
@@ -54,20 +47,14 @@
 	};
 
 	const getPriceRatio = async () => {
-		let result;
-		if ($signerAddress) {
-			({ result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-				address: $cysFlareAddress,
-				args: [BigInt(1e18), 0n]
-			}));
-		} else {
-			({ result } = await publicClient.simulateContract({
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
 				address: $cysFlareAddress,
 				abi: erc20PriceOracleReceiptVaultAbi,
 				functionName: 'previewDeposit',
-				args: [BigInt(1e18), 0n]
-			}));
-		}
+				args: [BigInt(1e18), 0n],
+				account: ZeroAddress
+			})
+		console.log(result)
 		priceRatio = result;
 	};
 
