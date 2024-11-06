@@ -2,7 +2,7 @@
 	import balancesStore from '$lib/balancesStore';
 	import type { Receipt } from '$lib/types';
 	import { fade } from 'svelte/transition';
-	import { cysFlareAddress, erc1155Address } from '$lib/stores';
+	import { cysFlrAddress, erc1155Address, sFlrAddress } from '$lib/stores';
 	import transactionStore from '$lib/transactionStore';
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { formatEther, parseEther } from 'ethers';
@@ -122,10 +122,11 @@
 			transactionStore.initiateUnlockTransaction({
 				signerAddress: $signerAddress,
 				config: $wagmiConfig,
+				cysFlrAddress: $cysFlrAddress,
+				sFlrAddress: $sFlrAddress,
 				erc1155Address: $erc1155Address,
-				cysFlareAddress: $cysFlareAddress,
-				assets: amountToRedeem,
-				tokenId: receipt.tokenId
+				tokenId: receipt.tokenId,
+				assets: amountToRedeem
 			})}
 	>
 		{buttonStatus}

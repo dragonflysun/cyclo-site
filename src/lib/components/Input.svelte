@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { signerAddress } from 'svelte-wagmi';
+	import { createEventDispatcher } from 'svelte';
+
 	export let amount: string = '0.0';
 	export let unit: string = '';
-
-	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -38,6 +39,7 @@
 		>
 	{/if}
 	<button
+		disabled={!$signerAddress}
 		data-testid={'set-val-to-max'}
 		on:click={setValueToMax}
 		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base">MAX</button
