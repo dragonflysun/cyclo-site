@@ -8,9 +8,7 @@
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
-	import {
-		simulateErc20PriceOracleReceiptVaultPreviewDeposit
-	} from '../../generated';
+	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -47,10 +45,10 @@
 
 	const getPriceRatio = async () => {
 		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-				address: $cysFlareAddress,
-				args: [BigInt(1e18), 0n],
-				account: ZeroAddress as `0x${string}`
-			})
+			address: $cysFlareAddress,
+			args: [BigInt(1e18), 0n],
+			account: ZeroAddress as `0x${string}`
+		});
 		priceRatio = result;
 	};
 
