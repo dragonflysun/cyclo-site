@@ -9,11 +9,23 @@
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 
-	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
+	import {
+		erc20PriceOracleReceiptVaultAbi,
+		simulateErc20PriceOracleReceiptVaultPreviewDeposit
+	} from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
+
+	import { createPublicClient, http } from 'viem';
+	import { flare } from 'viem/chains';
+
+	const publicClient = createPublicClient({
+		chain: flare,
+		transport: http()
+	});
+
 	export let amountToLock = '0.0';
 
 	let priceRatio = BigInt(0);
@@ -21,6 +33,10 @@
 	let insufficientFunds = false;
 
 	let intervalId: ReturnType<typeof setInterval>;
+
+	onMount(() => {
+		startGettingPriceRatio();
+	});
 
 	$: if ($signerAddress) {
 		checkBalance();
@@ -38,25 +54,28 @@
 		}
 	};
 
-	onMount(() => {
-		startGettingPriceRatio();
-	});
-
 	const getPriceRatio = async () => {
-		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cysFlrAddress,
-			args: [BigInt(1e18), 0n]
-		});
+		let result;
+		if ($signerAddress) {
+			({ result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+				address: $cysFlareAddress,
+				args: [BigInt(1e18), 0n]
+			}));
+		} else {
+			({ result } = await publicClient.simulateContract({
+				address: $cysFlareAddress,
+				abi: erc20PriceOracleReceiptVaultAbi,
+				functionName: 'previewDeposit',
+				args: [BigInt(1e18), 0n]
+			}));
+		}
+
 		priceRatio = result;
 	};
 
 	const startGettingPriceRatio = async () => {
 		intervalId = setInterval(getPriceRatio, 5000);
-		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cysFlrAddress,
-			args: [BigInt(1e18), 0n]
-		});
-		priceRatio = result;
+		getPriceRatio();
 	};
 
 	function stopGettingPriceRatio() {
@@ -75,7 +94,7 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>SFLR BALANCE</span>
+					<span>SFLR BALANCE!!!</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
@@ -83,7 +102,9 @@
 					>
 				</div>
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.sFlrBalance}<span in:fade={{ duration: 700 }}
+					{#key $balancesStore.sFlrBalance}<span
+							data-testid="sflr-balance"
+							in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
 					<span>SFLR</span>
@@ -126,21 +147,38 @@
 		</div>
 
 		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
-			<span class="align-center content-center">LOCK AMOUNT</span>
-
-			<Input
-				on:change={(event) => {
-					amountToLock = event.detail.value;
-					checkBalance();
-				}}
-				on:setValueToMax={() => {
-					assets = $balancesStore.sFlrBalance;
-					amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
-				}}
-				bind:amount={amountToLock}
-				maxValue={$balancesStore.sFlrBalance}
-				unit={'SFLR'}
-			/>
+			<span>LOCK AMOUNT</span>
+			<div class="flex flex-col">
+				<Input
+					data-testid="lock-input"
+					on:change={(event) => {
+						amountToLock = event.detail.value;
+						checkBalance();
+					}}
+					on:setValueToMax={() => {
+						assets = $balancesStore.sFlrBalance;
+						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
+					}}
+					bind:amount={amountToLock}
+					maxValue={$balancesStore.sFlrBalance}
+					unit={'SFLR'}
+				/>
+				{#if $signerAddress}
+					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
+						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5)}
+					</p>
+				{:else}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<div
+						on:click={() => $web3Modal.open()}
+						class="my-2 cursor-pointer text-right text-xs font-light hover:underline"
+						data-testid="connect-message"
+					>
+						Connect a wallet to see SFLR balance
+					</div>
+				{/if}
+			</div>
 		</div>
 
 		<div class="flex w-full flex-col gap-2">
