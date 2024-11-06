@@ -109,4 +109,22 @@ describe('Lock Component', () => {
 			expect(mockSimulateContract).toHaveBeenCalled();
 		});
 	});
+
+	it('should show the connect message if there is no signerAddress', async () => {
+		mockSignerAddressStore.mockSetSubscribeValue('');
+		render(Lock);
+		await waitFor(() => {
+			expect(screen.getByTestId('connect-message')).toBeInTheDocument();
+		});
+	});
+
+	it('should show the SFLR balance if there is a signerAddress', async () => {
+		mockSignerAddressStore.mockSetSubscribeValue('0x0000');
+		render(Lock);
+		await waitFor(() => {
+			const balance = screen.getByTestId('your-balance');
+			expect(balance).toBeInTheDocument();
+			expect(balance).toHaveTextContent('9.8760');
+		});
+	});
 });
