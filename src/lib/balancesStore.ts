@@ -13,7 +13,7 @@ const cysFLRBalanceStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
-	const refreshSflr = async (config: Config, sFlrAddress: Hex, signerAddress: string) => {
+	const refreshsFlr = async (config: Config, sFlrAddress: Hex, signerAddress: string) => {
 		const newSflrBalance = await readErc20BalanceOf(config, {
 			address: sFlrAddress,
 			args: [signerAddress as Hex]
@@ -25,7 +25,7 @@ const cysFLRBalanceStore = () => {
 		}));
 	};
 
-	const refreshcysFLR = async (config: Config, cysFLRAddress: Hex, signerAddress: string) => {
+	const refreshcysFlr = async (config: Config, cysFLRAddress: Hex, signerAddress: string) => {
 		const newcysFLRBalance = await readErc20BalanceOf(config, {
 			address: cysFLRAddress,
 			args: [signerAddress as Hex]
@@ -37,11 +37,45 @@ const cysFLRBalanceStore = () => {
 		}));
 	};
 
+	const refreshBothBalances = async (
+		config: Config,
+		sFlrAddress: Hex,
+		cysFlrAddress: Hex,
+		signerAddress: string
+	) => {
+		try {
+			const [newSFlrBalance, newCyFlrBalance] = await Promise.all([
+				readErc20BalanceOf(config, {
+					address: sFlrAddress,
+					args: [signerAddress as Hex]
+				}),
+				readErc20BalanceOf(config, {
+					address: cysFlrAddress,
+					args: [signerAddress as Hex]
+				})
+			]);
+
+			update((state) => ({
+				...state,
+				sFlrBalance: newSFlrBalance,
+				cyFlrBalance: newCyFlrBalance,
+				status: 'Ready'
+			}));
+		} catch (error) {
+			console.error('Error refreshing balances:', error);
+			update((state) => ({
+				...state,
+				status: 'Error'
+			}));
+		}
+	};
+
 	return {
 		subscribe,
 		reset,
-		refreshcysFLR,
-		refreshSflr
+		refreshcysFlr,
+		refreshsFlr,
+		refreshBothBalances
 	};
 };
 

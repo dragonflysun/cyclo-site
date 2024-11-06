@@ -2,39 +2,37 @@
 	import { fade } from 'svelte/transition';
 	import { readErc20TotalSupply } from '../../generated';
 	import { onMount } from 'svelte';
-	import { cysFlareAddress, stakedFlareAddress } from '$lib/stores';
+	import { cysFlrAddress, sFlrAddress } from '$lib/stores';
 	import { wagmiConfig } from 'svelte-wagmi';
 	import { formatEther } from 'ethers';
 	import { formatNumberWithAbbreviations } from '$lib/methods';
 
-	let stakedFlareSupply: bigint | null = null;
-	let cysFlareSupply: bigint | null = null;
+	let sFlrSupply: bigint | null = null;
+	let cysFlrSupply: bigint | null = null;
 
 	const getcysFLRSupply = async () => {
 		const data = await readErc20TotalSupply($wagmiConfig, {
-			address: $cysFlareAddress
+			address: $cysFlrAddress
 		});
-		return (cysFlareSupply = data);
+		return (cysFlrSupply = data);
 	};
 
-	const getStakedFlareSupply = async () => {
+	const getsFlrSupply = async () => {
 		const data = await readErc20TotalSupply($wagmiConfig, {
-			address: $stakedFlareAddress
+			address: $sFlrAddress
 		});
-		return (stakedFlareSupply = data);
+		return (sFlrSupply = data);
 	};
 
 	onMount(async () => {
 		await getcysFLRSupply();
-		await getStakedFlareSupply();
+		await getsFlrSupply();
 	});
 
-	$: readableSFLRSupply = stakedFlareSupply
-		? formatNumberWithAbbreviations(+formatEther(stakedFlareSupply))
-		: '';
+	$: readableSFLRSupply = sFlrSupply ? formatNumberWithAbbreviations(+formatEther(sFlrSupply)) : '';
 
-	$: readablecysFLRSupply = cysFlareSupply
-		? formatNumberWithAbbreviations(+formatEther(cysFlareSupply))
+	$: readablecysFLRSupply = cysFlrSupply
+		? formatNumberWithAbbreviations(+formatEther(cysFlrSupply))
 		: '';
 </script>
 

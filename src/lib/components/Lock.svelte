@@ -3,7 +3,7 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cysFlareAddress, stakedFlareAddress } from '$lib/stores';
+	import { cysFlrAddress, erc1155Address, sFlrAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
@@ -17,6 +17,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
+
 	import { createPublicClient, http } from 'viem';
 	import { flare } from 'viem/chains';
 
@@ -61,17 +62,18 @@
 		let result;
 		if ($signerAddress) {
 			({ result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-				address: $cysFlareAddress,
+				address: $cysFlrAddress,
 				args: [BigInt(1e18), 0n]
 			}));
 		} else {
 			({ result } = await publicClient.simulateContract({
-				address: $cysFlareAddress,
+				address: $cysFlrAddress,
 				abi: erc20PriceOracleReceiptVaultAbi,
 				functionName: 'previewDeposit',
 				args: [BigInt(1e18), 0n]
 			}));
 		}
+
 		priceRatio = result;
 	};
 
@@ -149,29 +151,45 @@
 		</div>
 
 		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
-			<span class="align-center content-center">LOCK AMOUNT</span>
-
-			<Input
-				data-testid="lock-input"
-				on:change={(event) => {
-					amountToLock = event.detail.value;
-					checkBalance();
-				}}
-				on:setValueToMax={() => {
-					assets = $balancesStore.sFlrBalance;
-					amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
-				}}
-				bind:amount={amountToLock}
-				maxValue={$balancesStore.sFlrBalance}
-				unit={'SFLR'}
-			/>
+			<span>LOCK AMOUNT</span>
+			<div class="flex flex-col">
+				<Input
+					data-testid="lock-input"
+					on:change={(event) => {
+						amountToLock = event.detail.value;
+						checkBalance();
+					}}
+					on:setValueToMax={() => {
+						assets = $balancesStore.sFlrBalance;
+						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
+					}}
+					bind:amount={amountToLock}
+					maxValue={$balancesStore.sFlrBalance}
+					unit={'SFLR'}
+				/>
+				{#if $signerAddress}
+					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
+						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5)}
+					</p>
+				{:else}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
+					<div
+						on:click={() => $web3Modal.open()}
+						class="my-2 cursor-pointer text-right text-xs font-light hover:underline"
+						data-testid="connect-message"
+					>
+						Connect a wallet to see SFLR balance
+					</div>
+				{/if}
+			</div>
 		</div>
 
 		<div class="flex w-full flex-col gap-2">
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock === null ? 0 : amountToLock}</span>
+				<span>{amountToLock}</span>
 
 				<span>SFLR</span>
 			</div>
@@ -208,8 +226,9 @@
 					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
-						stakedFlareAddress: $stakedFlareAddress,
-						cysFlareAddress: $cysFlareAddress,
+						cysFlrAddress: $cysFlrAddress,
+						sFlrAddress: $sFlrAddress,
+						erc1155Address: $erc1155Address,
 						assets: assets
 					})}>{insufficientFunds ? 'INSUFFICIENT WFLR' : 'LOCK'}</Button
 			>

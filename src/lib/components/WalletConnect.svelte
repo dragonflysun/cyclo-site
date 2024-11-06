@@ -9,12 +9,12 @@
 	{#if $wrongNetwork || !$signerAddress || !$connected}
 		<div data-testid="not-connected">
 			<CloseCircleSolid color="red" class="hidden md:inline" />
-			<span>Connect</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
+			<span>Connect</span><span class="hidden md:inline">{''} to {$targetNetwork.name}</span>
 		</div>
 	{:else}
 		<div data-testid="connected">
 			<CheckCircleSolid color="green" class="hidden md:inline" />
-			<span>Connected</span><span class="hidden md:inline"> to {$targetNetwork.name}</span>
+			<span>Connected</span><span class="hidden md:inline">{''} to {$targetNetwork.name}</span>
 		</div>
 	{/if}
 </Button>
