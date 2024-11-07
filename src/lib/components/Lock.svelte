@@ -45,7 +45,7 @@
 
 	const getPriceRatio = async () => {
 		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cysFlareAddress,
+			address: $cysFlrAddress,
 			args: [BigInt(1e18), 0n],
 			account: ZeroAddress as `0x${string}`
 		});
