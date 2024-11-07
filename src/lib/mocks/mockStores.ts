@@ -14,7 +14,7 @@ const mockConnectedWritable = writable<boolean>(false);
 const mockWagmiConfigWritable = writable<Config>(mockWeb3Config);
 const erc1155AddressWritable = writable<Hex>('0x6D6111ab02800aC64f66456874add77F44529a90');
 const mockCyFlrAddressWritable = writable<Hex>('0x91e3B9820b47c7D4e6765E90F94C1638E7bc53C6');
-
+const mockSFlrAddressWritable = writable<Hex>('0x91e3B9820b47c7D4e6765E90F94C163123456789');
 const mockBalancesWritable = writable({
 	cysFLRBalance: BigInt(100),
 	sFlrBalance: BigInt(100),
@@ -78,4 +78,10 @@ export const mockCyFlrAddressStore = {
 	subscribe: mockCyFlrAddressWritable.subscribe,
 	set: mockCyFlrAddressWritable.set,
 	mockSetSubscribeValue: (value: Hex): void => mockCyFlrAddressWritable.set(value)
+};
+
+export const mockSflrAddressStore = {
+	subscribe: mockSFlrAddressWritable.subscribe,
+	set: mockSFlrAddressWritable.set,
+	mockSetSubscribeValue: (value: Hex): void => mockSFlrAddressWritable.set(value)
 };
