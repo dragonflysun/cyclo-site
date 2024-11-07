@@ -10,7 +10,7 @@ Notably Cyclo avoids or mitigates the following problems found in various stable
 - **Liquidation**: Cyclo will never liquidate user's FLR assets for any reason
 - **Centralisation**: There are no admin keys or risk parameters to be tuned, not even a DAO
 - **Under Collateralization**: There is a strict overcollateralization of all sFLR collateral and circulating cysFLR
-- **Tax complexity**: Minting cysFLR is technically akin to wrapping FLR to sFLR, not trading
+- **Tax complexity**: Minting cysFLR is technically akin to wrapping FLR to wFLR, not trading
 - **Gas costs**: Minting/burning cysFLR is cheaper than an AMM trade
 - **USD regulations**: cysFLR references the FTSO oracle price of FLR not the US dollar, there is no "issuer"
 - **Supply constraints**: cysFLR has an unbounded elastic supply
