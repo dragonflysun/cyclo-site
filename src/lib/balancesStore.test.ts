@@ -32,8 +32,8 @@ describe('cysFlrBalanceStore', () => {
 	});
 
 	it('should refresh sFlrBalance correctly', async () => {
-		const mockWFlrBalance = BigInt(1000);
-		(readErc20BalanceOf as Mock).mockResolvedValue(mockWFlrBalance);
+		const mocksFlrBalance = BigInt(1000);
+		(readErc20BalanceOf as Mock).mockResolvedValue(mocksFlrBalance);
 
 		await refreshBalances(
 			mockWagmiConfigStore as unknown as Config,
@@ -43,13 +43,13 @@ describe('cysFlrBalanceStore', () => {
 		);
 
 		const storeValue = get(cysFlrBalanceStore);
-		expect(storeValue.sFlrBalance).toBe(mockWFlrBalance);
+		expect(storeValue.sFlrBalance).toBe(mocksFlrBalance);
 		expect(storeValue.status).toBe('Ready');
 	});
 
-	it('should refresh cysFlrBalance correctly', async () => {
-		const mockCyFlrBalance = BigInt(2000);
-		(readErc20BalanceOf as Mock).mockResolvedValue(mockCyFlrBalance);
+	it('should refresh cysFLRBalance correctly', async () => {
+		const mockCysFlrBalance = BigInt(2000);
+		(readErc20BalanceOf as Mock).mockResolvedValue(mockCysFlrBalance);
 
 		await refreshBalances(
 			mockWagmiConfigStore as unknown as Config,
@@ -59,7 +59,7 @@ describe('cysFlrBalanceStore', () => {
 		);
 
 		const storeValue = get(cysFlrBalanceStore);
-		expect(storeValue.cysFlrBalance).toBe(mockCyFlrBalance);
+		expect(storeValue.cysFlrBalance).toBe(mockCysFlrBalance);
 		expect(storeValue.status).toBe('Ready');
 	});
 

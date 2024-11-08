@@ -55,10 +55,10 @@
 					{Number(formatEther(receipt.balance)).toFixed(5)}
 				</TableBodyCell>
 
-				<TableBodyCell class="hidden md:table-cell" data-testid={`wflr-per-receipt-${index}`}>
+				<TableBodyCell class="hidden md:table-cell" data-testid={`sflr-per-receipt-${index}`}>
 					{receipt.readableFlrPerReceipt}
 				</TableBodyCell>
-				<TableBodyCell class="" data-testid={`total-locked-wflr-${index}`}>
+				<TableBodyCell class="" data-testid={`total-locked-sflr-${index}`}>
 					{receipt.readableTotalFlr}
 				</TableBodyCell>
 				<TableBodyCell class="">

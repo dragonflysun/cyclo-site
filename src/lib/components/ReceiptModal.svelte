@@ -11,7 +11,7 @@
 
 	enum ButtonStatus {
 		INSUFFICIENT_RECEIPTS = 'INSUFFICIENT RECEIPTS',
-		INSUFFICIENT_cyFLR = 'INSUFFICIENT cyFLR',
+		INSUFFICIENT_cysFLR = 'INSUFFICIENT cysFLR',
 		READY = 'UNLOCK'
 	}
 	export let receipt: Receipt;
@@ -42,7 +42,7 @@
 		if (erc1155balance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
 		} else if ($balancesStore.cysFlrBalance < amountToRedeem) {
-			buttonStatus = ButtonStatus.INSUFFICIENT_cyFLR;
+			buttonStatus = ButtonStatus.INSUFFICIENT_cysFLR;
 		} else {
 			buttonStatus = ButtonStatus.READY;
 		}
