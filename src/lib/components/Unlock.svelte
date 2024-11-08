@@ -14,8 +14,6 @@
 
 	let loading = true;
 
-	$: console.log($balancesStore)
-
 	$: if ($signerAddress) {
 		refreshReceipts();
 	}
