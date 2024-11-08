@@ -144,7 +144,7 @@
 				/>
 				{#if $signerAddress}
 					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
-						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5)}
+						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
 					</p>
 				{:else}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
