@@ -6,7 +6,8 @@
 	export let unit: string = '';
 
 	const dispatch = createEventDispatcher();
-	let displayAmount = (typeof amount === 'string' ? amount : amount.toString()).replace(/,/g, '.') || '0';
+	let displayAmount =
+		(typeof amount === 'string' ? amount : amount.toString()).replace(/,/g, '.') || '0';
 
 	$: displayAmount = amount ? amount.toString().replace(/,/g, '.') : '0';
 
@@ -27,9 +28,7 @@
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
-		const allowedKeys = [
-			'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'
-		];
+		const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'];
 		const isNumber = /^[0-9]$/.test(event.key);
 
 		if (event.key === 'Backspace' && Number(displayAmount) === 0) {
@@ -58,7 +57,8 @@
 		placeholder="0.0"
 		step="0.1"
 		type="text"
-		bind:value={displayAmount} />
+		bind:value={displayAmount}
+	/>
 	{#if unit}
 		<span
 			data-testid="unit"
