@@ -13,7 +13,6 @@ const balancesStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
 
-
 	const refreshBalances = async (
 		config: Config,
 		sFlrAddress: Hex,

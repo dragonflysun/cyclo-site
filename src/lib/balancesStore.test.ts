@@ -66,7 +66,12 @@ describe('cysFlrBalanceStore', () => {
 	it('should reset the store to its initial state', () => {
 		const mockWFlrBalance = BigInt(1000);
 		(readErc20BalanceOf as Mock).mockResolvedValue(mockWFlrBalance);
-		refreshBalances(mockWagmiConfigStore as unknown as Config, mocksFlrAddress, mockCysFlrAddress, mockSignerAddress);
+		refreshBalances(
+			mockWagmiConfigStore as unknown as Config,
+			mocksFlrAddress,
+			mockCysFlrAddress,
+			mockSignerAddress
+		);
 
 		reset();
 
