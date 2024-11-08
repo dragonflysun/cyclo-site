@@ -126,7 +126,6 @@ const transactionStore = () => {
 		}));
 
 	const handleCatchError = (e: { details: string }, step: string, hash: string | undefined) => {
-		console.log('handling catch error!', e.details);
 		if (
 			e.details.includes('User denied transaction signature') ||
 			e.details.includes('User rejected the request.')
@@ -138,6 +137,8 @@ const transactionStore = () => {
 			return transactionError(TransactionError.APPROVAL_FAILED, hash);
 		} else if (step === 'unlock') {
 			return transactionError(TransactionError.UNLOCK_TRANSACTION_FAILED, hash);
+		} else {
+			return transactionError(TransactionError.UNKNOWN_ERROR, hash)
 		}
 	};
 
@@ -239,7 +240,7 @@ const transactionStore = () => {
 				}
 				return transactionSuccess(hash);
 			} catch (e: unknown) {
-				handleCatchError(e as { details: string }, 'unlock', hash);
+				return handleCatchError(e as { details: string }, 'unlock', hash);
 			}
 		};
 
@@ -293,7 +294,7 @@ const transactionStore = () => {
 				}
 				return await handleUnlock();
 			} catch (e) {
-				handleCatchError(e, 'approve', hash);
+				return handleCatchError(e as { details: string }, 'approve', hash);
 			}
 		} else {
 			const allowance = await readErc20Allowance(config, {
