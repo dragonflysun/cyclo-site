@@ -20,7 +20,7 @@
 	let erc1155balance = BigInt(receipt.balance);
 	let readableAmountToRedeem: string = '0.0';
 	let amountToRedeem = BigInt(0);
-	let flrToReceive = BigInt(0);
+	let sFlrToReceive = BigInt(0);
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
@@ -52,9 +52,10 @@
 	}
 
 	$: if (amountToRedeem > 0) {
-		const _flrToReceive = (amountToRedeem * 10n ** 18n) / BigInt(receipt.tokenId);
-		flrToReceive = _flrToReceive;
+		const _sFlrToReceive = (amountToRedeem * 10n ** 18n) / BigInt(receipt.tokenId);
+		sFlrToReceive = _sFlrToReceive;
 	} else {
+		sFlrToReceive = BigInt(0);
 		amountToRedeem = BigInt(0);
 	}
 </script>
@@ -108,7 +109,7 @@
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(flrToReceive))} SFLR
+				{Number(formatEther(sFlrToReceive))} SFLR
 			</span>
 		</div>
 	</div>
