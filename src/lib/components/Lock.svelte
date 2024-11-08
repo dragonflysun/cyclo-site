@@ -8,6 +8,7 @@
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
+	import { Modal } from 'flowbite-svelte';
 	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
@@ -16,11 +17,12 @@
 	import { ZeroAddress } from 'ethers';
 
 	export let amountToLock = '0.0';
+	let disclaimerAcknowledged = false;
+	let disclaimerOpen = false;
 
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0);
 	let insufficientFunds = false;
-
 	let intervalId: ReturnType<typeof setInterval>;
 
 	onMount(() => {
@@ -35,11 +37,7 @@
 		if (amountToLock) {
 			const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
 			assets = bigNumValue;
-			if ($balancesStore.sFlrBalance < assets) {
-				insufficientFunds = true;
-			} else {
-				insufficientFunds = false;
-			}
+			insufficientFunds = $balancesStore.sFlrBalance < assets;
 		}
 	};
 
@@ -60,6 +58,25 @@
 	function stopGettingPriceRatio() {
 		clearInterval(intervalId);
 	}
+
+	const initiateLockWithDisclaimer = () => {
+		if (!disclaimerAcknowledged) {
+			disclaimerOpen = true;
+		} else {
+			runLockTransaction();
+		}
+	};
+
+	const runLockTransaction = () => {
+		transactionStore.initiateLockTransaction({
+			signerAddress: $signerAddress,
+			config: $wagmiConfig,
+			cysFlrAddress: $cysFlrAddress,
+			sFlrAddress: $sFlrAddress,
+			erc1155Address: $erc1155Address,
+			assets: assets
+		});
+	};
 
 	onDestroy(() => {
 		stopGettingPriceRatio();
@@ -130,7 +147,7 @@
 			<div class="flex flex-col">
 				<Input
 					data-testid="lock-input"
-					on:change={(event) => {
+					on:input={(event) => {
 						amountToLock = event.detail.value;
 						checkBalance();
 					}}
@@ -144,11 +161,9 @@
 				/>
 				{#if $signerAddress}
 					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
-						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5)}
+						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
 					</p>
 				{:else}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div
 						on:click={() => $web3Modal.open()}
 						class="my-2 cursor-pointer text-right text-xs font-light hover:underline"
@@ -165,14 +180,11 @@
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				<span>{amountToLock}</span>
-
 				<span>SFLR</span>
 			</div>
 
 			<div class="flex w-full">
-				<div
-					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white"
-				>
+				<div class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white">
 					<img src={ftso} alt="ftso" class="w-1/2" />
 					{Number(formatEther(priceRatio.toString())).toFixed(5)}
 				</div>
@@ -197,25 +209,49 @@
 				disabled={insufficientFunds || !assets}
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
-				on:click={() =>
-					transactionStore.initiateLockTransaction({
-						signerAddress: $signerAddress,
-						config: $wagmiConfig,
-						cysFlrAddress: $cysFlrAddress,
-						sFlrAddress: $sFlrAddress,
-						erc1155Address: $erc1155Address,
-						assets: assets
-					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
-			>
+				on:click={() => initiateLockWithDisclaimer()}
+				>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button>
 		{:else}
 			<Button
 				customClass="text-lg"
 				data-testid="connect-wallet-button"
-				on:click={() => $web3Modal.open()}>CONNECT WALLET</Button
-			>
+				on:click={() => $web3Modal.open()}>CONNECT WALLET</Button>
 		{/if}
 	</div>
 </Card>
+
+<Modal
+	size="sm"
+	open={disclaimerOpen}
+	on:close={() => disclaimerOpen = false}
+	data-testid="disclaimer-modal"
+>
+	<div class="p-4 text-center">
+		<h2 class="text-lg font-semibold text-red-600 mb-4">Wait!</h2>
+		<p class="text-sm text-gray-700 dark:text-gray-300 mb-4">
+			Before you deploy your strategy, make sure you understand the following:
+		</p>
+		<ul class="list-disc list-inside text-left text-gray-700 dark:text-gray-300 text-xs mb-4">
+			<li>This front end is a tool for interacting with Raindex smart contracts.</li>
+			<li>You are deploying your own strategy and using your own wallet and private keys.</li>
+			<li>No custodianship of funds exists; lost funds are unrecoverable.</li>
+			<li>No endorsement or guarantee is provided for these strategies.</li>
+			<li>Do not proceed if you do not understand the strategy you are deploying.</li>
+			<li>Only invest funds you can afford to lose.</li>
+		</ul>
+		<Button
+			class="mt-4 bg-red-500 text-white hover:bg-red-600"
+			on:click={() => {
+				disclaimerAcknowledged = true;
+				disclaimerOpen = false;
+				runLockTransaction();
+			}}
+			data-testid="disclaimer-acknowledge-button"
+		>
+			I Acknowledge
+		</Button>
+	</div>
+</Modal>
 
 <style lang="postcss">
 	.fill-circle {
