@@ -36,12 +36,12 @@
 	}
 
 	$: maxRedeemable =
-		$balancesStore?.cysFLRBalance < erc1155balance ? $balancesStore.cysFLRBalance : erc1155balance;
+		$balancesStore?.cysFlrBalance < erc1155balance ? $balancesStore.cysFlrBalance : erc1155balance;
 
 	$: if (amountToRedeem) {
 		if (erc1155balance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
-		} else if ($balancesStore.cysFLRBalance < amountToRedeem) {
+		} else if ($balancesStore.cysFlrBalance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_cyFLR;
 		} else {
 			buttonStatus = ButtonStatus.READY;
