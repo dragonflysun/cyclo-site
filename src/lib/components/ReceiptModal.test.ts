@@ -37,8 +37,8 @@ describe('ReceiptModal Component', () => {
 		const lockUpPrice = Number(formatEther(mockReceipt.tokenId));
 
 		await waitFor(() => {
-			expect(screen.getByTestId('balance')).toHaveTextContent(receiptBalance.toFixed(5));
-			expect(screen.getByTestId('lock-up-price')).toHaveTextContent(lockUpPrice.toFixed(4));
+			expect(screen.getByTestId('balance')).toHaveTextContent(receiptBalance.toString());
+			expect(screen.getByTestId('lock-up-price')).toHaveTextContent(lockUpPrice.toString());
 		});
 	});
 

@@ -24,6 +24,10 @@
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
+	$: console.log('amount', amountToRedeem)
+	$: console.log('readable', readableAmountToRedeem)
+	$: console.log("balance", erc1155balance)
+
 	const checkBalance = () => {
 		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
 			readableAmountToRedeem = '0.0';
@@ -39,7 +43,10 @@
 		$balancesStore?.cysFlrBalance < erc1155balance ? $balancesStore.cysFlrBalance : erc1155balance;
 
 	$: if (amountToRedeem) {
+		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
 		if (erc1155balance < amountToRedeem) {
+			console.log(erc1155balance, amountToRedeem);
+			console.log("it's less")
 			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
 		} else if ($balancesStore.cysFlrBalance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_cyFLR;
@@ -62,7 +69,7 @@
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}
 					<span in:fade={{ duration: 700 }} data-testid="balance"
-						>{Number(readableBalance).toFixed(5)}</span
+						>{Number(readableBalance)}</span
 					>
 				{/if}{/key}
 		</div>
@@ -72,7 +79,7 @@
 		<span>LOCK-UP PRICE</span>
 
 		<div class="flex flex-row items-center gap-2">
-			<span data-testid="lock-up-price">{Number(formatEther(tokenId)).toFixed(4)}</span>
+			<span data-testid="lock-up-price">{Number(formatEther(tokenId))}</span>
 		</div>
 	</div>
 
@@ -82,13 +89,11 @@
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
 			<Input
-				maxValue={maxRedeemable}
 				bind:amount={readableAmountToRedeem}
 				data-testid="redeem-input"
 				on:input={checkBalance}
 				on:setValueToMax={() => {
-					amountToRedeem = maxRedeemable;
-					readableAmountToRedeem = Number(formatEther(maxRedeemable.toString())).toFixed(5);
+					amountToRedeem = maxRedeemable
 				}}
 			/>
 		</div>
@@ -109,7 +114,7 @@
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(flrToReceive)).toFixed(5)} SFLR
+				{Number(formatEther(flrToReceive))} SFLR
 			</span>
 		</div>
 	</div>
