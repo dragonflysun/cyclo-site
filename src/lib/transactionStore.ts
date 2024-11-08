@@ -125,7 +125,7 @@ const transactionStore = () => {
 			hash: hash || ''
 		}));
 
-	const handleCatchError = (e: {details: string}, step: string, hash: string | undefined) => {
+	const handleCatchError = (e: { details: string }, step: string, hash: string | undefined) => {
 		console.log('handling catch error!', e.details);
 		if (
 			e.details.includes('User denied transaction signature') ||
@@ -166,7 +166,7 @@ const transactionStore = () => {
 				});
 
 				awaitLockTx(hash);
-				await waitForTransactionReceipt(config, { confirmations: 1, hash });
+				await waitForTransactionReceipt(config, { hash });
 				await balancesStore.refreshBalances(
 					config,
 					sFlrAddress,
@@ -180,7 +180,7 @@ const transactionStore = () => {
 				}
 				return transactionSuccess(hash);
 			} catch (e: unknown) {
-				return handleCatchError(e, 'lock', hash);
+				return handleCatchError(e as { details: string }, 'lock', hash);
 			}
 		};
 
@@ -197,7 +197,7 @@ const transactionStore = () => {
 				await waitForTransactionReceipt(config, { hash });
 				return await handleLock();
 			} catch (e: unknown) {
-				handleCatchError(e, 'approve', hash);
+				handleCatchError(e as { details: string }, 'approve', hash);
 			}
 		} else {
 			return await handleLock();
@@ -225,7 +225,7 @@ const transactionStore = () => {
 				});
 
 				awaitUnlockTx(hash);
-				await waitForTransactionReceipt(config, { confirmations: 4, hash });
+				await waitForTransactionReceipt(config, { hash });
 				await balancesStore.refreshBalances(
 					config,
 					sFlrAddress,
@@ -239,7 +239,7 @@ const transactionStore = () => {
 				}
 				return transactionSuccess(hash);
 			} catch (e: unknown) {
-				handleCatchError(e, 'unlock', hash);
+				handleCatchError(e as { details: string }, 'unlock', hash);
 			}
 		};
 
@@ -253,12 +253,12 @@ const transactionStore = () => {
 				});
 
 				awaitApprovalTx(hash);
-				const res = await waitForTransactionReceipt(config, { confirmations: 1, hash });
+				const res = await waitForTransactionReceipt(config, { hash });
 				if (res) {
 					return res;
 				}
 			} catch (e: unknown) {
-				handleCatchError(e, 'approve', hash);
+				handleCatchError(e as { details: string }, 'approve', hash);
 			}
 		};
 
