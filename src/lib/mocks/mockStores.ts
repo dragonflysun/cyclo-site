@@ -13,7 +13,7 @@ const mockPageWritable = writable({ url: { pathname: '/' } });
 const mockConnectedWritable = writable<boolean>(false);
 const mockWagmiConfigWritable = writable<Config>(mockWeb3Config);
 const erc1155AddressWritable = writable<Hex>('0x6D6111ab02800aC64f66456874add77F44529a90');
-const mockCyFlrAddressWritable = writable<Hex>('0x91e3B9820b47c7D4e6765E90F94C1638E7bc53C6');
+const mockCysFlrAddressWritable = writable<Hex>('0x91e3B9820b47c7D4e6765E90F94C1638E7bc53C6');
 const mockSFlrAddressWritable = writable<Hex>('0x91e3B9820b47c7D4e6765E90F94C163123456789');
 const mockBalancesWritable = writable({
 	cysFLRBalance: BigInt(100),
@@ -74,10 +74,10 @@ export const mockErc1155AddressStore = {
 	mockSetSubscribeValue: (value: Hex): void => erc1155AddressWritable.set(value)
 };
 
-export const mockCyFlrAddressStore = {
-	subscribe: mockCyFlrAddressWritable.subscribe,
-	set: mockCyFlrAddressWritable.set,
-	mockSetSubscribeValue: (value: Hex): void => mockCyFlrAddressWritable.set(value)
+export const mockCysFlrAddressStore = {
+	subscribe: mockCysFlrAddressWritable.subscribe,
+	set: mockCysFlrAddressWritable.set,
+	mockSetSubscribeValue: (value: Hex): void => mockCysFlrAddressWritable.set(value)
 };
 
 export const mockSflrAddressStore = {

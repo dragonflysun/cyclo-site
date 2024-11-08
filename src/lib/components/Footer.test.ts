@@ -18,7 +18,7 @@ describe('Footer.svelte', () => {
 		vi.spyOn(global, 'fetch').mockResolvedValue({} as Response);
 	});
 
-	it('should display cyFLR and sFLR supplies correctly when fetched', async () => {
+	it('should display cysFLR and sFLR supplies correctly when fetched', async () => {
 		(readErc20TotalSupply as Mock)
 			.mockResolvedValueOnce(BigInt(2000000000000000000))
 			.mockResolvedValueOnce(BigInt(5000000000000000000));
@@ -42,7 +42,7 @@ describe('Footer.svelte', () => {
 		render(Footer);
 
 		await waitFor(() => {
-			expect(screen.queryByText('Total cyFLR supply')).not.toBeInTheDocument();
+			expect(screen.queryByText('Total cysFLR supply')).not.toBeInTheDocument();
 			expect(screen.queryByText('Total sFLR supply')).not.toBeInTheDocument();
 		});
 	});
