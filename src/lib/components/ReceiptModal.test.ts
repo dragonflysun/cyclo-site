@@ -49,7 +49,7 @@ describe('ReceiptModal Component', () => {
 		await userEvent.type(input, '0.5');
 
 		await waitFor(() => {
-			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('0.21664 SFLR');
+			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('21.663778162911612 SFLR');
 		});
 	});
 

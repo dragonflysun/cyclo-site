@@ -24,9 +24,6 @@
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
-	$: console.log('amount', amountToRedeem)
-	$: console.log('readable', readableAmountToRedeem)
-	$: console.log("balance", erc1155balance)
 
 	const checkBalance = () => {
 		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
@@ -35,9 +32,11 @@
 		amountToRedeem = parseEther(readableAmountToRedeem.toString());
 	};
 
-	$: if (readableAmountToRedeem) {
+
+	const handleInput = (event: { detail: { value: string; }; }) => {
+		readableAmountToRedeem = event.detail.value;
 		checkBalance();
-	}
+	};
 
 	$: maxRedeemable =
 		$balancesStore?.cysFlrBalance < erc1155balance ? $balancesStore.cysFlrBalance : erc1155balance;
@@ -45,8 +44,6 @@
 	$: if (amountToRedeem) {
 		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
 		if (erc1155balance < amountToRedeem) {
-			console.log(erc1155balance, amountToRedeem);
-			console.log("it's less")
 			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
 		} else if ($balancesStore.cysFlrBalance < amountToRedeem) {
 			buttonStatus = ButtonStatus.INSUFFICIENT_cyFLR;
@@ -89,9 +86,9 @@
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
 			<Input
-				bind:amount={readableAmountToRedeem}
+				value={readableAmountToRedeem}
+				on:input={handleInput}
 				data-testid="redeem-input"
-				on:input={checkBalance}
 				on:setValueToMax={() => {
 					amountToRedeem = maxRedeemable
 				}}
@@ -122,7 +119,7 @@
 	<button
 		data-testid="unlock-button"
 		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white md:text-2xl"
-		disabled={buttonStatus !== ButtonStatus.READY}
+		disabled={buttonStatus !== ButtonStatus.READY || amountToRedeem === BigInt(0)}
 		on:click={() =>
 			transactionStore.initiateUnlockTransaction({
 				signerAddress: $signerAddress,

@@ -130,7 +130,7 @@
 			<div class="flex flex-col">
 				<Input
 					data-testid="lock-input"
-					on:change={(event) => {
+					on:input={(event) => {
 						amountToLock = event.detail.value;
 						checkBalance();
 					}}
