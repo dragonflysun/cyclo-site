@@ -16,7 +16,7 @@ describe('cysFlrBalanceStore', () => {
 	const mocksFlrAddress = '0xabcdef1234567890';
 	const mockCysFlrAddress = '0xabcdefabcdef1234';
 
-	const { reset, refreshcysFlr, refreshsFlr } = balancesStore;
+	const { reset, refreshBalances } = balancesStore;
 
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -25,7 +25,7 @@ describe('cysFlrBalanceStore', () => {
 
 	it('should initialize with the correct default state', () => {
 		expect(get(cysFlrBalanceStore)).toEqual({
-			cysFLRBalance: BigInt(0),
+			cysFlrBalance: BigInt(0),
 			sFlrBalance: BigInt(0),
 			status: 'Checking'
 		});
@@ -35,9 +35,10 @@ describe('cysFlrBalanceStore', () => {
 		const mocksFlrBalance = BigInt(1000);
 		(readErc20BalanceOf as Mock).mockResolvedValue(mocksFlrBalance);
 
-		await refreshsFlr(
+		await refreshBalances(
 			mockWagmiConfigStore as unknown as Config,
 			mocksFlrAddress,
+			mockCysFlrAddress,
 			mockSignerAddress
 		);
 
@@ -50,26 +51,32 @@ describe('cysFlrBalanceStore', () => {
 		const mockCysFlrBalance = BigInt(2000);
 		(readErc20BalanceOf as Mock).mockResolvedValue(mockCysFlrBalance);
 
-		await refreshcysFlr(
+		await refreshBalances(
 			mockWagmiConfigStore as unknown as Config,
+			mocksFlrAddress,
 			mockCysFlrAddress,
 			mockSignerAddress
 		);
 
 		const storeValue = get(cysFlrBalanceStore);
-		expect(storeValue.cysFLRBalance).toBe(mockCysFlrBalance);
+		expect(storeValue.cysFlrBalance).toBe(mockCysFlrBalance);
 		expect(storeValue.status).toBe('Ready');
 	});
 
 	it('should reset the store to its initial state', () => {
-		const mocksFlrBalance = BigInt(1000);
-		(readErc20BalanceOf as Mock).mockResolvedValue(mocksFlrBalance);
-		refreshsFlr(mockWagmiConfigStore as unknown as Config, mocksFlrAddress, mockSignerAddress);
+		const mockWFlrBalance = BigInt(1000);
+		(readErc20BalanceOf as Mock).mockResolvedValue(mockWFlrBalance);
+		refreshBalances(
+			mockWagmiConfigStore as unknown as Config,
+			mocksFlrAddress,
+			mockCysFlrAddress,
+			mockSignerAddress
+		);
 
 		reset();
 
 		expect(get(cysFlrBalanceStore)).toEqual({
-			cysFLRBalance: BigInt(0),
+			cysFlrBalance: BigInt(0),
 			sFlrBalance: BigInt(0),
 			status: 'Checking'
 		});

@@ -145,7 +145,7 @@ const transactionStore = () => {
 					awaitLockTx(hash);
 					const res = await waitForTransactionReceipt(config, { hash: hash });
 					if (res) {
-						await balancesStore.refreshBothBalances(
+						await balancesStore.refreshBalances(
 							config,
 							sFlrAddress,
 							cysFlrAddress,
@@ -176,7 +176,7 @@ const transactionStore = () => {
 				awaitLockTx(hash);
 				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
-					await balancesStore.refreshBothBalances(
+					await balancesStore.refreshBalances(
 						config,
 						sFlrAddress,
 						cysFlrAddress,
@@ -216,7 +216,7 @@ const transactionStore = () => {
 				awaitUnlockTx(hash);
 				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 				if (res) {
-					await balancesStore.refreshBothBalances(
+					await balancesStore.refreshBalances(
 						config,
 						sFlrAddress,
 						cysFlrAddress,
