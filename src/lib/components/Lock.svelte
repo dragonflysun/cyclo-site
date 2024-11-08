@@ -33,6 +33,8 @@
 		checkBalance();
 	}
 
+	$: console.log(disclaimerOpen)
+
 	const checkBalance = () => {
 		if (amountToLock) {
 			const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
