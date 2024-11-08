@@ -10,7 +10,7 @@
 	import { base } from '$app/paths';
 
 	$: if ($signerAddress) {
-		balancesStore.refreshBothBalances($wagmiConfig, $sFlrAddress, $cysFlrAddress, $signerAddress);
+		balancesStore.refreshBalances($wagmiConfig, $sFlrAddress, $cysFlrAddress, $signerAddress);
 	}
 </script>
 

@@ -48,7 +48,7 @@ describe('Unlock Component', () => {
 		render(Unlock);
 
 		await waitFor(() => {
-			const balanceText = screen.getByText('1.0000');
+			const balanceText = screen.getByText(BigInt(1).toString());
 			expect(balanceText).toBeInTheDocument();
 			expect(screen.getByText('cysFLR')).toBeInTheDocument();
 		});
