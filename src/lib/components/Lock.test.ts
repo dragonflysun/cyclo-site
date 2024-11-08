@@ -50,7 +50,7 @@ describe('Lock Component', () => {
 		initiateLockTransactionSpy.mockClear();
 		mockBalancesStore.mockSetSubscribeValue(
 			BigInt(1234000000000000000), // sFlrBalance
-			BigInt(9876000000000000000), // wFlrBalance
+			BigInt(9876000000000000000), // cysFlrBalance
 			'Ready' // status
 		);
 	});
