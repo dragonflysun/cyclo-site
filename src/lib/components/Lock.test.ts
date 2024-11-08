@@ -75,8 +75,8 @@ describe('Lock Component', () => {
 		await waitFor(() => {
 			const priceRatio = screen.getByTestId('price-ratio');
 			expect(priceRatio).toBeInTheDocument();
-			const calculatedCyflr = screen.getByTestId('calculated-cyflr');
-			expect(calculatedCyflr).toHaveTextContent('0.001');
+			const calculatedCysflr = screen.getByTestId('calculated-cysflr');
+			expect(calculatedCysflr).toHaveTextContent('0.001');
 		});
 	});
 

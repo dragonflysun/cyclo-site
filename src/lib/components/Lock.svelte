@@ -205,7 +205,7 @@
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				{#key priceRatio}
-					<span in:fade={{ duration: 700 }} data-testid="calculated-cyflr"
+					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
 						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
 					>
 				{/key}

@@ -44,7 +44,7 @@ const cysFLRBalanceStore = () => {
 		signerAddress: string
 	) => {
 		try {
-			const [newSFlrBalance, newCyFlrBalance] = await Promise.all([
+			const [newSFlrBalance, newCysFlrBalance] = await Promise.all([
 				readErc20BalanceOf(config, {
 					address: sFlrAddress,
 					args: [signerAddress as Hex]
@@ -58,7 +58,7 @@ const cysFLRBalanceStore = () => {
 			update((state) => ({
 				...state,
 				sFlrBalance: newSFlrBalance,
-				cyFlrBalance: newCyFlrBalance,
+				cysFlrBalance: newCysFlrBalance,
 				status: 'Ready'
 			}));
 		} catch (error) {
