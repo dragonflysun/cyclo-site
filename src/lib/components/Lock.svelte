@@ -8,23 +8,12 @@
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
-
-	import {
-		erc20PriceOracleReceiptVaultAbi,
-		simulateErc20PriceOracleReceiptVaultPreviewDeposit
-	} from '../../generated';
+	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
-
-	import { createPublicClient, http } from 'viem';
-	import { flare } from 'viem/chains';
-
-	const publicClient = createPublicClient({
-		chain: flare,
-		transport: http()
-	});
+	import { ZeroAddress } from 'ethers';
 
 	export let amountToLock = '0.0';
 
@@ -55,21 +44,11 @@
 	};
 
 	const getPriceRatio = async () => {
-		let result;
-		if ($signerAddress) {
-			({ result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-				address: $cysFlrAddress,
-				args: [BigInt(1e18), 0n]
-			}));
-		} else {
-			({ result } = await publicClient.simulateContract({
-				address: $cysFlrAddress,
-				abi: erc20PriceOracleReceiptVaultAbi,
-				functionName: 'previewDeposit',
-				args: [BigInt(1e18), 0n]
-			}));
-		}
-
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
+			address: $cysFlrAddress,
+			args: [BigInt(1e18), 0n],
+			account: ZeroAddress as `0x${string}`
+		});
 		priceRatio = result;
 	};
 
