@@ -6,9 +6,9 @@
 	export let unit: string = '';
 
 	const dispatch = createEventDispatcher();
-	let displayAmount = amount.replace(/,/g, '.') || '0';
+	let displayAmount = (typeof amount === 'string' ? amount : amount.toString()).replace(/,/g, '.') || '0';
 
-	$: displayAmount = amount ? amount.replace(/,/g, '.') : '0';
+	$: displayAmount = amount ? amount.toString().replace(/,/g, '.') : '0';
 
 	function setValueToMax() {
 		dispatch('setValueToMax');
@@ -23,7 +23,7 @@
 			sanitizedValue = parts[0] + '.' + parts.slice(1).join('');
 		}
 		displayAmount = sanitizedValue || '0';
-		dispatch('change', { value: sanitizedValue });
+		dispatch('input', { value: sanitizedValue });
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
@@ -31,6 +31,10 @@
 			'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'
 		];
 		const isNumber = /^[0-9]$/.test(event.key);
+
+		if (event.key === 'Backspace' && Number(displayAmount) === 0) {
+			event.preventDefault();
+		}
 
 		if (event.key === '.' && displayAmount.includes('.')) {
 			event.preventDefault();

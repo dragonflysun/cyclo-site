@@ -32,6 +32,7 @@
 	};
 
 	const handleInput = (event: { detail: { value: string } }) => {
+		console.log(event.detail.value);
 		readableAmountToRedeem = event.detail.value;
 		checkBalance();
 	};
@@ -82,7 +83,7 @@
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
 			<Input
-				value={readableAmountToRedeem}
+				bind:amount={readableAmountToRedeem}
 				on:input={handleInput}
 				data-testid="redeem-input"
 				on:setValueToMax={() => {
