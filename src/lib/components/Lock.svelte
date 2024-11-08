@@ -73,7 +73,7 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>SFLR BALANCE!!!</span>
+					<span>SFLR BALANCE</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
@@ -184,7 +184,7 @@
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				{#key priceRatio}
-					<span in:fade={{ duration: 700 }} data-testid="calculated-cyflr"
+					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
 						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
 					>
 				{/key}

@@ -7,11 +7,11 @@ import { formatEther } from 'ethers';
 import { mockReceipt } from '$lib/mocks/mockReceipt';
 import userEvent from '@testing-library/user-event';
 
-const { mockBalancesStore, mockErc1155AddressStore, mockCyFlrAddressStore, mockSflrAddressStore } =
+const { mockBalancesStore, mockErc1155AddressStore, mockCysFlrAddressStore, mockSflrAddressStore } =
 	await vi.hoisted(() => import('$lib/mocks/mockStores'));
 
 vi.mock('$lib/stores', async () => ({
-	cysFlrAddress: mockCyFlrAddressStore,
+	cysFlrAddress: mockCysFlrAddressStore,
 	erc1155Address: mockErc1155AddressStore,
 	sFlrAddress: mockSflrAddressStore
 }));
@@ -67,7 +67,7 @@ describe('ReceiptModal Component', () => {
 		});
 	});
 
-	it('should display "INSUFFICIENT cyFLR" if cyFLR balance is insufficient', async () => {
+	it('should display "INSUFFICIENT cysFLR" if cysFLR balance is insufficient', async () => {
 		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
 
 		render(ReceiptModal, { receipt: mockReceipt });
@@ -78,7 +78,7 @@ describe('ReceiptModal Component', () => {
 
 		await waitFor(() => {
 			const button = screen.getByTestId('unlock-button');
-			expect(button).toHaveTextContent('INSUFFICIENT cyFLR');
+			expect(button).toHaveTextContent('INSUFFICIENT cysFLR');
 			expect(button).toBeDisabled();
 		});
 	});
