@@ -24,7 +24,6 @@
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
-
 	const checkBalance = () => {
 		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
 			readableAmountToRedeem = '0.0';
@@ -32,8 +31,7 @@
 		amountToRedeem = parseEther(readableAmountToRedeem.toString());
 	};
 
-
-	const handleInput = (event: { detail: { value: string; }; }) => {
+	const handleInput = (event: { detail: { value: string } }) => {
 		readableAmountToRedeem = event.detail.value;
 		checkBalance();
 	};
@@ -65,9 +63,7 @@
 		<span>NUMBER HELD</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}
-					<span in:fade={{ duration: 700 }} data-testid="balance"
-						>{Number(readableBalance)}</span
-					>
+					<span in:fade={{ duration: 700 }} data-testid="balance">{Number(readableBalance)}</span>
 				{/if}{/key}
 		</div>
 	</div>
@@ -90,7 +86,7 @@
 				on:input={handleInput}
 				data-testid="redeem-input"
 				on:setValueToMax={() => {
-					amountToRedeem = maxRedeemable
+					amountToRedeem = maxRedeemable;
 				}}
 			/>
 		</div>
