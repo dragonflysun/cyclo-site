@@ -70,7 +70,7 @@ describe('Lock Component', () => {
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
-		await userEvent.type(input, '0.5');
+		await userEvent.type(input, '0.0005');
 
 		const lockButton = screen.getByTestId('lock-button');
 		await userEvent.click(lockButton);
@@ -101,7 +101,7 @@ describe('Lock Component', () => {
 		await waitFor(() => {
 			const balance = screen.getByTestId('your-balance');
 			expect(balance).toBeInTheDocument();
-			expect(balance).toHaveTextContent('9.8760');
+			expect(balance).toHaveTextContent('SFLR Balance: 9.876');
 		});
 	});
 });

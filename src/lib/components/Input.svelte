@@ -2,7 +2,7 @@
 	import { signerAddress } from 'svelte-wagmi';
 	import { createEventDispatcher } from 'svelte';
 
-	export let amount: string = '0.0';
+	export let amount: string | number = '0.0';
 	export let unit: string = '';
 
 	const dispatch = createEventDispatcher();
@@ -13,7 +13,7 @@
 
 	function handleInput(event: Event) {
 		const target = event.target as HTMLInputElement;
-		dispatch('change', { value: target.value });
+		dispatch('input', { value: target.value });
 	}
 </script>
 

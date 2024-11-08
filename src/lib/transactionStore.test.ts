@@ -235,7 +235,6 @@ describe('transactionStore', () => {
 			erc1155Address: mockERC1155Address,
 			sFlrAddress: mocksFlrAddress,
 			tokenId: mockTokenId,
-
 			assets: BigInt(100)
 		});
 
