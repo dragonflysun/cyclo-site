@@ -94,7 +94,7 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>SFLR BALANCE!!!</span>
+					<span>SFLR BALANCE</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
