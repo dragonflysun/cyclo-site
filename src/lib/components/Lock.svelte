@@ -164,7 +164,7 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock}</span>
+				<span>{amountToLock || 0}</span>
 
 				<span>SFLR</span>
 			</div>
