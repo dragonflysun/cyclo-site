@@ -237,7 +237,9 @@
 		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
 			Before you deploy your strategy, make sure you understand the following:
 		</p>
-		<ul class="mb-4 list-inside list-disc text-left text-xs text-gray-700 dark:text-gray-300">
+		<ul
+			class="mb-4 flex list-inside list-disc flex-col gap-1 text-left text-xs text-gray-700 dark:text-gray-300"
+		>
 			<li>This front end is a tool for interacting with Raindex smart contracts.</li>
 			<li>You are deploying your own strategy and using your own wallet and private keys.</li>
 			<li>No custodianship of funds exists; lost funds are unrecoverable.</li>
@@ -245,17 +247,19 @@
 			<li>Do not proceed if you do not understand the strategy you are deploying.</li>
 			<li>Only invest funds you can afford to lose.</li>
 		</ul>
-		<Button
-			class="mt-4 bg-red-500 text-white hover:bg-red-600"
-			on:click={() => {
-				disclaimerAcknowledged = true;
-				disclaimerOpen = false;
-				runLockTransaction();
-			}}
-			data-testid="disclaimer-acknowledge-button"
-		>
-			I Acknowledge
-		</Button>
+		<div class="flex w-full justify-center">
+			<Button
+				class="mt-4  text-white"
+				on:click={() => {
+					disclaimerAcknowledged = true;
+					disclaimerOpen = false;
+					runLockTransaction();
+				}}
+				data-testid="disclaimer-acknowledge-button"
+			>
+				Acknowledge
+			</Button>
+		</div>
 	</div>
 </Modal>
 
