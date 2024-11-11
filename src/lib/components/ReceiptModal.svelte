@@ -25,15 +25,10 @@
 	const tokenId = receipt.tokenId;
 
 	const checkBalance = () => {
-		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
-			readableAmountToRedeem = '0.0';
+		if (readableAmountToRedeem) {
+			const bigNumValue = BigInt(parseEther(readableAmountToRedeem.toString()).toString());
+			amountToRedeem = bigNumValue;
 		}
-		amountToRedeem = parseEther(readableAmountToRedeem.toString());
-	};
-
-	const handleInput = (event: { detail: { value: string } }) => {
-		readableAmountToRedeem = event.detail.value;
-		checkBalance();
 	};
 
 	$: maxRedeemable =
@@ -83,12 +78,15 @@
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
 			<Input
-				value={readableAmountToRedeem}
-				on:input={handleInput}
+				on:input={(event) => {
+					readableAmountToRedeem = event.detail.value;
+					checkBalance();
+				}}
 				data-testid="redeem-input"
 				on:setValueToMax={() => {
 					amountToRedeem = maxRedeemable;
 				}}
+				maxValue={Number(maxRedeemable)}
 			/>
 		</div>
 	</div>
@@ -97,12 +95,8 @@
 		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white md:text-2xl"
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
-			<span class="w-1/2 text-center"
-				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
-			>
-			<span class="w-1/2 text-center"
-				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
-			>
+			<span class="w-1/2 text-center">{readableAmountToRedeem || 0} RECEIPTS</span>
+			<span class="w-1/2 text-center">{readableAmountToRedeem || 0} cysFLR</span>
 		</div>
 		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
 
