@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { signerAddress } from 'svelte-wagmi';
 	import { createEventDispatcher } from 'svelte';
-	import balancesStore from '$lib/balancesStore';
 
 	export let amount: number = 0;
 	export let tokenName: string = '';
@@ -18,8 +17,6 @@
 		const target = event.target as HTMLInputElement;
 		dispatch('input', { value: target.value });
 	}
-
-	$: console.log('buttonDisabled', !$signerAddress);
 </script>
 
 <div
