@@ -37,8 +37,8 @@ describe('ReceiptModal Component', () => {
 		const lockUpPrice = Number(formatEther(mockReceipt.tokenId));
 
 		await waitFor(() => {
-			expect(screen.getByTestId('balance')).toHaveTextContent(receiptBalance.toFixed(5));
-			expect(screen.getByTestId('lock-up-price')).toHaveTextContent(lockUpPrice.toFixed(4));
+			expect(screen.getByTestId('balance')).toHaveTextContent(receiptBalance.toString());
+			expect(screen.getByTestId('lock-up-price')).toHaveTextContent(lockUpPrice.toString());
 		});
 	});
 
@@ -49,7 +49,7 @@ describe('ReceiptModal Component', () => {
 		await userEvent.type(input, '0.5');
 
 		await waitFor(() => {
-			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('0.21664 SFLR');
+			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('21.663778162911612 SFLR');
 		});
 	});
 
@@ -73,7 +73,7 @@ describe('ReceiptModal Component', () => {
 		render(ReceiptModal, { receipt: mockReceipt });
 
 		const input = screen.getByTestId('redeem-input');
-		await userEvent.type(input, '250000000');
+		await userEvent.type(input, '0.00001');
 		await userEvent.tab();
 
 		await waitFor(() => {

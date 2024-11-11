@@ -157,8 +157,7 @@
 						assets = $balancesStore.sFlrBalance;
 						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
 					}}
-					bind:amount={amountToLock}
-					maxValue={$balancesStore.sFlrBalance}
+					maxValue={Number($balancesStore.sFlrBalance)}
 					unit={'SFLR'}
 				/>
 				{#if $signerAddress}
@@ -181,7 +180,8 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock}</span>
+				<span>{amountToLock || 0}</span>
+
 				<span>SFLR</span>
 			</div>
 

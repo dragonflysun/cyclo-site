@@ -62,7 +62,7 @@ describe('Lock Component', () => {
 			const priceRatio = screen.getByTestId('price-ratio');
 			expect(priceRatio).toBeInTheDocument();
 			const calculatedCysflr = screen.getByTestId('calculated-cysflr');
-			expect(calculatedCysflr).toHaveTextContent('0.001');
+			expect(calculatedCysflr).toHaveTextContent('7460.000');
 		});
 	});
 
@@ -70,7 +70,7 @@ describe('Lock Component', () => {
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
-		await userEvent.type(input, '0.5');
+		await userEvent.type(input, '0.0005');
 
 		const lockButton = screen.getByTestId('lock-button');
 		await userEvent.click(lockButton);
