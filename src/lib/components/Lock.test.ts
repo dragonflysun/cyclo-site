@@ -66,7 +66,7 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it('should call initiateLockTransaction when lock button is clicked', async () => {
+	it('should show the disclaimer modal when lock button is clicked', async () => {
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
@@ -103,5 +103,25 @@ describe('Lock Component', () => {
 			expect(balance).toBeInTheDocument();
 			expect(balance).toHaveTextContent('SFLR Balance: 9.876');
 		});
+	});
+
+	it('should activate lock transaction when the disclaimer is accepted', async () => {
+		render(Lock);
+
+		const input = screen.getByTestId('lock-input');
+		await userEvent.type(input, '0.0005');
+
+		const lockButton = screen.getByTestId('lock-button');
+		await userEvent.click(lockButton);
+
+		await waitFor(() => {
+			expect(screen.getByTestId('disclaimer-modal')).toBeInTheDocument();
+		});
+
+		screen.debug();
+
+		const acceptButton = screen.getByTestId('disclaimer-acknowledge-button');
+		await userEvent.click(acceptButton);
+		expect(initiateLockTransactionSpy).toHaveBeenCalled();
 	});
 });

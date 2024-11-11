@@ -33,8 +33,6 @@
 		checkBalance();
 	}
 
-	$: console.log(disclaimerOpen)
-
 	const checkBalance = () => {
 		if (amountToLock) {
 			const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
@@ -165,6 +163,8 @@
 						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
 					</p>
 				{:else}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div
 						on:click={() => $web3Modal.open()}
 						class="my-2 cursor-pointer text-right text-xs font-light hover:underline"
@@ -186,7 +186,9 @@
 			</div>
 
 			<div class="flex w-full">
-				<div class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white">
+				<div
+					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white"
+				>
 					<img src={ftso} alt="ftso" class="w-1/2" />
 					{Number(formatEther(priceRatio.toString())).toFixed(5)}
 				</div>
@@ -212,12 +214,14 @@
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
 				on:click={() => initiateLockWithDisclaimer()}
-				>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button>
+				>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
+			>
 		{:else}
 			<Button
 				customClass="text-lg"
 				data-testid="connect-wallet-button"
-				on:click={() => $web3Modal.open()}>CONNECT WALLET</Button>
+				on:click={() => $web3Modal.open()}>CONNECT WALLET</Button
+			>
 		{/if}
 	</div>
 </Card>
@@ -225,15 +229,15 @@
 <Modal
 	size="sm"
 	open={disclaimerOpen}
-	on:close={() => disclaimerOpen = false}
+	on:close={() => (disclaimerOpen = false)}
 	data-testid="disclaimer-modal"
 >
 	<div class="p-4 text-center">
-		<h2 class="text-lg font-semibold text-red-600 mb-4">Wait!</h2>
-		<p class="text-sm text-gray-700 dark:text-gray-300 mb-4">
+		<h2 class="mb-4 text-lg font-semibold text-red-600">Wait!</h2>
+		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
 			Before you deploy your strategy, make sure you understand the following:
 		</p>
-		<ul class="list-disc list-inside text-left text-gray-700 dark:text-gray-300 text-xs mb-4">
+		<ul class="mb-4 list-inside list-disc text-left text-xs text-gray-700 dark:text-gray-300">
 			<li>This front end is a tool for interacting with Raindex smart contracts.</li>
 			<li>You are deploying your own strategy and using your own wallet and private keys.</li>
 			<li>No custodianship of funds exists; lost funds are unrecoverable.</li>
