@@ -24,6 +24,11 @@
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
+	$: console.log(erc1155balance, 'receipts')
+		$: console.log($balancesStore.cysFlrBalance, 'cysFlr')
+		$: console.log(amountToRedeem, 'to redeem')
+
+
 	const checkBalance = () => {
 		if (readableAmountToRedeem) {
 			const bigNumValue = BigInt(parseEther(readableAmountToRedeem.toString()).toString());
