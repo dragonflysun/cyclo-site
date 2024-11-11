@@ -10,6 +10,9 @@ export const load = async ({ params }) => {
 
 	for (const [path, resolver] of Object.entries(modules)) {
 		const adjustedPath = `${basePath}${path.replace('/src/docs', '')}`;
+		console.log('Adjusted Path:', adjustedPath);
+console.log('Expected Slug:', slugFromPath(adjustedPath));
+console.log('Provided Slug:', params.slug);
 		if (slugFromPath(adjustedPath) === params.slug) {
 			match = { path, resolver: resolver as unknown as App.MdsvexResolver };
 			break;
@@ -17,6 +20,8 @@ export const load = async ({ params }) => {
 	}
 
 	const post = await match?.resolver?.();
+
+	
 
 	if (!post || !post.metadata?.published) {
 		throw error(404); // Couldn't resolve the post
