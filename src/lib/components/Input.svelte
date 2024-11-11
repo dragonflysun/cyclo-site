@@ -18,6 +18,8 @@
 		const target = event.target as HTMLInputElement;
 		dispatch('input', { value: target.value });
 	}
+
+	$: console.log('buttonDisabled', !$signerAddress);
 </script>
 
 <div
@@ -46,6 +48,7 @@
 		disabled={!$signerAddress}
 		data-testid={'set-val-to-max'}
 		on:click={setValueToMax}
-		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base">MAX</button
+		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base disabled:cursor-not-allowed"
+		>MAX</button
 	>
 </div>
