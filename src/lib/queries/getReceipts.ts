@@ -5,9 +5,16 @@ import { readErc1155BalanceOf } from '../../generated';
 import type { Config } from '@wagmi/core';
 import type { Hex } from 'viem';
 
-export const getReceipts = async (address: string, erc1155Address: string, config: Config) => {
-	const query: string = `https://api.routescan.io/v2/network/mainnet/evm/14/address/${address}/erc1155-holdings?limit=1000`;
+type BlockScoutData = {
+	token: {
+		address: string;
+	};
+	value: string;
+	id: string;
+};
 
+export const getReceipts = async (address: string, erc1155Address: string, config: Config) => {
+	const query: string = `https://flare-explorer.flare.network/api/v2/addresses/${address}/nft?type=ERC-1155`;
 	const getBalance = async (tokenId: bigint) => {
 		const res = await readErc1155BalanceOf(config, {
 			address: erc1155Address as Hex,
@@ -19,8 +26,12 @@ export const getReceipts = async (address: string, erc1155Address: string, confi
 	try {
 		let data: Receipt[] = [];
 		const response = await axios.get(query);
-
-		data = response.data.items.filter((item: Receipt) => item.tokenAddress === erc1155Address);
+		data = response.data.items.map((item: BlockScoutData) => ({
+			tokenId: item.id,
+			balance: item.value,
+			tokenAddress: item.token.address
+		}));
+		data = data.filter((item: Receipt) => item.tokenAddress === erc1155Address);
 		data = data.map((item: Receipt) => ({
 			...item,
 			readableTokenId: formatEther(item.tokenId)
