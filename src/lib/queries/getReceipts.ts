@@ -5,14 +5,6 @@ import { readErc1155BalanceOf } from '../../generated';
 import type { Config } from '@wagmi/core';
 import type { Hex } from 'viem';
 
-type BlockScoutData = {
-	token: {
-		address: string;
-	};
-	value: string;
-	id: string;
-};
-
 export const getReceipts = async (address: string, erc1155Address: string, config: Config) => {
 	const query: string = `https://flare-explorer.flare.network/api/v2/addresses/${address}/nft?type=ERC-1155`;
 	const getBalance = async (tokenId: bigint) => {
