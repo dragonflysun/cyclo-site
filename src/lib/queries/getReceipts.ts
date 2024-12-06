@@ -1,4 +1,4 @@
-import type { Receipt } from '$lib/types';
+import type { BlockScoutData, Receipt } from '$lib/types';
 import axios from 'axios';
 import { formatEther } from 'ethers';
 import { readErc1155BalanceOf } from '../../generated';
