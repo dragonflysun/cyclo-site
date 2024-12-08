@@ -8,6 +8,7 @@
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
+	import { Modal } from 'flowbite-svelte';
 	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { onDestroy, onMount } from 'svelte';
@@ -16,11 +17,12 @@
 	import { ZeroAddress } from 'ethers';
 
 	export let amountToLock = '0.0';
+	let disclaimerAcknowledged = false;
+	let disclaimerOpen = false;
 
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0);
 	let insufficientFunds = false;
-
 	let intervalId: ReturnType<typeof setInterval>;
 
 	onMount(() => {
@@ -35,11 +37,7 @@
 		if (amountToLock) {
 			const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
 			assets = bigNumValue;
-			if ($balancesStore.sFlrBalance < assets) {
-				insufficientFunds = true;
-			} else {
-				insufficientFunds = false;
-			}
+			insufficientFunds = $balancesStore.sFlrBalance < assets;
 		}
 	};
 
@@ -60,6 +58,25 @@
 	function stopGettingPriceRatio() {
 		clearInterval(intervalId);
 	}
+
+	const initiateLockWithDisclaimer = () => {
+		if (!disclaimerAcknowledged) {
+			disclaimerOpen = true;
+		} else {
+			runLockTransaction();
+		}
+	};
+
+	const runLockTransaction = () => {
+		transactionStore.initiateLockTransaction({
+			signerAddress: $signerAddress,
+			config: $wagmiConfig,
+			cysFlrAddress: $cysFlrAddress,
+			sFlrAddress: $sFlrAddress,
+			erc1155Address: $erc1155Address,
+			assets: assets
+		});
+	};
 
 	onDestroy(() => {
 		stopGettingPriceRatio();
@@ -138,8 +155,7 @@
 						assets = $balancesStore.sFlrBalance;
 						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
 					}}
-					bind:amount={amountToLock}
-					maxValue={$balancesStore.sFlrBalance}
+					maxValue={Number($balancesStore.sFlrBalance)}
 					unit={'SFLR'}
 				/>
 				{#if $signerAddress}
@@ -164,7 +180,7 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock}</span>
+				<span>{amountToLock || 0}</span>
 
 				<span>SFLR</span>
 			</div>
@@ -197,15 +213,8 @@
 				disabled={insufficientFunds || !assets}
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
-				on:click={() =>
-					transactionStore.initiateLockTransaction({
-						signerAddress: $signerAddress,
-						config: $wagmiConfig,
-						cysFlrAddress: $cysFlrAddress,
-						sFlrAddress: $sFlrAddress,
-						erc1155Address: $erc1155Address,
-						assets: assets
-					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
+				on:click={() => initiateLockWithDisclaimer()}
+				>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
 			>
 		{:else}
 			<Button
@@ -216,6 +225,43 @@
 		{/if}
 	</div>
 </Card>
+
+<Modal
+	size="sm"
+	open={disclaimerOpen}
+	on:close={() => (disclaimerOpen = false)}
+	data-testid="disclaimer-modal"
+>
+	<div class="p-4 text-center">
+		<h2 class="mb-4 text-lg font-semibold text-red-600">Wait!</h2>
+		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
+			Before you deploy your strategy, make sure you understand the following:
+		</p>
+		<ul
+			class="mb-4 flex list-inside list-disc flex-col gap-1 text-left text-xs text-gray-700 dark:text-gray-300"
+		>
+			<li>This front end is a tool for interacting with Raindex smart contracts.</li>
+			<li>You are deploying your own strategy and using your own wallet and private keys.</li>
+			<li>No custodianship of funds exists; lost funds are unrecoverable.</li>
+			<li>No endorsement or guarantee is provided for these strategies.</li>
+			<li>Do not proceed if you do not understand the strategy you are deploying.</li>
+			<li>Only invest funds you can afford to lose.</li>
+		</ul>
+		<div class="flex w-full justify-center">
+			<Button
+				class="mt-4  text-white"
+				on:click={() => {
+					disclaimerAcknowledged = true;
+					disclaimerOpen = false;
+					runLockTransaction();
+				}}
+				data-testid="disclaimer-acknowledge-button"
+			>
+				Acknowledge
+			</Button>
+		</div>
+	</div>
+</Modal>
 
 <style lang="postcss">
 	.fill-circle {
