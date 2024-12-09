@@ -138,7 +138,7 @@ describe('transactionStore', () => {
 		});
 	});
 
-	it('should prompt the user to approve cysFLR contract to lock SFLR if allowance is less than assets', async () => {
+	it('should prompt the user to approve cysFLR contract to lock sFLR if allowance is less than assets', async () => {
 		const mockAllowance = BigInt(500);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
@@ -195,7 +195,7 @@ describe('transactionStore', () => {
 		await waitFor(() => {
 			expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
 			expect(get(transactionStore).error).toBe(
-				'There was an error locking your SFLR. Please try again.'
+				'There was an error locking your sFLR. Please try again.'
 			);
 		});
 	});
@@ -218,7 +218,7 @@ describe('transactionStore', () => {
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
 		expect(get(transactionStore).error).toBe(
-			'There was an error locking your SFLR. Please try again.'
+			'There was an error locking your sFLR. Please try again.'
 		);
 	});
 
@@ -285,7 +285,7 @@ describe('transactionStore', () => {
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
 		expect(get(transactionStore).error).toBe(
-			'There was an error locking your SFLR. Please try again.'
+			'There was an error locking your sFLR. Please try again.'
 		);
 	});
 });
