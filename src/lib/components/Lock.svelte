@@ -198,7 +198,7 @@
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
 				on:click={() =>
-					transactionStore.initiateLockTransaction({
+					transactionStore.handleLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						cysFlrAddress: $cysFlrAddress,

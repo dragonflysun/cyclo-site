@@ -111,7 +111,7 @@ const transactionStore = () => {
 			hash: hash || ''
 		}));
 
-	const initiateLockTransaction = async ({
+	const handleLockTransaction = async ({
 		signerAddress,
 		config,
 		cysFlrAddress,
@@ -196,7 +196,7 @@ const transactionStore = () => {
 		}
 	};
 
-	const initiateUnlockTransaction = async ({
+	const handleUnlockTransaction = async ({
 		signerAddress,
 		config,
 		cysFlrAddress,
@@ -280,45 +280,48 @@ const transactionStore = () => {
 		});
 
 		if (!isERC1155Approved) {
+			awaitWalletConfirmation('You need to approve the cysFLR contract to unlock your SFLR...');
+			let hash: Hex | undefined;
 			try {
-				awaitWalletConfirmation('You need to approve the cysFLR contract to unlock your SFLR...');
-				const hash = await writeErc1155SetApprovalForAll(config, {
+				hash = await writeErc1155SetApprovalForAll(config, {
 					address: erc1155Address,
 					args: [cysFlrAddress, true]
 				});
-				awaitApprovalTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
-
-				if (res) {
-					const cysFlrSpendAllowance = await readErc20Allowance(config, {
-						address: cysFlrAddress,
-						args: [signerAddress as Hex, cysFlrAddress]
-					});
-					if (cysFlrSpendAllowance < assets) {
-						const approveResult = await writeApprovecysFlrSpend();
-						if ('error' in approveResult) {
-							return transactionError('User rejected approval transaction.');
-						}
-						return writeUnlock();
-					}
-					return writeUnlock();
-				} else {
-					transactionError('Transaction failed to approve the cysFLR spend', hash);
-				}
 			} catch {
-				transactionError('User rejected transaction');
+				return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
 			}
+			awaitApprovalTx(hash);
+			try {
+				await waitForTransactionReceipt(config, { hash: hash });
+			} catch {
+				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
+			}
+
+			const cysFlrSpendAllowance = await readErc20Allowance(config, {
+				address: cysFlrAddress,
+				args: [signerAddress as Hex, cysFlrAddress]
+			});
+			if (cysFlrSpendAllowance < assets) {
+				try {
+					await writeApprovecysFlrSpend();
+					return writeUnlock();
+				} catch {
+					return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
+				}
+			}
+			return writeUnlock();
 		} else {
 			const cysFlrSpendAllowance = await readErc20Allowance(config, {
 				address: cysFlrAddress,
 				args: [signerAddress as Hex, cysFlrAddress]
 			});
 			if (cysFlrSpendAllowance < assets) {
-				const approveResult = await writeApprovecysFlrSpend();
-				if ('error' in approveResult) {
-					return transactionError('User rejected approval transaction.');
+				try {
+					await writeApprovecysFlrSpend();
+					return writeUnlock();
+				} catch {
+					return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
 				}
-				return writeUnlock();
 			}
 			return writeUnlock();
 		}
@@ -327,8 +330,8 @@ const transactionStore = () => {
 	return {
 		subscribe,
 		reset,
-		initiateLockTransaction,
-		initiateUnlockTransaction,
+		handleLockTransaction,
+		handleUnlockTransaction,
 		checkingWalletAllowance,
 		awaitWalletConfirmation,
 		awaitApprovalTx,
