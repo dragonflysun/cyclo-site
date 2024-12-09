@@ -8,24 +8,15 @@
 	import mintDia from '$lib/images/mint-dia.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
-	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
-	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
-	import { ZeroAddress } from 'ethers';
 
 	export let amountToLock = '0.0';
 
 	let priceRatio = BigInt(0);
 	let assets = BigInt(0);
 	let insufficientFunds = false;
-
-	let intervalId: ReturnType<typeof setInterval>;
-
-	onMount(() => {
-		startGettingPriceRatio();
-	});
 
 	$: if ($signerAddress) {
 		checkBalance();
@@ -43,27 +34,7 @@
 		}
 	};
 
-	const getPriceRatio = async () => {
-		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cysFlrAddress,
-			args: [BigInt(1e18), 0n],
-			account: ZeroAddress as `0x${string}`
-		});
-		priceRatio = result;
-	};
-
-	const startGettingPriceRatio = async () => {
-		intervalId = setInterval(getPriceRatio, 5000);
-		getPriceRatio();
-	};
-
-	function stopGettingPriceRatio() {
-		clearInterval(intervalId);
-	}
-
-	onDestroy(() => {
-		stopGettingPriceRatio();
-	});
+	$: priceRatio = $balancesStore.lockPrice;
 </script>
 
 <Card size="lg">

@@ -6,13 +6,14 @@ import type { Hex } from 'viem';
 const initialState = {
 	cysFlrBalance: BigInt(0),
 	sFlrBalance: BigInt(0),
-	status: 'Checking'
+	status: 'Checking',
+	lockPrice: BigInt(0)
 };
 
 const balancesStore = () => {
 	const { subscribe, set, update } = writable(initialState);
 	const reset = () => set(initialState);
-
+	const updateLockPrice = (price: bigint) => update((state) => ({ ...state, lockPrice: price }));
 	const refreshBalances = async (
 		config: Config,
 		sFlrAddress: Hex,
@@ -49,7 +50,8 @@ const balancesStore = () => {
 	return {
 		subscribe,
 		reset,
-		refreshBalances
+		refreshBalances,
+		updateLockPrice
 	};
 };
 
