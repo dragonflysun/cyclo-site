@@ -32,9 +32,6 @@
 	}
 
 	$: insufficientFunds = $balancesStore.sFlrBalance < assets;
-	$: if ($balancesStore.sFlrBalance) {
-		amountToLock = '0.0';
-	}
 
 	const checkBalance = () => {
 		if (amountToLock) {
@@ -204,7 +201,7 @@
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
 				on:click={() =>
-					transactionStore.handleLockTransaction({
+					transactionStore.initiateLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						cysFlrAddress: $cysFlrAddress,
