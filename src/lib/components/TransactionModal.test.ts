@@ -90,24 +90,24 @@ describe('TransactionModal Component', () => {
 	it('should handle multiple statuses like CHECKING_ALLOWANCE and PENDING_APPROVAL', async () => {
 		mockTransactionStore.mockSetSubscribeValue({
 			status: TransactionStatus.CHECKING_ALLOWANCE,
-			message: 'Checking your approved SFLR spend...'
+			message: 'Checking your approved sFLR spend...'
 		});
 
 		render(TransactionModal);
 
 		await waitFor(() => {
 			expect(screen.getByTestId('pending-message')).toHaveTextContent(
-				'Checking your approved SFLR spend...'
+				'Checking your approved sFLR spend...'
 			);
 		});
 
 		mockTransactionStore.mockSetSubscribeValue({
 			status: TransactionStatus.PENDING_APPROVAL,
-			message: 'Approving SFLR spend...'
+			message: 'Approving sFLR spend...'
 		});
 
 		await waitFor(() => {
-			expect(screen.getByTestId('pending-message')).toHaveTextContent('Approving SFLR spend...');
+			expect(screen.getByTestId('pending-message')).toHaveTextContent('Approving sFLR spend...');
 		});
 	});
 });
