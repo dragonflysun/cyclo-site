@@ -143,6 +143,7 @@ describe('transactionStore', () => {
 		const mockAllowance = BigInt(500);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
+		(writeErc20Approve as Mock).mockResolvedValueOnce('mockHash');
 
 		await initiateLockTransaction({
 			signerAddress: '0x123',
