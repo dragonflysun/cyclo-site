@@ -17,9 +17,9 @@
 
 	export let amountToLock = '0.0';
 
-	let priceRatio = BigInt(0);
-	let assets = BigInt(0);
-	let insufficientFunds = false;
+	$: priceRatio = BigInt(0);
+	$: assets = BigInt(0);
+
 
 	let intervalId: ReturnType<typeof setInterval>;
 
@@ -29,6 +29,11 @@
 
 	$: if ($signerAddress) {
 		checkBalance();
+	}
+
+	$: insufficientFunds = $balancesStore.sFlrBalance < assets;
+	$: if ($balancesStore.sFlrBalance) {
+		amountToLock = '0.0';
 	}
 
 	const checkBalance = () => {
@@ -64,6 +69,8 @@
 	onDestroy(() => {
 		stopGettingPriceRatio();
 	});
+
+
 </script>
 
 <Card size="lg">
@@ -197,7 +204,7 @@
 				customClass="md:text-2xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
 				on:click={() =>
-					transactionStore.initiateLockTransaction({
+					transactionStore.handleLockTransaction({
 						signerAddress: $signerAddress,
 						config: $wagmiConfig,
 						cysFlrAddress: $cysFlrAddress,
