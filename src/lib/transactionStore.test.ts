@@ -11,6 +11,7 @@ import {
 } from '../generated';
 import { waitForTransactionReceipt, type Config } from '@wagmi/core';
 import { waitFor } from '@testing-library/svelte';
+import { TransactionErrorMessage } from './types/errors';
 
 const { mockWagmiConfigStore } = await vi.hoisted(() => import('./mocks/mockStores'));
 
@@ -142,7 +143,6 @@ describe('transactionStore', () => {
 		const mockAllowance = BigInt(500);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
-		(writeErc20Approve as Mock).mockResolvedValueOnce('mockHash');
 
 		await initiateLockTransaction({
 			signerAddress: '0x123',
@@ -181,7 +181,6 @@ describe('transactionStore', () => {
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
 		(writeErc20Approve as Mock).mockRejectedValue(new Error('UserRejectedRequestError'));
-		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue('mockDepositHash');
 
 		await initiateLockTransaction({
 			signerAddress: '0x123',
@@ -194,9 +193,7 @@ describe('transactionStore', () => {
 
 		await waitFor(() => {
 			expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-			expect(get(transactionStore).error).toBe(
-				'There was an error locking your SFLR. Please try again.'
-			);
+			expect(get(transactionStore).error).toBe(TransactionErrorMessage.USER_REJECTED_APPROVAL);
 		});
 	});
 	it('should handle user rejecting lock transaction confimation', async () => {
@@ -217,9 +214,7 @@ describe('transactionStore', () => {
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe(
-			'There was an error locking your SFLR. Please try again.'
-		);
+		expect(get(transactionStore).error).toBe(TransactionErrorMessage.USER_REJECTED_LOCK);
 	});
 
 	it('should handle successful unlock transaction', async () => {
@@ -284,8 +279,7 @@ describe('transactionStore', () => {
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe(
-			'There was an error locking your SFLR. Please try again.'
-		);
+		expect(get(transactionStore).error).toBe(TransactionErrorMessage.TIMEOUT);
 	});
 });
+

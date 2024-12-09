@@ -15,6 +15,7 @@ import {
 import balancesStore from './balancesStore';
 import { myReceipts } from './stores';
 import { getReceipts } from './queries/getReceipts';
+import { TransactionErrorMessage } from './types/errors';
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 export const ONE = BigInt('1000000000000000000');
@@ -102,7 +103,7 @@ const transactionStore = () => {
 			hash: hash,
 			message: message || ''
 		}));
-	const transactionError = (message: string, hash?: string) =>
+	const transactionError = (message: TransactionErrorMessage, hash?: string) =>
 		update((state) => ({
 			...state,
 			status: TransactionStatus.ERROR,
@@ -118,7 +119,49 @@ const transactionStore = () => {
 		erc1155Address,
 		assets
 	}: initiateLockTransactionArgs) => {
+		const writeLock = async () => {
+			let hash: Hex | undefined;
+			// GET WALLET CONFIRMATION
+			try {
+				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
+				hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
+					address: cysFlrAddress,
+					args: [assets, signerAddress as Hex, 0n, '0x']
+				});
+			} catch {
+				return transactionError(TransactionErrorMessage.USER_REJECTED_LOCK);
+			}
+			awaitLockTx(hash);
+			// WAIT FOR TX RECEIPT
+			try {
+				await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
+			} catch {
+				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
+			}
+			// UPDATE BALANCES AND RECEIPTS
+			try {
+				await balancesStore.refreshBalances(
+					config,
+					sFlrAddress,
+					cysFlrAddress,
+					signerAddress as string
+				);
+				const getReceiptsResult = await getReceipts(signerAddress as Hex, erc1155Address, config);
+				if (getReceiptsResult) {
+					myReceipts.set(getReceiptsResult);
+				}
+			} catch {
+				return transactionError(TransactionErrorMessage.GENERIC, hash);
+			}
+			// SUCCESS
+			return transactionSuccess(
+				hash,
+				"Congrats! You've successfully locked your SFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original FLR at any time, or trade your cysFLR on the Flare Network."
+			);
+		};
+
 		checkingWalletAllowance();
+
 		const data = await readErc20Allowance(config, {
 			address: sFlrAddress,
 			args: [signerAddress as Hex, cysFlrAddress]
@@ -126,74 +169,30 @@ const transactionStore = () => {
 
 		if (data < assets) {
 			awaitWalletConfirmation('You need to approve the cysFLR contract to lock your SFLR...');
+			// GET WALLET CONFIRMATION FOR APPROVAL
+			let hash: Hex | undefined;
 			try {
-				const hash = await writeErc20Approve(config, {
+				hash = await writeErc20Approve(config, {
 					address: sFlrAddress,
 					args: [cysFlrAddress, assets]
 				});
-
-				awaitApprovalTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
-
-				if (res) {
-					awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
-					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
-						address: cysFlrAddress,
-						args: [assets, signerAddress as Hex, 0n, '0x']
-					});
-
-					awaitLockTx(hash);
-					const res = await waitForTransactionReceipt(config, { hash: hash });
-					if (res) {
-						await balancesStore.refreshBalances(
-							config,
-							sFlrAddress,
-							cysFlrAddress,
-							signerAddress as string
-						);
-						transactionSuccess(
-							hash,
-							"Congrats! You've successfully locked your SFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original FLR at any time, or trade your cysFLR on the Flare Network."
-						);
-					} else {
-						return transactionError('Transaction failed to lock your SFLR.', hash);
-					}
-				}
-			} catch (e) {
-				const error = e as WaitForTransactionReceiptErrorType;
-				transactionError(
-					error.name === 'UserRejectedRequestError' ? 'User rejected transaction' : error.name
-				);
-			}
-		} else {
-			try {
-				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
-				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
-					address: cysFlrAddress,
-					args: [assets, signerAddress as Hex, 0n, '0x']
-				});
-
-				awaitLockTx(hash);
-				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
-				if (res) {
-					await balancesStore.refreshBalances(
-						config,
-						sFlrAddress,
-						cysFlrAddress,
-						signerAddress as string
-					);
-
-					const res = await getReceipts(signerAddress as Hex, erc1155Address, config);
-					if (res) {
-						myReceipts.set(res);
-					}
-					return transactionSuccess(hash);
-				} else {
-					transactionError('Transaction failed to lock your SFLR', hash);
-				}
 			} catch {
-				transactionError('There was an error locking your SFLR. Please try again.');
+				return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
 			}
+
+			awaitApprovalTx(hash);
+			// WAIT FOR TX RECEIPT FOR APPROVAL
+			try {
+				await waitForTransactionReceipt(config, { hash: hash });
+			} catch {
+				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
+			}
+
+			// WRITE LOCK TRANSACTION
+			return writeLock();
+		} else {
+			// WRITE LOCK TRANSACTION
+			return writeLock();
 		}
 	};
 
@@ -207,32 +206,41 @@ const transactionStore = () => {
 		assets
 	}: InitiateUnlockTransactionArgs) => {
 		const writeUnlock = async () => {
+			let hash: Hex | undefined;
+			// GET WALLET CONFIRMATION
 			try {
 				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your SFLR...');
-				const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
+				hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
 					address: cysFlrAddress,
 					args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
 				});
-				awaitUnlockTx(hash);
-				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
-				if (res) {
-					await balancesStore.refreshBalances(
-						config,
-						sFlrAddress,
-						cysFlrAddress,
-						signerAddress as string
-					);
-					const res = await getReceipts(signerAddress as Hex, erc1155Address, config);
-					if (res) {
-						myReceipts.set(res);
-					}
-					return transactionSuccess(hash);
-				} else {
-					return transactionError('Transaction timed out... You can see more here' + hash);
+			} catch {
+				return transactionError(TransactionErrorMessage.USER_REJECTED_UNLOCK);
+			}
+			awaitUnlockTx(hash);
+			// WAIT FOR TX RECEIPT
+			try {
+				await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
+			} catch {
+				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
+			}
+			// UPDATE BALANCES AND RECEIPTS
+			try {
+				await balancesStore.refreshBalances(
+					config,
+					sFlrAddress,
+					cysFlrAddress,
+					signerAddress as string
+				);
+				const getReceiptsResult = await getReceipts(signerAddress as Hex, erc1155Address, config);
+				if (getReceiptsResult) {
+					myReceipts.set(getReceiptsResult);
 				}
 			} catch {
-				return transactionError('There was an error unlocking your SFLR. Please try again.');
+				return transactionError(TransactionErrorMessage.GENERIC, hash);
 			}
+			// SUCCESS
+			return transactionSuccess(hash);
 		};
 
 		const writeApprovecysFlrSpend = async () => {
