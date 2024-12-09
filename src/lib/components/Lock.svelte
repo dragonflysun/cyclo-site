@@ -83,8 +83,7 @@
 				<div class="flex flex-row gap-4">
 					{#key $balancesStore.sFlrBalance}<span
 							data-testid="sflr-balance"
-							in:fade={{ duration: 700 }}
-							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
+							in:fade={{ duration: 700 }}>{Number(formatEther($balancesStore.sFlrBalance))}</span
 						>{/key}
 					<span>sFLR</span>
 				</div>
@@ -106,7 +105,7 @@
 					in:fade={{ duration: 700 }}
 					class="flex flex-row items-center gap-2"
 					data-testid="price-ratio"
-					>{Number(formatEther(priceRatio.toString())).toFixed(5)}
+					>{Number(formatEther(priceRatio.toString()))}
 
 					<svg width="20" height="20" viewBox="0 0 100 100">
 						<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
@@ -136,7 +135,7 @@
 					}}
 					on:setValueToMax={() => {
 						assets = $balancesStore.sFlrBalance;
-						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
+						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toString();
 					}}
 					bind:amount={amountToLock}
 					maxValue={$balancesStore.sFlrBalance}
@@ -174,7 +173,7 @@
 					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white"
 				>
 					<img src={ftso} alt="ftso" class="w-1/2" />
-					{Number(formatEther(priceRatio.toString())).toFixed(5)}
+					{Number(formatEther(priceRatio.toString()))}
 				</div>
 				<img src={mintDia} alt="diagram" class="w-1/2" />
 				<div class="w-1/4"></div>
@@ -185,7 +184,7 @@
 			>
 				{#key priceRatio}
 					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
-						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
+						>{+amountToLock * Number(formatEther(priceRatio.toString()))}</span
 					>
 				{/key}
 				<span>cysFLR</span>

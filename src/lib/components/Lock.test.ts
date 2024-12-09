@@ -47,7 +47,7 @@ describe('Lock Component', () => {
 		await waitFor(() => {
 			expect(screen.getByTestId('sflr-balance')).toBeInTheDocument();
 
-			expect(screen.getByTestId('sflr-balance')).toHaveTextContent('9.8760');
+			expect(screen.getByTestId('sflr-balance')).toHaveTextContent('9.876');
 			expect(screen.getByTestId('price-ratio')).toBeInTheDocument();
 		});
 	});
@@ -62,7 +62,7 @@ describe('Lock Component', () => {
 			const priceRatio = screen.getByTestId('price-ratio');
 			expect(priceRatio).toBeInTheDocument();
 			const calculatedCysflr = screen.getByTestId('calculated-cysflr');
-			expect(calculatedCysflr).toHaveTextContent('0.001');
+			expect(calculatedCysflr).toHaveTextContent('0.000746');
 		});
 	});
 
