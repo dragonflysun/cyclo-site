@@ -20,7 +20,6 @@
 	$: priceRatio = BigInt(0);
 	$: assets = BigInt(0);
 
-
 	let intervalId: ReturnType<typeof setInterval>;
 
 	onMount(() => {
@@ -66,8 +65,6 @@
 	onDestroy(() => {
 		stopGettingPriceRatio();
 	});
-
-
 </script>
 
 <Card size="lg">
