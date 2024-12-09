@@ -2,12 +2,14 @@
 	import { signerAddress } from 'svelte-wagmi';
 	import { createEventDispatcher } from 'svelte';
 
-	export let amount: string | number = '0.0';
-	export let unit: string = '';
+	export let amount: number = 0;
+	export let tokenName: string = '';
+	export let maxValue: number = 0;
 
 	const dispatch = createEventDispatcher();
 
 	function setValueToMax() {
+		amount = maxValue;
 		dispatch('setValueToMax');
 	}
 
@@ -28,20 +30,22 @@
 		placeholder="0.0"
 		step="0.1"
 		type="number"
+		lang="en-001"
 		bind:value={amount}
 	/>
-	{#if unit}
+	{#if tokenName}
 		<span
-			data-testid="unit"
+			data-testid="Name"
 			class=" h-full content-center self-center bg-primary pr-2 text-right text-lg text-white md:text-2xl"
 		>
-			{unit}</span
+			{tokenName}</span
 		>
 	{/if}
 	<button
 		disabled={!$signerAddress}
 		data-testid={'set-val-to-max'}
 		on:click={setValueToMax}
-		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base">MAX</button
+		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base disabled:cursor-not-allowed"
+		>MAX</button
 	>
 </div>
