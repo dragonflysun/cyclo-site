@@ -139,7 +139,7 @@ describe('transactionStore', () => {
 		});
 	});
 
-	it('should prompt the user to approve cysFLR contract to lock SFLR if allowance is less than assets', async () => {
+	it('should prompt the user to approve cysFLR contract to lock sFLR if allowance is less than assets', async () => {
 		const mockAllowance = BigInt(500);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);

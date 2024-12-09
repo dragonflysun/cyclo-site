@@ -24,9 +24,9 @@ export enum TransactionStatus {
 	IDLE = 'Idle',
 	CHECKING_ALLOWANCE = 'Checking your approved sFLR spend...',
 	PENDING_WALLET = 'Waiting for wallet confirmation...',
-	PENDING_APPROVAL = 'Approving SFLR spend...',
-	PENDING_LOCK = 'Locking SFLR...',
-	PENDING_UNLOCK = 'Unlocking SFLR...',
+	PENDING_APPROVAL = 'Approving sFLR spend...',
+	PENDING_LOCK = 'Locking sFLR...',
+	PENDING_UNLOCK = 'Unlocking sFLR...',
 	SUCCESS = 'Success! Transaction confirmed',
 	ERROR = 'Something went wrong'
 }
@@ -237,7 +237,7 @@ const transactionStore = () => {
 					myReceipts.set(getReceiptsResult);
 				}
 			} catch {
-				return transactionError(TransactionErrorMessage.GENERIC, hash);
+				return transactionError(TransactionErrorMessage.BALANCE_REFRESH_FAILED, hash);
 			}
 			// SUCCESS
 			return transactionSuccess(hash);
@@ -266,7 +266,7 @@ const transactionStore = () => {
 			}
 		};
 
-		checkingWalletAllowance('Checking you are approved to unlock your SFLR...');
+		checkingWalletAllowance('Checking you are approved to unlock your sFLR...');
 
 		const isERC1155Approved = await readErc1155IsApprovedForAll(config, {
 			address: erc1155Address,

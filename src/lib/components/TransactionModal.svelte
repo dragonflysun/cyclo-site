@@ -49,7 +49,7 @@
 				>
 					<h1 class="text-lg md:text-2xl">✅</h1>
 				</div>
-				<div class="flex flex-col gap-4 text-left">
+				<div class="flex flex-col gap-4 text-center">
 					<p
 						class="text-lg font-semibold text-gray-900 dark:text-white"
 						data-testid="success-status"
