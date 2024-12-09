@@ -151,7 +151,7 @@ const transactionStore = () => {
 					myReceipts.set(getReceiptsResult);
 				}
 			} catch {
-				return transactionError(TransactionErrorMessage.GENERIC, hash);
+				return transactionError(TransactionErrorMessage.BALANCE_REFRESH_FAILED, hash);
 			}
 			// SUCCESS
 			return transactionSuccess(
