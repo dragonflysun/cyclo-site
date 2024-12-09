@@ -83,8 +83,7 @@
 				<div class="flex flex-row gap-4">
 					{#key $balancesStore.sFlrBalance}<span
 							data-testid="sflr-balance"
-							in:fade={{ duration: 700 }}
-							>{Number(formatEther($balancesStore.sFlrBalance))}</span
+							in:fade={{ duration: 700 }}>{Number(formatEther($balancesStore.sFlrBalance))}</span
 						>{/key}
 					<span>SFLR</span>
 				</div>
@@ -185,7 +184,7 @@
 			>
 				{#key priceRatio}
 					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
-						>{(+amountToLock * Number(formatEther(priceRatio.toString())))}</span
+						>{+amountToLock * Number(formatEther(priceRatio.toString()))}</span
 					>
 				{/key}
 				<span>cysFLR</span>
