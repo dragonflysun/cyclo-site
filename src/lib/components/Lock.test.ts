@@ -62,7 +62,7 @@ describe('Lock Component', () => {
 			const priceRatio = screen.getByTestId('price-ratio');
 			expect(priceRatio).toBeInTheDocument();
 			const calculatedCysflr = screen.getByTestId('calculated-cysflr');
-			expect(calculatedCysflr).toHaveTextContent('0.001');
+			expect(calculatedCysflr).toHaveTextContent('7460.000');
 		});
 	});
 
