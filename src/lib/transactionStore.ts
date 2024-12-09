@@ -153,7 +153,7 @@ const transactionStore = () => {
 						);
 						transactionSuccess(
 							hash,
-							"Congrats! You've successfully locked your SFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original FLR at any time, or trade your cysFLR on the Flare Network."
+							"Congrats! You've successfully locked your SFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original sFLR at any time, or trade your cysFLR on the Flare Network."
 						);
 					} else {
 						return transactionError('Transaction failed to lock your SFLR', hash);
