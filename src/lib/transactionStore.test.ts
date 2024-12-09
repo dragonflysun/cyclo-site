@@ -139,7 +139,7 @@ describe('transactionStore', () => {
 		});
 	});
 
-	it.only('should prompt the user to approve cysFLR contract to lock SFLR if allowance is less than assets', async () => {
+	it('should prompt the user to approve cysFLR contract to lock SFLR if allowance is less than assets', async () => {
 		const mockAllowance = BigInt(500);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
@@ -260,7 +260,7 @@ describe('transactionStore', () => {
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe('User rejected transaction');
+		expect(get(transactionStore).error).toBe(TransactionErrorMessage.USER_REJECTED_APPROVAL);
 	});
 
 	it('should handle transaction failure during lock', async () => {

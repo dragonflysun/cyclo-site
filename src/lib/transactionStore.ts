@@ -244,31 +244,26 @@ const transactionStore = () => {
 		};
 
 		const writeApprovecysFlrSpend = async () => {
+
 			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your SFLR...');
+			let hash: Hex | undefined;
+
 			try {
-				const hash = await writeErc20Approve(config, {
+				hash = await writeErc20Approve(config, {
 					address: cysFlrAddress,
 					args: [cysFlrAddress, assets]
 				});
+			} catch {
+				console.log('writeApprovecysFlrSpend error');
+				return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
+			}
 
-				awaitApprovalTx(hash);
-				const receipt = await waitForTransactionReceipt(config, { hash: hash });
-
-				if (receipt) {
-					return receipt;
-				} else {
-					transactionError('Transaction failed to approve the cysFLR spend.', hash);
-					return { error: 'Transaction failed to approve the cysFLR spend.' };
-				}
-			} catch (e) {
-				const error = e as WaitForTransactionReceiptErrorType;
-				const errorMessage =
-					error.name === 'UserRejectedRequestError'
-						? 'User rejected transaction.'
-						: 'There was an error approving the cysFLR spend. Please try again.';
-
-				transactionError(errorMessage);
-				return { error: errorMessage };
+			awaitApprovalTx(hash);
+			try {
+				await waitForTransactionReceipt(config, { hash: hash });
+				return writeUnlock();
+			} catch {
+				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
 			}
 		};
 
@@ -302,28 +297,20 @@ const transactionStore = () => {
 				args: [signerAddress as Hex, cysFlrAddress]
 			});
 			if (cysFlrSpendAllowance < assets) {
-				try {
-					await writeApprovecysFlrSpend();
-					return writeUnlock();
-				} catch {
-					return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
-				}
+				return writeApprovecysFlrSpend();
+			} else {
+				return writeUnlock();
 			}
-			return writeUnlock();
 		} else {
 			const cysFlrSpendAllowance = await readErc20Allowance(config, {
 				address: cysFlrAddress,
 				args: [signerAddress as Hex, cysFlrAddress]
 			});
 			if (cysFlrSpendAllowance < assets) {
-				try {
-					await writeApprovecysFlrSpend();
-					return writeUnlock();
-				} catch {
-					return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
-				}
-			}
+					return writeApprovecysFlrSpend();
+			} else {
 			return writeUnlock();
+			}
 		}
 	};
 
