@@ -39,8 +39,8 @@
 	>
 		<TableHeadCell>Locked Price</TableHeadCell>
 		<TableHeadCell>Number Held</TableHeadCell>
-		<TableHeadCell class="hidden md:block">Locked SFLR/Receipt</TableHeadCell>
-		<TableHeadCell>Total Locked SFLR</TableHeadCell>
+		<TableHeadCell class="hidden md:block">Locked sFLR/Receipt</TableHeadCell>
+		<TableHeadCell>Total Locked sFLR</TableHeadCell>
 		<TableHeadCell></TableHeadCell>
 	</TableHead>
 	<TableBody
