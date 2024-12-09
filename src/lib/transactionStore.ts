@@ -245,7 +245,7 @@ const transactionStore = () => {
 
 				awaitApprovalTx(hash);
 				const receipt = await waitForTransactionReceipt(config, { hash: hash });
-				
+
 				if (receipt) {
 					return receipt;
 				} else {
@@ -254,10 +254,11 @@ const transactionStore = () => {
 				}
 			} catch (e) {
 				const error = e as WaitForTransactionReceiptErrorType;
-				const errorMessage = error.name === 'UserRejectedRequestError' 
-					? 'User rejected transaction.' 
-					: 'There was an error approving the cysFLR spend. Please try again.';
-					
+				const errorMessage =
+					error.name === 'UserRejectedRequestError'
+						? 'User rejected transaction.'
+						: 'There was an error approving the cysFLR spend. Please try again.';
+
 				transactionError(errorMessage);
 				return { error: errorMessage };
 			}
