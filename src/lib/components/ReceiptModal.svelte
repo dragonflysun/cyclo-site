@@ -118,7 +118,7 @@
 		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white md:text-2xl"
 		disabled={buttonStatus !== ButtonStatus.READY || amountToRedeem === BigInt(0)}
 		on:click={() =>
-			transactionStore.initiateUnlockTransaction({
+			transactionStore.handleUnlockTransaction({
 				signerAddress: $signerAddress,
 				config: $wagmiConfig,
 				cysFlrAddress: $cysFlrAddress,

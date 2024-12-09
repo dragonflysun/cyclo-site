@@ -25,12 +25,12 @@ vi.mock('$lib/balancesStore', async () => {
 vi.mock('$lib/transactionStore', async (importOriginal) => ({
 	default: {
 		...((await importOriginal) as object),
-		initiateLockTransaction: vi.fn().mockResolvedValue({})
+		handleLockTransaction: vi.fn().mockResolvedValue({})
 	}
 }));
 
 describe('Lock Component', () => {
-	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'initiateLockTransaction');
+	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'handleLockTransaction');
 
 	beforeEach(() => {
 		initiateLockTransactionSpy.mockClear();
@@ -66,7 +66,7 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it('should call initiateLockTransaction when lock button is clicked', async () => {
+	it('should call handleLockTransaction when lock button is clicked', async () => {
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
