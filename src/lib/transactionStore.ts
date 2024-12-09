@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-import type { Hex, WaitForTransactionReceiptErrorType } from 'viem';
+import type { Hex } from 'viem';
 
 import type { Config } from '@wagmi/core';
 import { waitForTransactionReceipt } from '@wagmi/core';
@@ -244,7 +244,6 @@ const transactionStore = () => {
 		};
 
 		const writeApprovecysFlrSpend = async () => {
-
 			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your SFLR...');
 			let hash: Hex | undefined;
 
@@ -307,9 +306,9 @@ const transactionStore = () => {
 				args: [signerAddress as Hex, cysFlrAddress]
 			});
 			if (cysFlrSpendAllowance < assets) {
-					return writeApprovecysFlrSpend();
+				return writeApprovecysFlrSpend();
 			} else {
-			return writeUnlock();
+				return writeUnlock();
 			}
 		}
 	};
