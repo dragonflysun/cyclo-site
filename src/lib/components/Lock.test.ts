@@ -41,7 +41,7 @@ describe('Lock Component', () => {
 		);
 	});
 
-	it('should render SFLR balance and price ratio correctly', async () => {
+	it('should render sFLR balance and price ratio correctly', async () => {
 		mockSignerAddressStore.mockSetSubscribeValue('0x1234567890123456789012345678901234567890');
 		render(Lock);
 		await waitFor(() => {
@@ -80,7 +80,7 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it('should disable the lock button if SFLR balance is insufficient', async () => {
+	it('should disable the lock button if sFLR balance is insufficient', async () => {
 		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
 		render(Lock);
 		const lockButton = screen.getByTestId('lock-button');
@@ -95,13 +95,13 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it('should show the SFLR balance if there is a signerAddress', async () => {
+	it('should show the sFLR balance if there is a signerAddress', async () => {
 		mockSignerAddressStore.mockSetSubscribeValue('0x0000');
 		render(Lock);
 		await waitFor(() => {
 			const balance = screen.getByTestId('your-balance');
 			expect(balance).toBeInTheDocument();
-			expect(balance).toHaveTextContent('SFLR Balance: 9.876');
+			expect(balance).toHaveTextContent('sFLR Balance: 9.876');
 		});
 	});
 });

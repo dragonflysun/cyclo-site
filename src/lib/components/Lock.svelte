@@ -73,11 +73,11 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>SFLR BALANCE</span>
+					<span>sFLR BALANCE</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
-						class="cursor-pointer text-xs font-light hover:underline">How do I get SFLR?</a
+						class="cursor-pointer text-xs font-light hover:underline">How do I get sFLR?</a
 					>
 				</div>
 				<div class="flex flex-row gap-4">
@@ -86,14 +86,14 @@
 							in:fade={{ duration: 700 }}
 							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
 						>{/key}
-					<span>SFLR</span>
+					<span>sFLR</span>
 				</div>
 			</div>
 		{/if}
 
 		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<div class="flex flex-col">
-				<span>SFLR/USD PRICE</span>
+				<span>sFLR/USD PRICE</span>
 				<a
 					href={base + '/docs/why-flare'}
 					class="cursor-pointer text-xs font-light hover:underline"
@@ -140,11 +140,11 @@
 					}}
 					bind:amount={amountToLock}
 					maxValue={$balancesStore.sFlrBalance}
-					unit={'SFLR'}
+					unit={'sFLR'}
 				/>
 				{#if $signerAddress}
 					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
-						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
+						sFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
 					</p>
 				{:else}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -154,7 +154,7 @@
 						class="my-2 cursor-pointer text-right text-xs font-light hover:underline"
 						data-testid="connect-message"
 					>
-						Connect a wallet to see SFLR balance
+						Connect a wallet to see sFLR balance
 					</div>
 				{/if}
 			</div>
@@ -166,7 +166,7 @@
 			>
 				<span>{amountToLock}</span>
 
-				<span>SFLR</span>
+				<span>sFLR</span>
 			</div>
 
 			<div class="flex w-full">
@@ -205,7 +205,7 @@
 						sFlrAddress: $sFlrAddress,
 						erc1155Address: $erc1155Address,
 						assets: assets
-					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
+					})}>{insufficientFunds ? 'INSUFFICIENT sFLR' : 'LOCK'}</Button
 			>
 		{:else}
 			<Button
