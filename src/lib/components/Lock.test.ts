@@ -4,6 +4,7 @@ import transactionStore from '$lib/transactionStore';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
 import { mockSignerAddressStore } from '$lib/mocks/mockStores';
+import { parseEther } from 'ethers';
 
 const { mockBalancesStore } = await vi.hoisted(() => import('$lib/mocks/mockStores'));
 
@@ -37,7 +38,8 @@ describe('Lock Component', () => {
 		mockBalancesStore.mockSetSubscribeValue(
 			BigInt(1234000000000000000), // sFlrBalance
 			BigInt(9876000000000000000), // cysFlrBalance
-			'Ready' // status
+			'Ready', // status
+			BigInt(1) // lockPrice
 		);
 	});
 
@@ -53,16 +55,18 @@ describe('Lock Component', () => {
 	});
 
 	it('should calculate the correct cysFLR amount based on input', async () => {
+		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready', BigInt(parseEther("100")));
+
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
-		await userEvent.type(input, '500000');
+		await userEvent.type(input, '0.5');
 
 		await waitFor(() => {
 			const priceRatio = screen.getByTestId('price-ratio');
 			expect(priceRatio).toBeInTheDocument();
 			const calculatedCysflr = screen.getByTestId('calculated-cysflr');
-			expect(calculatedCysflr).toHaveTextContent('0.000746');
+			expect(calculatedCysflr).toHaveTextContent('0.5');
 		});
 	});
 
@@ -81,7 +85,7 @@ describe('Lock Component', () => {
 	});
 
 	it('should disable the lock button if SFLR balance is insufficient', async () => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
+		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready', BigInt(1));
 		render(Lock);
 		const lockButton = screen.getByTestId('lock-button');
 		expect(lockButton).toBeDisabled();

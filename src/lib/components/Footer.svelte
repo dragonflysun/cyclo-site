@@ -9,8 +9,7 @@
 <footer class="flex h-16 flex-col justify-center bg-[#1C02B8] px-2 text-white">
 	{#if $balancesStore.lockPrice}
 		<div class="flex gap-2" in:fade data-testId="cysFlr-supply">
-			Current lock price <span>{formatEther($balancesStore.lockPrice)}</span>
+			Current Lock Price (USD/sFLR) <span>{formatEther($balancesStore.lockPrice)}</span>
 		</div>
 	{/if}
-
 </footer>

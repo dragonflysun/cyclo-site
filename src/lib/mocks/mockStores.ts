@@ -18,17 +18,24 @@ const mockSFlrAddressWritable = writable<Hex>('0x91e3B9820b47c7D4e6765E90F94C163
 const mockBalancesWritable = writable({
 	cysFlrBalance: BigInt(100),
 	sFlrBalance: BigInt(100),
-	status: 'Checking'
+	status: 'Checking',
+	lockPrice: BigInt(1)
 });
 
 export const mockBalancesStore = {
 	subscribe: mockBalancesWritable.subscribe,
 	set: mockBalancesWritable.set,
-	mockSetSubscribeValue: (cysFlrBalance: bigint, sFlrBalance: bigint, status: string): void => {
+	mockSetSubscribeValue: (
+		cysFlrBalance: bigint,
+		sFlrBalance: bigint,
+		status: string,
+		lockPrice: bigint
+	): void => {
 		mockBalancesWritable.set({
 			cysFlrBalance,
 			sFlrBalance,
-			status
+			status,
+			lockPrice
 		});
 	}
 };
