@@ -129,7 +129,6 @@ describe('ReceiptModal Component', () => {
 		const maxButton = screen.getByTestId('set-val-to-max');
 		await fireEvent.click(maxButton);
 
-
 		// Click unlock button
 
 		await waitFor(() => {
@@ -148,7 +147,7 @@ describe('ReceiptModal Component', () => {
 		});
 	});
 
-		it('should set cysFlrBalance when max button is clicked and receipt balance is greater than cysFlrBalance', async () => {
+	it('should set cysFlrBalance when max button is clicked and receipt balance is greater than cysFlrBalance', async () => {
 		const mockCysFlrBalance = BigInt('100000000000'); // 1 cysFLR
 		mockBalancesStore.mockSetSubscribeValue(mockCysFlrBalance, BigInt(1), 'Ready');
 
@@ -157,7 +156,6 @@ describe('ReceiptModal Component', () => {
 		// Find the max button within the input component and click it
 		const maxButton = screen.getByTestId('set-val-to-max');
 		await fireEvent.click(maxButton);
-
 
 		// Click unlock button
 
