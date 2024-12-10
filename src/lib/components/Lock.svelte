@@ -17,9 +17,8 @@
 
 	export let amountToLock = '0.0';
 
-	let priceRatio = BigInt(0);
-	let assets = BigInt(0);
-	let insufficientFunds = false;
+	$: priceRatio = BigInt(0);
+	$: assets = BigInt(0);
 
 	let intervalId: ReturnType<typeof setInterval>;
 
@@ -30,6 +29,8 @@
 	$: if ($signerAddress) {
 		checkBalance();
 	}
+
+	$: insufficientFunds = $balancesStore.sFlrBalance < assets;
 
 	const checkBalance = () => {
 		if (amountToLock) {
