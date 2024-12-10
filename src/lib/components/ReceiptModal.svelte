@@ -59,8 +59,8 @@
 	}
 </script>
 
-<div class="flex w-full flex-col items-center justify-center gap-6 p-6" data-testId="receipt-modal">
-	<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
+<div class="flex w-full flex-col items-center justify-center gap-6 lg:p-6 p-2" data-testId="receipt-modal">
+	<div class="flex w-full md:flex-row flex-col justify-between text-lg font-semibold text-white md:text-2xl">
 		<span>NUMBER HELD</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}
@@ -69,16 +69,16 @@
 		</div>
 	</div>
 
-	<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
+	<div class="flex w-full md:flex-row flex-col justify-between text-lg font-semibold text-white md:text-2xl">
 		<span>LOCK-UP PRICE</span>
 
-		<div class="flex flex-row items-center gap-2">
+		<div class="flex flex-row gap-4">
 			<span data-testid="lock-up-price">{Number(formatEther(tokenId))}</span>
 		</div>
 	</div>
 
 	<div
-		class="flex w-full flex-row items-center justify-between text-lg font-semibold text-white md:text-2xl"
+		class="flex w-full md:flex-row flex-col items-start justify-between text-lg font-semibold text-white md:text-2xl"
 	>
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
