@@ -15,7 +15,8 @@
 	}
 
 	function handleInput(event: Event) {
-		const formattedValue = handleDecimalSeparator(event);
+		const target = event.target as HTMLInputElement;
+		const formattedValue = handleDecimalSeparator({ target: { value: target.value } });
 		displayValue = formattedValue;
 
 		// Update the actual value

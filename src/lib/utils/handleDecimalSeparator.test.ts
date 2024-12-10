@@ -2,11 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { handleDecimalSeparator } from './handleDecimalSeparator';
 
 describe('handleDecimalSeparator', () => {
-	const createInputEvent = (value: string): Event => {
-		const event = new Event('input');
-		Object.defineProperty(event, 'target', { value: { value } });
-		return event;
-	};
+	const createInputEvent = (value: string) => ({
+		target: { value }
+	});
 
 	it('should handle basic decimal input with dot', () => {
 		const event = createInputEvent('123.45');
