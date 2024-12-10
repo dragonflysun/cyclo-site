@@ -83,8 +83,19 @@ describe('Lock Component', () => {
 	it('should disable the lock button if sFLR balance is insufficient', async () => {
 		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
 		render(Lock);
+		const input = screen.getByTestId('lock-input');
+		await userEvent.type(input, '500000');
 		const lockButton = screen.getByTestId('lock-button');
 		expect(lockButton).toBeDisabled();
+		expect(lockButton).toHaveTextContent('INSUFFICIENT sFLR');
+	});
+
+	it('should disable the lock button if no value had been entered', async () => {
+		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
+		render(Lock);
+		const lockButton = screen.getByTestId('lock-button');
+		expect(lockButton).toBeDisabled();
+		expect(lockButton).toHaveTextContent('LOCK');
 	});
 
 	it('should show the connect message if there is no signerAddress', async () => {
