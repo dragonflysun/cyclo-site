@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { signerAddress } from 'svelte-wagmi';
 	import { createEventDispatcher } from 'svelte';
+	import { handleDecimalSeparator } from '$lib/utils/handleDecimalSeparator';
 
 	export let amount: string | number = '0.0';
 	export let unit: string = '';
+
+	let displayValue = amount.toString();
 
 	const dispatch = createEventDispatcher();
 
@@ -13,7 +16,17 @@
 
 	function handleInput(event: Event) {
 		const target = event.target as HTMLInputElement;
-		dispatch('input', { value: target.value });
+		const formattedValue = handleDecimalSeparator(event);
+		displayValue = formattedValue;
+
+		// Update the actual value
+		amount = formattedValue;
+		dispatch('input', { value: formattedValue });
+	}
+
+	// Keep display value in sync when amount changes externally
+	$: if (amount.toString() !== displayValue) {
+		displayValue = amount.toString();
 	}
 </script>
 
@@ -27,13 +40,13 @@
 		min={0}
 		placeholder="0.0"
 		step="0.1"
-		type="number"
-		bind:value={amount}
+		type="text"
+		value={displayValue}
 	/>
 	{#if unit}
 		<span
 			data-testid="unit"
-			class=" h-full content-center self-center bg-primary pr-2 text-right text-lg text-white md:text-2xl"
+			class="h-full content-center self-center bg-primary pr-2 text-right text-lg text-white md:text-2xl"
 		>
 			{unit}</span
 		>
