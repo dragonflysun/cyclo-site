@@ -27,6 +27,7 @@ describe('cysFlrBalanceStore', () => {
 		expect(get(cysFlrBalanceStore)).toEqual({
 			cysFlrBalance: BigInt(0),
 			sFlrBalance: BigInt(0),
+			lockPrice: BigInt(0),
 			status: 'Checking'
 		});
 	});
@@ -78,6 +79,7 @@ describe('cysFlrBalanceStore', () => {
 		expect(get(cysFlrBalanceStore)).toEqual({
 			cysFlrBalance: BigInt(0),
 			sFlrBalance: BigInt(0),
+			lockPrice: BigInt(0),
 			status: 'Checking'
 		});
 	});

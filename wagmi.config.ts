@@ -3,6 +3,7 @@ import { foundry } from '@wagmi/cli/plugins';
 import { actions } from '@wagmi/cli/plugins';
 import { erc20Abi, type Abi } from 'viem';
 import { erc1155Abi } from './src/lib/contracts/erc1155Abi';
+import { quoterAbi } from './src/lib/contracts/quoterAbi';
 export default defineConfig({
 	out: 'src/generated.ts',
 	contracts: [
@@ -13,6 +14,10 @@ export default defineConfig({
 		{
 			name: 'erc1155',
 			abi: erc1155Abi as Abi
+		},
+		{
+			name: 'quoter',
+			abi: quoterAbi as Abi
 		}
 	],
 	plugins: [
