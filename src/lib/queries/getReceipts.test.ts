@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getReceipts } from './getReceipts';
 import axios from 'axios';
 import { readErc1155BalanceOf } from '../../generated';
-import type { Receipt } from '$lib/types';
+import type { BlockScoutData } from '$lib/types';
 import type { Config } from '@wagmi/core';
 import { formatEther } from 'ethers';
 import { type Hex } from 'viem';
@@ -17,18 +17,16 @@ describe('getReceipts', () => {
 	const mockErc1155Address = '0xMockERC1155Address' as Hex;
 	const mockConfig = {} as Config;
 
-	const mockData: Receipt[] = [
+	const mockData: BlockScoutData[] = [
 		{
-			chainId: '1',
-			tokenAddress: mockErc1155Address,
-			tokenId: '1000000000000000000',
-			balance: BigInt(1)
+			token: { address: mockErc1155Address },
+			id: '1000000000000000000',
+			value: '1'
 		},
 		{
-			chainId: '1',
-			tokenAddress: '0xAnotherERC1155Address' as Hex,
-			tokenId: '2000000000000000000',
-			balance: BigInt(0)
+			token: { address: '0xAnotherERC1155Address' as Hex },
+			id: '2000000000000000000',
+			value: '0'
 		}
 	];
 
@@ -48,14 +46,13 @@ describe('getReceipts', () => {
 		const result = await getReceipts(mockAddress, mockErc1155Address, mockConfig);
 
 		expect(axios.get).toHaveBeenCalledWith(
-			`https://api.routescan.io/v2/network/mainnet/evm/14/address/${mockAddress}/erc1155-holdings?limit=1000`
+			`https://flare-explorer.flare.network/api/v2/addresses/${mockAddress}/nft?type=ERC-1155`
 		);
 
 		expect(readErc1155BalanceOf).toHaveBeenCalled();
 
 		expect(result).toEqual([
 			{
-				chainId: '1',
 				tokenAddress: mockErc1155Address,
 				tokenId: '1000000000000000000',
 				balance: BigInt(1),

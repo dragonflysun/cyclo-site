@@ -9,3 +9,11 @@ export type Receipt = {
 	readableTotalFlr?: string;
 	readableFlrPerReceipt?: string;
 };
+
+export type BlockScoutData = {
+	token: {
+		address: string;
+	};
+	value: string;
+	id: string;
+};

@@ -23,9 +23,9 @@ export enum TransactionStatus {
 	IDLE = 'Idle',
 	CHECKING_ALLOWANCE = 'Checking your approved sFLR spend...',
 	PENDING_WALLET = 'Waiting for wallet confirmation...',
-	PENDING_APPROVAL = 'Approving SFLR spend...',
-	PENDING_LOCK = 'Locking SFLR...',
-	PENDING_UNLOCK = 'Unlocking SFLR...',
+	PENDING_APPROVAL = 'Approving sFLR spend...',
+	PENDING_LOCK = 'Locking sFLR...',
+	PENDING_UNLOCK = 'Unlocking sFLR...',
 	SUCCESS = 'Success! Transaction confirmed',
 	ERROR = 'Something went wrong'
 }
@@ -125,7 +125,7 @@ const transactionStore = () => {
 		});
 
 		if (data < assets) {
-			awaitWalletConfirmation('You need to approve the cysFLR contract to lock your SFLR...');
+			awaitWalletConfirmation('You need to approve the cysFLR contract to lock your sFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
 					address: sFlrAddress,
@@ -136,7 +136,7 @@ const transactionStore = () => {
 				const res = await waitForTransactionReceipt(config, { hash: hash });
 
 				if (res) {
-					awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
+					awaitWalletConfirmation('Awaiting wallet confirmation to lock your sFLR...');
 					const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
 						address: cysFlrAddress,
 						args: [assets, signerAddress as Hex, 0n, '0x']
@@ -153,10 +153,10 @@ const transactionStore = () => {
 						);
 						transactionSuccess(
 							hash,
-							"Congrats! You've successfully locked your SFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original FLR at any time, or trade your cysFLR on the Flare Network."
+							"Congrats! You've successfully locked your sFLR in return for cysFLR. You can burn your cysFLR and receipts to redeem your original sFLR at any time, or trade your cysFLR on the Flare Network."
 						);
 					} else {
-						return transactionError('Transaction failed to lock your SFLR', hash);
+						return transactionError('Transaction failed to lock your SFLR.', hash);
 					}
 				}
 			} catch (e) {
@@ -167,7 +167,7 @@ const transactionStore = () => {
 			}
 		} else {
 			try {
-				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
+				awaitWalletConfirmation('Awaiting wallet confirmation to lock your sFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultDeposit(config, {
 					address: cysFlrAddress,
 					args: [assets, signerAddress as Hex, 0n, '0x']
@@ -189,10 +189,10 @@ const transactionStore = () => {
 					}
 					return transactionSuccess(hash);
 				} else {
-					transactionError('Transaction failed to lock your SFLR', hash);
+					transactionError('Transaction failed to lock your sFLR', hash);
 				}
 			} catch {
-				transactionError('There was an error locking your SFLR. Please try again.');
+				transactionError('There was an error locking your sFLR. Please try again.');
 			}
 		}
 	};
@@ -208,7 +208,7 @@ const transactionStore = () => {
 	}: InitiateUnlockTransactionArgs) => {
 		const writeUnlock = async () => {
 			try {
-				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your SFLR...');
+				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your sFLR...');
 				const hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
 					address: cysFlrAddress,
 					args: [assets, signerAddress as Hex, signerAddress as Hex, BigInt(tokenId), '0x']
@@ -231,35 +231,40 @@ const transactionStore = () => {
 					return transactionError('Transaction timed out... You can see more here' + hash);
 				}
 			} catch {
-				return transactionError('There was an error unlocking your SFLR. Please try again.');
+				return transactionError('There was an error unlocking your sFLR. Please try again.');
 			}
 		};
 
 		const writeApprovecysFlrSpend = async () => {
-			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your SFLR...');
+			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your sFLR...');
 			try {
 				const hash = await writeErc20Approve(config, {
 					address: cysFlrAddress,
 					args: [cysFlrAddress, assets]
 				});
+
 				awaitApprovalTx(hash);
-				const res = await waitForTransactionReceipt(config, { hash: hash });
-				if (res) {
-					return res;
+				const receipt = await waitForTransactionReceipt(config, { hash: hash });
+
+				if (receipt) {
+					return receipt;
 				} else {
-					return transactionError('Transaction failed to approve the cysFLR spend', hash);
+					transactionError('Transaction failed to approve the cysFLR spend.', hash);
+					return { error: 'Transaction failed to approve the cysFLR spend.' };
 				}
 			} catch (e) {
 				const error = e as WaitForTransactionReceiptErrorType;
-				return transactionError(
+				const errorMessage =
 					error.name === 'UserRejectedRequestError'
-						? 'User rejected transaction'
-						: 'There was an error approving the cysFLR spend. Please try again.'
-				);
+						? 'User rejected transaction.'
+						: 'There was an error approving the cysFLR spend. Please try again.';
+
+				transactionError(errorMessage);
+				return { error: errorMessage };
 			}
 		};
 
-		checkingWalletAllowance('Checking you are approved to unlock your SFLR...');
+		checkingWalletAllowance('Checking you are approved to unlock your sFLR...');
 
 		const isERC1155Approved = await readErc1155IsApprovedForAll(config, {
 			address: erc1155Address,
@@ -268,7 +273,7 @@ const transactionStore = () => {
 
 		if (!isERC1155Approved) {
 			try {
-				awaitWalletConfirmation('You need to approve the cysFLR contract to unlock your SFLR...');
+				awaitWalletConfirmation('You need to approve the cysFLR contract to unlock your sFLR...');
 				const hash = await writeErc1155SetApprovalForAll(config, {
 					address: erc1155Address,
 					args: [cysFlrAddress, true]
@@ -282,14 +287,13 @@ const transactionStore = () => {
 						args: [signerAddress as Hex, cysFlrAddress]
 					});
 					if (cysFlrSpendAllowance < assets) {
-						try {
-							await writeApprovecysFlrSpend();
-							writeUnlock();
-						} catch {
-							transactionError('User rejected transaction');
+						const approveResult = await writeApprovecysFlrSpend();
+						if ('error' in approveResult) {
+							return transactionError('User rejected approval transaction.');
 						}
+						return writeUnlock();
 					}
-					writeUnlock();
+					return writeUnlock();
 				} else {
 					transactionError('Transaction failed to approve the cysFLR spend', hash);
 				}
@@ -302,10 +306,13 @@ const transactionStore = () => {
 				args: [signerAddress as Hex, cysFlrAddress]
 			});
 			if (cysFlrSpendAllowance < assets) {
-				await writeApprovecysFlrSpend();
-				writeUnlock();
+				const approveResult = await writeApprovecysFlrSpend();
+				if ('error' in approveResult) {
+					return transactionError('User rejected approval transaction.');
+				}
+				return writeUnlock();
 			}
-			writeUnlock();
+			return writeUnlock();
 		}
 	};
 

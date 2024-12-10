@@ -17,9 +17,8 @@
 
 	export let amountToLock = '0.0';
 
-	let priceRatio = BigInt(0);
-	let assets = BigInt(0);
-	let insufficientFunds = false;
+	$: priceRatio = BigInt(0);
+	$: assets = BigInt(0);
 
 	let intervalId: ReturnType<typeof setInterval>;
 
@@ -30,6 +29,8 @@
 	$: if ($signerAddress) {
 		checkBalance();
 	}
+
+	$: insufficientFunds = $balancesStore.sFlrBalance < assets;
 
 	const checkBalance = () => {
 		if (amountToLock) {
@@ -73,27 +74,26 @@
 				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<div class="flex flex-col">
-					<span>SFLR BALANCE</span>
+					<span>sFLR BALANCE</span>
 					<a
 						target="_blank"
 						href={'https://portal.flare.network'}
-						class="cursor-pointer text-xs font-light hover:underline">How do I get SFLR?</a
+						class="cursor-pointer text-xs font-light hover:underline">How do I get sFLR?</a
 					>
 				</div>
 				<div class="flex flex-row gap-4">
 					{#key $balancesStore.sFlrBalance}<span
 							data-testid="sflr-balance"
-							in:fade={{ duration: 700 }}
-							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
+							in:fade={{ duration: 700 }}>{Number(formatEther($balancesStore.sFlrBalance))}</span
 						>{/key}
-					<span>SFLR</span>
+					<span>sFLR</span>
 				</div>
 			</div>
 		{/if}
 
 		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
 			<div class="flex flex-col">
-				<span>SFLR/USD PRICE</span>
+				<span>sFLR/USD PRICE</span>
 				<a
 					href={base + '/docs/why-flare'}
 					class="cursor-pointer text-xs font-light hover:underline"
@@ -106,7 +106,7 @@
 					in:fade={{ duration: 700 }}
 					class="flex flex-row items-center gap-2"
 					data-testid="price-ratio"
-					>{Number(formatEther(priceRatio.toString())).toFixed(5)}
+					>{Number(formatEther(priceRatio.toString()))}
 
 					<svg width="20" height="20" viewBox="0 0 100 100">
 						<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
@@ -136,15 +136,15 @@
 					}}
 					on:setValueToMax={() => {
 						assets = $balancesStore.sFlrBalance;
-						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
+						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toString();
 					}}
 					bind:amount={amountToLock}
 					maxValue={$balancesStore.sFlrBalance}
-					unit={'SFLR'}
+					unit={'sFLR'}
 				/>
 				{#if $signerAddress}
 					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
-						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
+						sFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
 					</p>
 				{:else}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -154,7 +154,7 @@
 						class="my-2 cursor-pointer text-right text-xs font-light hover:underline"
 						data-testid="connect-message"
 					>
-						Connect a wallet to see SFLR balance
+						Connect a wallet to see sFLR balance
 					</div>
 				{/if}
 			</div>
@@ -166,7 +166,7 @@
 			>
 				<span>{amountToLock || 0}</span>
 
-				<span>SFLR</span>
+				<span>sFLR</span>
 			</div>
 
 			<div class="flex w-full">
@@ -174,7 +174,7 @@
 					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white"
 				>
 					<img src={ftso} alt="ftso" class="w-1/2" />
-					{Number(formatEther(priceRatio.toString())).toFixed(5)}
+					{Number(formatEther(priceRatio.toString()))}
 				</div>
 				<img src={mintDia} alt="diagram" class="w-1/2" />
 				<div class="w-1/4"></div>
@@ -185,7 +185,7 @@
 			>
 				{#key priceRatio}
 					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
-						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
+						>{+amountToLock * Number(formatEther(priceRatio.toString()))}</span
 					>
 				{/key}
 				<span>cysFLR</span>
@@ -205,7 +205,7 @@
 						sFlrAddress: $sFlrAddress,
 						erc1155Address: $erc1155Address,
 						assets: assets
-					})}>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
+					})}>{insufficientFunds ? 'INSUFFICIENT sFLR' : 'LOCK'}</Button
 			>
 		{:else}
 			<Button
