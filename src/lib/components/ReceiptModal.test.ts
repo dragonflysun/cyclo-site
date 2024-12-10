@@ -23,7 +23,7 @@ vi.mock('$lib/balancesStore', async () => {
 });
 
 describe('ReceiptModal Component', () => {
-	const initiateUnlockTransactionSpy = vi.spyOn(transactionStore, 'initiateUnlockTransaction');
+	const initiateUnlockTransactionSpy = vi.spyOn(transactionStore, 'handleUnlockTransaction');
 
 	beforeEach(() => {
 		initiateUnlockTransactionSpy.mockClear();
@@ -101,7 +101,7 @@ describe('ReceiptModal Component', () => {
 		screen.debug();
 	});
 
-	it('should call initiateUnlockTransaction when unlock button is clicked', async () => {
+	it('should call handleUnlockTransaction when unlock button is clicked', async () => {
 		render(ReceiptModal, { receipt: mockReceipt });
 
 		const input = screen.getByTestId('redeem-input');
