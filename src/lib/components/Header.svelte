@@ -26,7 +26,7 @@
 				goto(base + '/');
 			}}
 		>
-			<img src={spiralLogo} alt="Cyclo logo" class="h-8 cursor-pointer" />
+			<img src={spiralLogo} alt="Cyclo spiral logo" class="h-8 cursor-pointer" />
 		</button>
 		{#if launched}
 			<button
