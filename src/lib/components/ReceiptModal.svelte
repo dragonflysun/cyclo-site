@@ -145,7 +145,7 @@
 			>
 			<img src={mobileBurnDia} alt="diagram" class="" />
 			<div class="flex flex-row items-center gap-2 overflow-ellipsis">
-				<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
+				<span class="flex overflow-ellipsis" data-testid="flr-to-receive-mobile">
 					{Number(formatEther(sFlrToReceive))} sFLR
 				</span>
 			</div>
