@@ -21,6 +21,7 @@
 	let readableAmountToRedeem: string = '0.0';
 	let amountToRedeem = BigInt(0);
 	let sFlrToReceive = BigInt(0);
+	
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
@@ -41,8 +42,9 @@
 		checkBalance();
 	};
 
-	$: maxRedeemable =
-		$balancesStore?.cysFlrBalance < erc1155balance ? $balancesStore.cysFlrBalance : erc1155balance;
+	$: maxRedeemable = ($balancesStore.cysFlrBalance ?? 0n) < (erc1155balance ?? 0n) 
+		? ($balancesStore.cysFlrBalance ?? 0n) 
+		: (erc1155balance ?? 0n);
 
 	$: if (amountToRedeem) {
 		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
