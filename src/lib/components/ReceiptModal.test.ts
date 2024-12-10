@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/svelte';
+import { render, screen, waitFor, fireEvent } from '@testing-library/svelte';
 import ReceiptModal from './ReceiptModal.svelte';
 import transactionStore from '$lib/transactionStore';
 
@@ -116,6 +116,62 @@ describe('ReceiptModal Component', () => {
 
 		await waitFor(() => {
 			expect(initiateUnlockTransactionSpy).toHaveBeenCalledOnce();
+		});
+	});
+
+	it('should set exact receipt balance when max button is clicked and receipt balance is less than cysFlrBalance', async () => {
+		const mockCysFlrBalance = BigInt('1000000000000000000'); // 1 cysFLR
+		mockBalancesStore.mockSetSubscribeValue(mockCysFlrBalance, BigInt(1), 'Ready');
+
+		render(ReceiptModal, { receipt: mockReceipt });
+
+		// Find the max button within the input component and click it
+		const maxButton = screen.getByTestId('set-val-to-max');
+		await fireEvent.click(maxButton);
+
+		// Click unlock button
+
+		await waitFor(() => {
+			const unlockButton = screen.getByTestId('unlock-button');
+			expect(unlockButton.getAttribute('disabled')).toBeFalsy();
+			userEvent.click(unlockButton);
+		});
+
+		// Verify initiateUnlockTransaction was called with exact cysFlrBalance
+		await waitFor(() => {
+			expect(initiateUnlockTransactionSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					assets: mockReceipt.balance
+				})
+			);
+		});
+	});
+
+	it('should set cysFlrBalance when max button is clicked and receipt balance is greater than cysFlrBalance', async () => {
+		const mockCysFlrBalance = BigInt('100000000000'); // 1 cysFLR
+		mockBalancesStore.mockSetSubscribeValue(mockCysFlrBalance, BigInt(1), 'Ready');
+
+		render(ReceiptModal, { receipt: mockReceipt });
+
+		// Find the max button within the input component and click it
+		const maxButton = screen.getByTestId('set-val-to-max');
+		await fireEvent.click(maxButton);
+
+		// Click unlock button
+
+		await waitFor(() => {
+			const unlockButton = screen.getByTestId('unlock-button');
+			expect(unlockButton.getAttribute('disabled')).toBeFalsy();
+			userEvent.click(unlockButton);
+		});
+
+		// Verify initiateUnlockTransaction was called with exact cysFlrBalance
+		await waitFor(() => {
+			expect(initiateUnlockTransactionSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					assets: mockCysFlrBalance
+				})
+			);
 		});
 	});
 });
