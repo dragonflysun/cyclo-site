@@ -24,7 +24,11 @@
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
+	let isMaxSelected = false;
+
 	const checkBalance = () => {
+		if (isMaxSelected) return;
+		
 		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
 			readableAmountToRedeem = '0.0';
 		}
@@ -32,6 +36,7 @@
 	};
 
 	const handleInput = (event: { detail: { value: string } }) => {
+		isMaxSelected = false;
 		readableAmountToRedeem = event.detail.value;
 		checkBalance();
 	};
@@ -87,7 +92,9 @@
 				on:input={handleInput}
 				data-testid="redeem-input"
 				on:setValueToMax={() => {
+					isMaxSelected = true;
 					amountToRedeem = maxRedeemable;
+					readableAmountToRedeem = Number(formatEther(maxRedeemable)).toString();
 				}}
 			/>
 		</div>
