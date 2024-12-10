@@ -121,6 +121,7 @@ const transactionStore = () => {
 	}: initiateLockTransactionArgs) => {
 		const writeLock = async () => {
 			let hash: Hex | undefined;
+			return transactionError(TransactionErrorMessage.GENERIC);
 			// GET WALLET CONFIRMATION
 			try {
 				awaitWalletConfirmation('Awaiting wallet confirmation to lock your SFLR...');
