@@ -64,7 +64,7 @@
 	data-testId="receipt-modal"
 >
 	<div
-		class="flex w-full flex-col justify-between text-lg font-semibold text-white md:flex-row md:text-2xl"
+		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 	>
 		<span>NUMBER HELD</span>
 		<div class="flex flex-row gap-4">
@@ -75,7 +75,7 @@
 	</div>
 
 	<div
-		class="flex w-full flex-col justify-between text-lg font-semibold text-white md:flex-row md:text-2xl"
+		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 	>
 		<span>LOCK-UP PRICE</span>
 
@@ -85,7 +85,7 @@
 	</div>
 
 	<div
-		class="flex w-full flex-col items-start justify-between text-lg font-semibold text-white md:flex-row md:text-2xl"
+		class="flex w-full flex-col items-start justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 	>
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
@@ -101,7 +101,7 @@
 	</div>
 
 	<div
-		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white md:text-2xl"
+		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white sm:text-xl"
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
 			<span class="w-1/2 text-center"
@@ -122,7 +122,7 @@
 
 	<button
 		data-testid="unlock-button"
-		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white md:text-2xl"
+		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white sm:text-xl"
 		disabled={buttonStatus !== ButtonStatus.READY || amountToRedeem === BigInt(0)}
 		on:click={() =>
 			transactionStore.handleUnlockTransaction({
