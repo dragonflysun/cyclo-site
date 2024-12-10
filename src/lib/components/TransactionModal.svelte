@@ -27,18 +27,26 @@
 				>
 					<h1 class="text-lg md:text-2xl">❌</h1>
 				</div>
-				<p class="w-full text-center whitespace-pre-wrap break-words text-lg font-semibold text-gray-900 dark:text-white" data-testid="error-status">
+				<p
+					class="w-full whitespace-pre-wrap break-words text-center text-lg font-semibold text-gray-900 dark:text-white"
+					data-testid="error-status"
+				>
 					{$transactionStore.status}
 				</p>
-				<p class="w-full text-center whitespace-pre-wrap break-words font-normal text-gray-900 dark:text-white" data-testid="error-message">
+				<p
+					class="w-full whitespace-pre-wrap break-words text-center font-normal text-gray-900 dark:text-white"
+					data-testid="error-message"
+				>
 					{$transactionStore.error}
 				</p>
 				{#if $transactionStore.error === TransactionErrorMessage.GENERIC}
-					<a class="text-center hover:underline" href="https://t.me/cyclofinance">https://t.me/cyclofinance</a>
+					<a class="text-center hover:underline" href="https://t.me/cyclofinance"
+						>https://t.me/cyclofinance</a
+					>
 				{/if}
 				{#if $transactionStore.hash}
 					<a
-						class="text-center text-sm text-primary hover:underline whitespace-pre-wrap break-words"
+						class="whitespace-pre-wrap break-words text-center text-sm text-primary hover:underline"
 						href={`https://flarescan.com/tx/${$transactionStore.hash}`}
 						data-testid="view-transaction-link">View transaction on Flarescan</a
 					>
@@ -55,14 +63,14 @@
 				</div>
 				<div class="flex flex-col gap-4 text-center">
 					<p
-						class="w-full text-center whitespace-pre-wrap break-words text-lg font-semibold text-gray-900 dark:text-white"
+						class="w-full whitespace-pre-wrap break-words text-center text-lg font-semibold text-gray-900 dark:text-white"
 						data-testid="success-status"
 					>
 						{$transactionStore.status}
 					</p>
 					{#if $transactionStore.message}
 						<p
-							class="w-full text-center whitespace-pre-wrap break-words text-sm font-normal text-gray-900 dark:text-white"
+							class="w-full whitespace-pre-wrap break-words text-center text-sm font-normal text-gray-900 dark:text-white"
 							data-testid="success-message"
 						>
 							{$transactionStore.message}
@@ -72,7 +80,7 @@
 					{#if $transactionStore.hash}
 						<a
 							target="_blank"
-							class="text-center hover:underline whitespace-pre-wrap break-words"
+							class="whitespace-pre-wrap break-words text-center hover:underline"
 							href={`https://flarescan.com/tx/${$transactionStore.hash}`}
 							data-testid="view-transaction-link">View transaction on Flarescan</a
 						>
@@ -90,7 +98,7 @@
 					<Spinner color="blue" size={10} />
 				</div>
 				<p
-					class="w-full text-center whitespace-pre-wrap break-words text-lg font-semibold text-gray-900 dark:text-white"
+					class="w-full whitespace-pre-wrap break-words text-center text-lg font-semibold text-gray-900 dark:text-white"
 					data-testid="pending-message"
 				>
 					{$transactionStore.message || $transactionStore.status}
