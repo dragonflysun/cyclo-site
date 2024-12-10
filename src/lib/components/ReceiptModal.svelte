@@ -94,6 +94,7 @@
 				on:input={handleInput}
 				data-testid="redeem-input"
 				on:setValueToMax={() => {
+					console.log('setValueToMax');
 					isMaxSelected = true;
 					amountToRedeem = maxRedeemable;
 					readableAmountToRedeem = Number(formatEther(maxRedeemable)).toString();
