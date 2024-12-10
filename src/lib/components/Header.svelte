@@ -20,7 +20,7 @@
 		>
 			<img src={logo} alt="Cyclo logo" class="h-8 cursor-pointer" />
 		</button>
-			<button
+		<button
 			class="block sm:hidden"
 			on:click={() => {
 				goto(base + '/');
@@ -30,7 +30,7 @@
 		</button>
 		{#if launched}
 			<button
-				class="text-white md:ml-4 text-xl"
+				class="text-xl text-white md:ml-4"
 				class:underline={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
 				on:click={() => {
 					goto(base + '/lock');
@@ -38,14 +38,14 @@
 			>
 		{/if}
 		<button
-		class="text-white md:ml-4 text-xl"
-		class:underline={$page.url.pathname.startsWith('/docs')}
-		on:click={() => {
-			goto(base + '/docs');
-		}}>Docs</button
+			class="text-xl text-white md:ml-4"
+			class:underline={$page.url.pathname.startsWith('/docs')}
+			on:click={() => {
+				goto(base + '/docs');
+			}}>Docs</button
 		>
 	</div>
-	<div class="flex gap-4 justify-center items-center">
+	<div class="flex items-center justify-center gap-4">
 		<SocialLinks />
 		<WalletConnect />
 	</div>

@@ -1,18 +1,17 @@
 <script>
-    import xLogo from "$lib/images/x-twitter.svg";
-    import telegramLogo from "$lib/images/telegram.svg";
-    import githubLogo from "$lib/images/github.svg";
-
+	import xLogo from '$lib/images/x-twitter.svg';
+	import telegramLogo from '$lib/images/telegram.svg';
+	import githubLogo from '$lib/images/github.svg';
 </script>
 
-<div class="flex-row gap-4 flex">
+<div class="flex flex-row gap-4">
 	<a href="https://x.com/cyclofinance" target="_blank">
-		<img src={xLogo} alt="x" class="w-6 h-6" />
+		<img src={xLogo} alt="x" class="h-6 w-6" />
 	</a>
 	<a href="https://t.me/cyclofinance" target="_blank">
-		<img src={telegramLogo} alt="telegram" class="w-6 h-6" />
+		<img src={telegramLogo} alt="telegram" class="h-6 w-6" />
 	</a>
 	<a href="https://github.com/cyclofinance" target="_blank">
-		<img src={githubLogo} alt="github" class="w-6 h-6" />
+		<img src={githubLogo} alt="github" class="h-6 w-6" />
 	</a>
 </div>
