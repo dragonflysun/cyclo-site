@@ -36,9 +36,9 @@
 	>
 {:else}
 	{#key $myReceipts}
-		<Card size="md">
+		<Card size="lg">
 			<div
-				class=" flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
+				class=" flex w-full flex-col sm:flex-row justify-between text-lg font-semibold text-white md:text-2xl"
 			>
 				<span>BALANCE</span>
 				<div class="flex flex-row gap-4">

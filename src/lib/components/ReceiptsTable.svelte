@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Button from '$lib/components/Button.svelte';
 	import {
 		Table,
 		TableBody,
@@ -7,12 +6,14 @@
 		TableHead,
 		TableHeadCell,
 		TableBodyCell,
-		Modal
+		Modal,
+		Button
 	} from 'flowbite-svelte';
 	import type { Receipt as ReceiptType } from '$lib/types';
 	import { formatEther } from 'ethers';
 
 	import ReceiptModal from '$lib/components/ReceiptModal.svelte';
+	import Card from './Card.svelte';
 
 	export let receipts: ReceiptType[];
 	let selectedReceipt: ReceiptType | null = null;
@@ -28,9 +29,9 @@
 		};
 	});
 </script>
-
+<Card size="lg">
 <Table
-	divClass="border-outset flex flex-col items-center gap-6 rounded-none border-4 border-white bg-primary p-1 md:p-4 shadow-md max-w-full"
+	divClass="w-full"
 	data-testid="receipts-table"
 >
 	<TableHead
@@ -63,6 +64,8 @@
 				</TableBodyCell>
 				<TableBodyCell class="">
 					<Button
+						class="flex items-center justify-center border-2 border-white bg-primary px-2 py-1 font-bold text-white transition-all hover:bg-blue-700 disabled:bg-neutral-600 rounded-none"
+
 						data-testid={`redeem-button-${index}`}
 						on:click={() => (selectedReceipt = receipt)}>Redeem</Button
 					>
@@ -71,6 +74,7 @@
 		{/each}
 	</TableBody>
 </Table>
+</Card>
 
 {#if selectedReceipt}
 	<Modal
