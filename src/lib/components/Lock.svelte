@@ -70,10 +70,10 @@
 	<div class="flex w-full flex-col items-center justify-center gap-10" data-testid="lock-container">
 		{#if $signerAddress}
 			<div
-				class="flex w-full md:flex-row flex-col justify-between text-lg font-semibold text-white md:text-2xl"
+				class="flex w-full flex-col justify-between text-lg font-semibold text-white md:flex-row md:text-2xl"
 			>
 				<span>sFLR BALANCE</span>
-				
+
 				<div class="flex flex-row gap-4">
 					<span data-testid="your-balance">
 						{Number(formatEther($balancesStore.sFlrBalance.toString()))}
@@ -82,9 +82,9 @@
 			</div>
 		{/if}
 
-<div
-				class="flex w-full md:flex-row flex-col justify-between text-lg font-semibold text-white md:text-2xl"
-			>
+		<div
+			class="flex w-full flex-col justify-between text-lg font-semibold text-white md:flex-row md:text-2xl"
+		>
 			<div class="flex flex-col gap-0">
 				<span>sFLR/USD PRICE</span>
 				<a
@@ -118,9 +118,10 @@
 			{/key}
 		</div>
 
-<div
-				class="flex w-full md:flex-row flex-col justify-between text-lg font-semibold text-white md:text-2xl"
-			>			<span>LOCK AMOUNT</span>
+		<div
+			class="flex w-full flex-col justify-between text-lg font-semibold text-white md:flex-row md:text-2xl"
+		>
+			<span>LOCK AMOUNT</span>
 			<div class="flex flex-col">
 				<Input
 					data-testid="lock-input"
@@ -137,7 +138,7 @@
 					unit={'sFLR'}
 				/>
 				{#if $signerAddress}
-					<p class="my-2 text-left md:text-right text-xs font-light" data-testid="your-balance">
+					<p class="my-2 text-left text-xs font-light md:text-right" data-testid="sflr-balance">
 						sFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
 					</p>
 				{:else}
@@ -156,7 +157,7 @@
 
 		<div class="flex w-full flex-col gap-2">
 			<div
-				class="flex flex-row md:flex-col w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+				class="flex w-full flex-row items-center justify-center gap-2 text-center text-lg font-semibold text-white md:flex-col md:text-2xl"
 			>
 				<span>{amountToLock}</span>
 

@@ -38,7 +38,7 @@
 	{#key $myReceipts}
 		<Card size="lg">
 			<div
-				class=" flex w-full flex-col sm:flex-row justify-between text-lg font-semibold text-white md:text-2xl"
+				class=" md:text-cl flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row"
 			>
 				<span>BALANCE</span>
 				<div class="flex flex-row gap-4">
