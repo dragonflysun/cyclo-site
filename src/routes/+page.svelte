@@ -1,5 +1,5 @@
 <script lang="ts">
-	import logo from '$lib/logo-white.svg';
+	import logo from '$lib/images/logo-white.svg';
 	import { ArrowsRepeatCountOutline, LockOpenOutline, LockOutline } from 'flowbite-svelte-icons';
 
 	let loadingDots = '.';
