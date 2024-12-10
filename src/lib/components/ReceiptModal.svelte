@@ -7,6 +7,8 @@
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { formatEther, parseEther } from 'ethers';
 	import burnDia from '$lib/images/burn-dia.svg';
+	import mobileBurnLine from '$lib/images/mobile-burn-line.svg';
+	import mobileBurnDia from '$lib/images/mobile-burn.svg';
 	import Input from './Input.svelte';
 
 	enum ButtonStatus {
@@ -109,9 +111,9 @@
 			/>
 		</div>
 	</div>
-
+	<!-- Burn diagram for desktop -->
 	<div
-		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white sm:text-xl"
+		class="hidden w-full flex-col items-center justify-center text-lg font-semibold text-white sm:flex sm:text-xl"
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
 			<span class="w-1/2 text-center"
@@ -127,6 +129,26 @@
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
 				{Number(formatEther(sFlrToReceive))} sFLR
 			</span>
+		</div>
+	</div>
+	<!-- Burn diagram for mobile -->
+	<div
+		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white sm:hidden sm:text-xl"
+	>
+		<div class="flex w-full flex-col items-center justify-center gap-1 text-right">
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
+			>
+			<img src={mobileBurnLine} alt="diagram" class="" />
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
+			>
+			<img src={mobileBurnDia} alt="diagram" class="" />
+			<div class="flex flex-row items-center gap-2 overflow-ellipsis">
+				<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
+					{Number(formatEther(sFlrToReceive))} sFLR
+				</span>
+			</div>
 		</div>
 	</div>
 
