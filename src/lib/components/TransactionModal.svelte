@@ -3,6 +3,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import transactionStore from '$lib/transactionStore';
 	import { TransactionStatus } from '$lib/transactionStore';
+	import { TransactionErrorMessage } from '$lib/types/errors';
 
 	const handleClose = () => {
 		return transactionStore.reset();
@@ -26,15 +27,26 @@
 				>
 					<h1 class="text-lg md:text-2xl">❌</h1>
 				</div>
-				<p class="text-lg font-semibold text-gray-900 dark:text-white" data-testid="error-status">
+				<p
+					class="w-full whitespace-pre-wrap break-words text-center text-lg font-semibold text-gray-900 dark:text-white"
+					data-testid="error-status"
+				>
 					{$transactionStore.status}
 				</p>
-				<p class="font-normal text-gray-900 dark:text-white" data-testid="error-message">
+				<p
+					class="w-full whitespace-pre-wrap break-words text-center font-normal text-gray-900 dark:text-white"
+					data-testid="error-message"
+				>
 					{$transactionStore.error}
 				</p>
+				{#if $transactionStore.error === TransactionErrorMessage.GENERIC}
+					<a class="text-center hover:underline" href="https://t.me/cyclofinance"
+						>https://t.me/cyclofinance</a
+					>
+				{/if}
 				{#if $transactionStore.hash}
 					<a
-						class="text-center text-sm text-primary hover:underline"
+						class="whitespace-pre-wrap break-words text-center text-sm text-primary hover:underline"
 						href={`https://flarescan.com/tx/${$transactionStore.hash}`}
 						data-testid="view-transaction-link">View transaction on Flarescan</a
 					>
@@ -49,16 +61,16 @@
 				>
 					<h1 class="text-lg md:text-2xl">✅</h1>
 				</div>
-				<div class="flex flex-col gap-4 text-left">
+				<div class="flex flex-col gap-4 text-center">
 					<p
-						class="text-lg font-semibold text-gray-900 dark:text-white"
+						class="w-full whitespace-pre-wrap break-words text-center text-lg font-semibold text-gray-900 dark:text-white"
 						data-testid="success-status"
 					>
 						{$transactionStore.status}
 					</p>
 					{#if $transactionStore.message}
 						<p
-							class="text-sm font-normal text-gray-900 dark:text-white"
+							class="w-full whitespace-pre-wrap break-words text-center text-sm font-normal text-gray-900 dark:text-white"
 							data-testid="success-message"
 						>
 							{$transactionStore.message}
@@ -68,7 +80,7 @@
 					{#if $transactionStore.hash}
 						<a
 							target="_blank"
-							class="text-center hover:underline"
+							class="whitespace-pre-wrap break-words text-center hover:underline"
 							href={`https://flarescan.com/tx/${$transactionStore.hash}`}
 							data-testid="view-transaction-link">View transaction on Flarescan</a
 						>
@@ -86,7 +98,7 @@
 					<Spinner color="blue" size={10} />
 				</div>
 				<p
-					class="text-center text-lg font-semibold text-gray-900 dark:text-white"
+					class="w-full whitespace-pre-wrap break-words text-center text-lg font-semibold text-gray-900 dark:text-white"
 					data-testid="pending-message"
 				>
 					{$transactionStore.message || $transactionStore.status}

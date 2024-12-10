@@ -11,6 +11,7 @@ import {
 } from '../generated';
 import { waitForTransactionReceipt, type Config } from '@wagmi/core';
 import { waitFor } from '@testing-library/svelte';
+import { TransactionErrorMessage } from './types/errors';
 
 const { mockWagmiConfigStore } = await vi.hoisted(() => import('./mocks/mockStores'));
 
@@ -39,8 +40,8 @@ describe('transactionStore', () => {
 	const {
 		reset,
 		checkingWalletAllowance,
-		initiateLockTransaction,
-		initiateUnlockTransaction,
+		handleLockTransaction,
+		handleUnlockTransaction,
 		awaitWalletConfirmation,
 		awaitApprovalTx,
 		awaitLockTx,
@@ -94,16 +95,16 @@ describe('transactionStore', () => {
 	});
 
 	it('should update status to ERROR', () => {
-		transactionError('Transaction failed', 'mockErrorHash');
+		transactionError(TransactionErrorMessage.GENERIC, 'mockErrorHash');
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe('Transaction failed');
+		expect(get(transactionStore).error).toBe(TransactionErrorMessage.GENERIC);
 		expect(get(transactionStore).hash).toBe('mockErrorHash');
 	});
 
 	it('should update status to ERROR without hash', () => {
-		transactionError('Transaction failed');
+		transactionError(TransactionErrorMessage.GENERIC);
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe('Transaction failed');
+		expect(get(transactionStore).error).toBe(TransactionErrorMessage.GENERIC);
 		expect(get(transactionStore).hash).toBe('');
 	});
 
@@ -119,7 +120,7 @@ describe('transactionStore', () => {
 	});
 
 	it('should reset the store to its initial state', () => {
-		initiateLockTransaction({
+		handleLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
@@ -138,13 +139,12 @@ describe('transactionStore', () => {
 		});
 	});
 
-	it('should prompt the user to approve cysFLR contract to lock SFLR if allowance is less than assets', async () => {
+	it('should prompt the user to approve cysFLR contract to lock sFLR if allowance is less than assets', async () => {
 		const mockAllowance = BigInt(500);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
-		(writeErc20Approve as Mock).mockResolvedValueOnce('mockHash');
 
-		await initiateLockTransaction({
+		handleLockTransaction({
 			signerAddress: '0x123',
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: '0x456',
@@ -153,7 +153,9 @@ describe('transactionStore', () => {
 			assets: BigInt(1000)
 		});
 
-		expect(get(transactionStore).status).toBe(TransactionStatus.PENDING_APPROVAL);
+		awaitWalletConfirmation('You need to approve the cysFLR contract to lock your SFLR...');
+
+		expect(get(transactionStore).status).toBe(TransactionStatus.PENDING_WALLET);
 	});
 
 	it('should handle successful lock transaction', async () => {
@@ -162,7 +164,7 @@ describe('transactionStore', () => {
 		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockResolvedValue('mockDepositHash');
 		(waitForTransactionReceipt as Mock).mockResolvedValue(true);
 
-		await initiateLockTransaction({
+		await handleLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
@@ -176,14 +178,13 @@ describe('transactionStore', () => {
 	});
 
 	it('should handle user rejecting spend approval', async () => {
-		const mockAllowance = BigInt(500);
-		const assets = BigInt(100);
+		const mockAllowance = BigInt(100);
+		const assets = BigInt(500);
 
 		(readErc20Allowance as Mock).mockResolvedValueOnce(mockAllowance);
 		(writeErc20Approve as Mock).mockRejectedValue(new Error('UserRejectedRequestError'));
-		(writeErc20PriceOracleReceiptVaultDeposit as Mock).mockRejectedValue('mockDepositHash');
 
-		await initiateLockTransaction({
+		await handleLockTransaction({
 			signerAddress: '0x123',
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: '0x456',
@@ -194,9 +195,7 @@ describe('transactionStore', () => {
 
 		await waitFor(() => {
 			expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-			expect(get(transactionStore).error).toBe(
-				'There was an error locking your SFLR. Please try again.'
-			);
+			expect(get(transactionStore).error).toBe(TransactionErrorMessage.USER_REJECTED_APPROVAL);
 		});
 	});
 	it('should handle user rejecting lock transaction confimation', async () => {
@@ -206,7 +205,7 @@ describe('transactionStore', () => {
 			new Error('UserRejectedRequestError')
 		);
 
-		await initiateLockTransaction({
+		await handleLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
@@ -217,9 +216,7 @@ describe('transactionStore', () => {
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe(
-			'There was an error locking your SFLR. Please try again.'
-		);
+		expect(get(transactionStore).error).toBe(TransactionErrorMessage.USER_REJECTED_LOCK);
 	});
 
 	it('should handle successful unlock transaction', async () => {
@@ -228,7 +225,7 @@ describe('transactionStore', () => {
 		(writeErc20PriceOracleReceiptVaultRedeem as Mock).mockResolvedValue('mockRedeemHash');
 		(waitForTransactionReceipt as Mock).mockResolvedValue(true);
 
-		await initiateUnlockTransaction({
+		await handleUnlockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			cysFlrAddress: mockcysFlrAddress,
@@ -251,7 +248,7 @@ describe('transactionStore', () => {
 			new Error('UserRejectedRequestError')
 		);
 
-		await initiateUnlockTransaction({
+		await handleUnlockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			cysFlrAddress: mockcysFlrAddress,
@@ -263,7 +260,7 @@ describe('transactionStore', () => {
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe('User rejected transaction');
+		expect(get(transactionStore).error).toBe(TransactionErrorMessage.USER_REJECTED_APPROVAL);
 	});
 
 	it('should handle transaction failure during lock', async () => {
@@ -274,7 +271,7 @@ describe('transactionStore', () => {
 			new Error('Transaction failed')
 		);
 
-		await initiateLockTransaction({
+		await handleLockTransaction({
 			signerAddress: mockSignerAddress,
 			config: mockWagmiConfigStore as unknown as Config,
 			sFlrAddress: mocksFlrAddress,
@@ -284,8 +281,6 @@ describe('transactionStore', () => {
 		});
 
 		expect(get(transactionStore).status).toBe(TransactionStatus.ERROR);
-		expect(get(transactionStore).error).toBe(
-			'There was an error locking your SFLR. Please try again.'
-		);
+		expect(get(transactionStore).error).toBe(TransactionErrorMessage.TIMEOUT);
 	});
 });

@@ -21,10 +21,15 @@
 	let readableAmountToRedeem: string = '0.0';
 	let amountToRedeem = BigInt(0);
 	let sFlrToReceive = BigInt(0);
+
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
+	let isMaxSelected = false;
+
 	const checkBalance = () => {
+		if (isMaxSelected) return;
+
 		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
 			readableAmountToRedeem = '0.0';
 		}
@@ -32,12 +37,15 @@
 	};
 
 	const handleInput = (event: { detail: { value: string } }) => {
+		isMaxSelected = false;
 		readableAmountToRedeem = event.detail.value;
 		checkBalance();
 	};
 
 	$: maxRedeemable =
-		$balancesStore?.cysFlrBalance < erc1155balance ? $balancesStore.cysFlrBalance : erc1155balance;
+		($balancesStore.cysFlrBalance ?? 0n) < (erc1155balance ?? 0n)
+			? ($balancesStore.cysFlrBalance ?? 0n)
+			: (erc1155balance ?? 0n);
 
 	$: if (amountToRedeem) {
 		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
@@ -87,7 +95,9 @@
 				on:input={handleInput}
 				data-testid="redeem-input"
 				on:setValueToMax={() => {
+					isMaxSelected = true;
 					amountToRedeem = maxRedeemable;
+					readableAmountToRedeem = Number(formatEther(maxRedeemable)).toString();
 				}}
 			/>
 		</div>
@@ -108,7 +118,7 @@
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(sFlrToReceive))} SFLR
+				{Number(formatEther(sFlrToReceive))} sFLR
 			</span>
 		</div>
 	</div>
@@ -118,7 +128,7 @@
 		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white md:text-2xl"
 		disabled={buttonStatus !== ButtonStatus.READY || amountToRedeem === BigInt(0)}
 		on:click={() =>
-			transactionStore.initiateUnlockTransaction({
+			transactionStore.handleUnlockTransaction({
 				signerAddress: $signerAddress,
 				config: $wagmiConfig,
 				cysFlrAddress: $cysFlrAddress,

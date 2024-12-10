@@ -26,12 +26,12 @@ vi.mock('$lib/balancesStore', async () => {
 vi.mock('$lib/transactionStore', async (importOriginal) => ({
 	default: {
 		...((await importOriginal) as object),
-		initiateLockTransaction: vi.fn().mockResolvedValue({})
+		handleLockTransaction: vi.fn().mockResolvedValue({})
 	}
 }));
 
 describe('Lock Component', () => {
-	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'initiateLockTransaction');
+	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'handleLockTransaction');
 
 	beforeEach(() => {
 		initiateLockTransactionSpy.mockClear();
@@ -43,7 +43,7 @@ describe('Lock Component', () => {
 		);
 	});
 
-	it('should render SFLR balance and price ratio correctly', async () => {
+	it('should render sFLR balance and price ratio correctly', async () => {
 		mockSignerAddressStore.mockSetSubscribeValue('0x1234567890123456789012345678901234567890');
 		render(Lock);
 		await waitFor(() => {
@@ -70,7 +70,7 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it('should call initiateLockTransaction when lock button is clicked', async () => {
+	it('should call handleLockTransaction when lock button is clicked', async () => {
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
@@ -84,11 +84,27 @@ describe('Lock Component', () => {
 		});
 	});
 
+<<<<<<< HEAD
 	it('should disable the lock button if SFLR balance is insufficient', async () => {
 		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready', BigInt(1));
+=======
+	it('should disable the lock button if sFLR balance is insufficient', async () => {
+		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
+		render(Lock);
+		const input = screen.getByTestId('lock-input');
+		await userEvent.type(input, '500000');
+		const lockButton = screen.getByTestId('lock-button');
+		expect(lockButton).toBeDisabled();
+		expect(lockButton).toHaveTextContent('INSUFFICIENT sFLR');
+	});
+
+	it('should disable the lock button if no value had been entered', async () => {
+		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
+>>>>>>> main
 		render(Lock);
 		const lockButton = screen.getByTestId('lock-button');
 		expect(lockButton).toBeDisabled();
+		expect(lockButton).toHaveTextContent('LOCK');
 	});
 
 	it('should show the connect message if there is no signerAddress', async () => {
@@ -99,13 +115,13 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it('should show the SFLR balance if there is a signerAddress', async () => {
+	it('should show the sFLR balance if there is a signerAddress', async () => {
 		mockSignerAddressStore.mockSetSubscribeValue('0x0000');
 		render(Lock);
 		await waitFor(() => {
 			const balance = screen.getByTestId('your-balance');
 			expect(balance).toBeInTheDocument();
-			expect(balance).toHaveTextContent('SFLR Balance: 9.876');
+			expect(balance).toHaveTextContent('sFLR Balance: 9.876');
 		});
 	});
 });
