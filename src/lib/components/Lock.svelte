@@ -66,28 +66,28 @@
 				>
 			</div>
 			{#if $balancesStore.lockPrice}
-			<div in:fade>
-			{#key $balancesStore.lockPrice}
-				<span
-					in:fade={{ duration: 700 }}
-					class="flex flex-row items-center gap-2"
-					data-testid="price-ratio"
-					>{Number(formatEther($balancesStore.lockPrice.toString()))}
+				<div in:fade>
+					{#key $balancesStore.lockPrice}
+						<span
+							in:fade={{ duration: 700 }}
+							class="flex flex-row items-center gap-2"
+							data-testid="price-ratio"
+							>{Number(formatEther($balancesStore.lockPrice.toString()))}
 
-					<svg width="20" height="20" viewBox="0 0 100 100">
-						<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
-						<circle
-							class="fill-circle"
-							cx="50"
-							cy="50"
-							r="45"
-							stroke="white"
-							stroke-width="10"
-							fill="none"
-							stroke-dasharray="282 282"
-						/>
-					</svg></span
-				>
+							<svg width="20" height="20" viewBox="0 0 100 100">
+								<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
+								<circle
+									class="fill-circle"
+									cx="50"
+									cy="50"
+									r="45"
+									stroke="white"
+									stroke-width="10"
+									fill="none"
+									stroke-dasharray="282 282"
+								/>
+							</svg></span
+						>
 					{/key}
 				</div>
 			{/if}
