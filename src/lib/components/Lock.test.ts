@@ -121,7 +121,7 @@ describe('Lock Component', () => {
 		await waitFor(() => {
 			const balance = screen.getByTestId('your-balance');
 			expect(balance).toBeInTheDocument();
-			expect(balance).toHaveTextContent('sFLR Balance: 9.876');
+			expect(balance).toHaveTextContent('9.876');
 		});
 	});
 });

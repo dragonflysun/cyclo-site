@@ -6,6 +6,8 @@
 	import { cysFlrAddress, erc1155Address, sFlrAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
+	import mintMobile from '$lib/images/mint-mobile.svg';
+	import mintMobileSquiggle from '$lib/images/mint-mobile-squiggle.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
@@ -42,28 +44,22 @@
 	<div class="flex w-full flex-col items-center justify-center gap-10" data-testid="lock-container">
 		{#if $signerAddress}
 			<div
-				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
+				class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 			>
-				<div class="flex flex-col">
-					<span>sFLR BALANCE</span>
-					<a
-						target="_blank"
-						href={'https://portal.flare.network'}
-						class="cursor-pointer text-xs font-light hover:underline">How do I get sFLR?</a
-					>
-				</div>
+				<span>sFLR BALANCE</span>
+
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.sFlrBalance}<span
-							data-testid="sflr-balance"
-							in:fade={{ duration: 700 }}>{Number(formatEther($balancesStore.sFlrBalance))}</span
-						>{/key}
-					<span>sFLR</span>
+					<span data-testid="your-balance">
+						{Number(formatEther($balancesStore.sFlrBalance.toString()))}
+					</span>
 				</div>
 			</div>
 		{/if}
 
-		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
-			<div class="flex flex-col">
+		<div
+			class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
+		>
+			<div class="flex flex-col gap-0">
 				<span>sFLR/USD PRICE</span>
 				<a
 					href={base + '/docs/why-flare'}
@@ -96,7 +92,9 @@
 			{/key}
 		</div>
 
-		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
+		<div
+			class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
+		>
 			<span>LOCK AMOUNT</span>
 			<div class="flex flex-col">
 				<Input
@@ -114,7 +112,7 @@
 					unit={'sFLR'}
 				/>
 				{#if $signerAddress}
-					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
+					<p class="my-2 text-left text-xs font-light sm:text-right" data-testid="sflr-balance">
 						sFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
 					</p>
 				{:else}
@@ -131,9 +129,10 @@
 			</div>
 		</div>
 
-		<div class="flex w-full flex-col gap-2">
+		<!-- Mint diagram for desktop -->
+		<div class="hidden w-full flex-col gap-2 sm:flex">
 			<div
-				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+				class="flex w-full flex-row items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:flex-col sm:text-xl"
 			>
 				<span>{amountToLock}</span>
 
@@ -152,7 +151,7 @@
 			</div>
 
 			<div
-				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
 			>
 				{#key priceRatio}
 					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
@@ -163,10 +162,37 @@
 			</div>
 		</div>
 
+		<!-- Mint diagram for mobile -->
+		<div class="flex w-full flex-col items-center gap-2 sm:hidden">
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+			>
+				<span>{amountToLock}</span>
+
+				<span>sFLR</span>
+			</div>
+			<img src={mintMobileSquiggle} alt="diagram" class="h-12" />
+			<div class="flex w-1/4 flex-col items-center justify-center text-center text-white">
+				<img src={ftso} alt="ftso" class="" />
+				{Number(formatEther(priceRatio.toString()))}
+			</div>
+			<img src={mintMobile} alt="diagram" class="h-60" />
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+			>
+				{#key priceRatio}
+					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr-mobile"
+						>{+amountToLock * Number(formatEther(priceRatio.toString()))}</span
+					>
+				{/key}
+				<span>cysFLR</span>
+			</div>
+		</div>
+
 		{#if $signerAddress}
 			<Button
 				disabled={insufficientFunds || !assets}
-				customClass="md:text-2xl text-lg w-full bg-white text-primary"
+				customClass="sm:text-xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
 				on:click={() =>
 					transactionStore.handleLockTransaction({
