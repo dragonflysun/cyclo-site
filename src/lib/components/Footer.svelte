@@ -1,71 +1,55 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { formatEther, parseUnits } from 'ethers';
+	import { formatEther, formatUnits } from 'ethers';
 	import balancesStore from '$lib/balancesStore';
-	import {
-		readErc20TotalSupply,
-		simulateQuoterQuoteExactInputSingle,
-		simulateQuoterQuoteExactOutput,
-		writeQuoterQuoteExactInputSingle,
-		writeQuoterQuoteExactOutput
-	} from '../../generated';
-	import { onMount } from 'svelte';
-	import { cysFlrAddress, quoterAddress } from '$lib/stores';
-	import { wagmiConfig } from 'svelte-wagmi';
 	import { formatNumberWithAbbreviations } from '$lib/methods';
-	import { parseEther } from 'ethers';
-	import { encodePacked } from 'viem';
 
-	let cysFlrSupply: bigint | null = null;
-	let cysFlrUsdPrice: bigint | null = null;
-
-	const getcysFLRSupply = async () => {
-		const data = await readErc20TotalSupply($wagmiConfig, {
-			address: $cysFlrAddress
-		});
-		return (cysFlrSupply = data);
-	};
-
-	const getcysFLRUsdPrice = async () => {
-		const FLARE_USDCE = '0xFbDa5F676cB37624f28265A144A48B0d6e87d3b6' as const;
-		const FEE_0_3_PERCENT = 3000;
-
-		const data = await simulateQuoterQuoteExactInputSingle($wagmiConfig, {
-			address: $quoterAddress,
-			args: [
-				{
-					tokenIn: $cysFlrAddress,
-					tokenOut: FLARE_USDCE,
-					amountIn: parseEther('1.0'), // 1 cysFLR (18 decimals)
-					fee: FEE_0_3_PERCENT,
-					sqrtPriceLimitX96: 0n
-				}
-			]
-		});
-		console.log('DATA!', data);
-		return (cysFlrUsdPrice = data);
-	};
-
-	onMount(() => {
-		getcysFLRUsdPrice();
-		getcysFLRSupply();
-	});
-
-	$: readablecysFLRSupply = cysFlrSupply
-		? formatNumberWithAbbreviations(+formatEther(cysFlrSupply))
+	$: readablecysFLRSupply = $balancesStore.cysFlrSupply
+		? formatNumberWithAbbreviations(+formatEther($balancesStore.cysFlrSupply))
 		: '';
 </script>
 
-<footer class="flex h-16 flex-col justify-center bg-[#1C02B8] px-2 text-white">
-	<button on:click={getcysFLRUsdPrice}>Get cysFLR USD Price</button>
-	{#if $balancesStore.lockPrice}
-		<div class="flex gap-2" in:fade data-testId="cysFlr-supply">
-			Current Lock Price (USD/sFLR) <span>{formatEther($balancesStore.lockPrice)}</span>
-		</div>
-	{/if}
-	{#if readablecysFLRSupply}
-		<div class="flex gap-2" in:fade data-testId="cysFlr-supply">
-			Total cysFLR supply <span>{readablecysFLRSupply}</span>
-		</div>
-	{/if}
+<footer
+	class="flex w-full flex-col justify-center bg-[#1C02B8] px-2 text-sm text-white sm:px-6 sm:text-base"
+>
+	<div class="flex w-full max-w-2xl flex-col justify-between gap-4 self-center sm:gap-0">
+		{#if $balancesStore.lockPrice}
+			<div
+				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+				in:fade
+				data-testId="lock-price"
+			>
+				<span>Current Lock Price (USD/sFLR)</span>
+				<span>{formatEther($balancesStore.lockPrice)}</span>
+			</div>
+		{/if}
+		{#if $balancesStore.cysFlrUsdPrice}
+			<div
+				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+				in:fade
+				data-testId="cysFlr-price"
+			>
+				<span>Current cysFLR Price</span>
+				<span>$ {formatUnits($balancesStore.cysFlrUsdPrice, 6)}</span>
+			</div>
+		{/if}
+		{#if readablecysFLRSupply}
+			<div
+				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+				in:fade
+				data-testId="cysFlr-supply"
+			>
+				<span>Total cysFLR supply</span> <span>{readablecysFLRSupply}</span>
+			</div>
+		{/if}
+		{#if $balancesStore.TVL}
+			<div
+				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+				in:fade
+				data-testId="TVL"
+			>
+				<span>Total TVL</span> <span>$ {formatUnits($balancesStore.TVL, 18)}</span>
+			</div>
+		{/if}
+	</div>
 </footer>

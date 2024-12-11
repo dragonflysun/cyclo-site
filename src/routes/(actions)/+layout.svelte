@@ -14,7 +14,7 @@
 	}
 </script>
 
-<div class="flex flex-grow flex-col items-center gap-6 bg-[#1C02B8] px-6 py-6 md:px-0">
+<div class="flex flex-grow flex-col items-center gap-6 bg-[#1C02B8] p-2 sm:p-6">
 	<div class="flex h-fit max-w-prose gap-6">
 		<Button
 			class=" w-32"
