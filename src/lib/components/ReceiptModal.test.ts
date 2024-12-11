@@ -6,7 +6,6 @@ import transactionStore from '$lib/transactionStore';
 import { formatEther, parseEther } from 'ethers';
 import { mockReceipt } from '$lib/mocks/mockReceipt';
 import userEvent from '@testing-library/user-event';
-import { forma } from '@wagmi/core/chains';
 
 const { mockBalancesStore, mockErc1155AddressStore, mockCysFlrAddressStore, mockSflrAddressStore } =
 	await vi.hoisted(() => import('$lib/mocks/mockStores'));
