@@ -166,7 +166,7 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span in:fade={{ duration: 700 }} class="text-sm" data-testid="calculated-cysflr-usd"
-						>USD Value: {(
+						>Current market value ~$ {(
 							+amountToLock * Number(formatUnits($balancesStore.cysFlrUsdPrice.toString(), 6))
 						).toFixed(2)}</span
 					>

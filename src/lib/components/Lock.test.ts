@@ -166,7 +166,7 @@ describe('Lock Component', () => {
 
 		await waitFor(() => {
 			const usdValueElement = screen.getByTestId('calculated-cysflr-usd');
-			expect(usdValueElement).toHaveTextContent('USD Value: 0.10');
+			expect(usdValueElement).toHaveTextContent('Current market value ~$ 0.10');
 		});
 	});
 });
