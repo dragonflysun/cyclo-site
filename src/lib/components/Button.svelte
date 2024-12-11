@@ -6,7 +6,7 @@
 
 <style lang="postcss">
 	button {
-		@apply flex items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 font-bold text-white transition-all hover:bg-blue-700 disabled:bg-neutral-600;
+		@apply flex items-center justify-center gap-2 border-4 border-white bg-primary px-2 py-1 font-bold text-white transition-all hover:bg-blue-700 disabled:bg-neutral-600 md:px-4 md:py-2;
 	}
 
 	.outset {
