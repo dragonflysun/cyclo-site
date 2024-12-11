@@ -190,7 +190,6 @@ describe('ReceiptModal Component', () => {
 	});
 
 	it('should set cysFlrBalance when max button is clicked and receipt balance is greater than cysFlrBalance', async () => {
-
 		const mockCysFlrBalance = parseEther('0.0001'); // 1 cysFLR
 		mockBalancesStore.mockSetSubscribeValue(
 			mockCysFlrBalance,
@@ -213,7 +212,7 @@ describe('ReceiptModal Component', () => {
 		// Check that the display value is correct
 		await waitFor(() => {
 			const input = screen.getByTestId('redeem-input');
-			expect(input).toHaveValue(formatEther(mockCysFlrBalance))
+			expect(input).toHaveValue(formatEther(mockCysFlrBalance));
 		});
 
 		// Click unlock button
