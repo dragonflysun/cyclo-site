@@ -100,7 +100,7 @@
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
 			<Input
-				value={readableAmountToRedeem}
+				bind:amount={readableAmountToRedeem}
 				on:input={handleInput}
 				data-testid="redeem-input"
 				on:setValueToMax={() => {
