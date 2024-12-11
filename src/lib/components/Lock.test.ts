@@ -147,7 +147,6 @@ describe('Lock Component', () => {
 	});
 
 	it('should display correct USD value', async () => {
-		// Set up balances store with known values
 		mockBalancesStore.mockSetSubscribeValue(
 			BigInt('1000000000000000000'), // sFlrBalance (1 sFLR)
 			BigInt('1000000000000000000'), // cysFlrBalance (1 cysFLR)
