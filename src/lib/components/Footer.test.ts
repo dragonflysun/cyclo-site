@@ -21,7 +21,7 @@ describe('Footer.svelte', () => {
 			BigInt(1e18),
 			BigInt(1e18),
 			BigInt(1e18), // cysFlrSupply
-			BigInt(5000000000000000000)  // TVL
+			BigInt(5000000000000000000) // TVL
 		);
 	});
 
@@ -52,7 +52,7 @@ describe('Footer.svelte', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0), // cysFlrSupply
-			BigInt(0)  // TVL
+			BigInt(0) // TVL
 		);
 
 		render(Footer);

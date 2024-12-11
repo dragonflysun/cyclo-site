@@ -34,22 +34,22 @@
 			</div>
 		{/if}
 		{#if $balancesStore.TVL}
-		<div
-		class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-		in:fade
-		data-testId="TVL"
-		>
-		<span>Total Locked Value</span> <span>$ {formatUnits($balancesStore.TVL, 18)}</span>
-	</div>
-	{/if}
-	{#if readablecysFLRSupply}
-		<div
-			class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-			in:fade
-			data-testId="cysFlr-supply"
-		>
-			<span>Total cysFLR supply</span> <span>{readablecysFLRSupply}</span>
-		</div>
-	{/if}
+			<div
+				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+				in:fade
+				data-testId="TVL"
+			>
+				<span>Total Locked Value</span> <span>$ {formatUnits($balancesStore.TVL, 18)}</span>
+			</div>
+		{/if}
+		{#if readablecysFLRSupply}
+			<div
+				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+				in:fade
+				data-testId="cysFlr-supply"
+			>
+				<span>Total cysFLR supply</span> <span>{readablecysFLRSupply}</span>
+			</div>
+		{/if}
 	</div>
 </footer>

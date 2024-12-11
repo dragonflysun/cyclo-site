@@ -8,15 +8,10 @@
 	import { PUBLIC_LAUNCHED } from '$env/static/public';
 	import { flare } from '@wagmi/core/chains';
 	import Footer from '$lib/components/Footer.svelte';
-	import {
-		cusdxAddress,
-		cysFlrAddress,
-		quoterAddress,
-		sFlrAddress
-	} from '$lib/stores';
+	import { cusdxAddress, cysFlrAddress, quoterAddress, sFlrAddress } from '$lib/stores';
 	import balancesStore from '$lib/balancesStore';
 	import { onDestroy } from 'svelte';
-	
+
 	let intervalId: ReturnType<typeof setInterval>;
 	const initWallet = async () => {
 		const erckit = defaultConfig({
@@ -28,7 +23,6 @@
 		});
 		await erckit.init();
 		startGettingPricesAndBalances();
-
 	};
 	const getPricesAndBalances = () => {
 		balancesStore.refreshPrices(
@@ -48,7 +42,7 @@
 	}
 
 	$: if ($signerAddress) {
-		balancesStore.refreshBalances($wagmiConfig, $sFlrAddress, $cysFlrAddress, $signerAddress)
+		balancesStore.refreshBalances($wagmiConfig, $sFlrAddress, $cysFlrAddress, $signerAddress);
 	}
 
 	const startGettingPricesAndBalances = () => {

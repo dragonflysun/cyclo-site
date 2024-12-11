@@ -54,7 +54,16 @@ describe('ReceiptModal Component', () => {
 	});
 
 	it('should disable the unlock button when the redeem amount is greater than balance', async () => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready', BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0));
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
 
@@ -68,7 +77,16 @@ describe('ReceiptModal Component', () => {
 	});
 
 	it('should display "INSUFFICIENT cysFLR" if cysFLR balance is insufficient', async () => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready', BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0));
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
 
@@ -126,7 +144,16 @@ describe('ReceiptModal Component', () => {
 
 	it('should set exact receipt balance when max button is clicked and receipt balance is less than cysFlrBalance', async () => {
 		const mockCysFlrBalance = BigInt('1000000000000000000'); // 1 cysFLR
-		mockBalancesStore.mockSetSubscribeValue(mockCysFlrBalance, BigInt(1), 'Ready', BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0));
+		mockBalancesStore.mockSetSubscribeValue(
+			mockCysFlrBalance,
+			BigInt(1),
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
 
@@ -154,7 +181,16 @@ describe('ReceiptModal Component', () => {
 
 	it('should set cysFlrBalance when max button is clicked and receipt balance is greater than cysFlrBalance', async () => {
 		const mockCysFlrBalance = BigInt('100000000000'); // 1 cysFLR
-		mockBalancesStore.mockSetSubscribeValue(mockCysFlrBalance, BigInt(1), 'Ready', BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0));
+		mockBalancesStore.mockSetSubscribeValue(
+			mockCysFlrBalance,
+			BigInt(1),
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
 

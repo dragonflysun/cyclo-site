@@ -1,7 +1,12 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { get } from 'svelte/store';
 import cysFlrBalanceStore from './balancesStore';
-import { readErc20BalanceOf, simulateQuoterQuoteExactOutputSingle, simulateErc20PriceOracleReceiptVaultPreviewDeposit, readErc20TotalSupply } from '../generated';
+import {
+	readErc20BalanceOf,
+	simulateQuoterQuoteExactOutputSingle,
+	simulateErc20PriceOracleReceiptVaultPreviewDeposit,
+	readErc20TotalSupply
+} from '../generated';
 import balancesStore from './balancesStore';
 import type { Config } from '@wagmi/core';
 import { waitFor } from '@testing-library/svelte';
@@ -75,8 +80,10 @@ describe('cysFlrBalanceStore', () => {
 	});
 
 	it('should refresh prices correctly', async () => {
-		const mockCysFlrUsdPriceReturn = {result: [BigInt(2000)]};
-		(simulateErc20PriceOracleReceiptVaultPreviewDeposit as Mock).mockResolvedValue({result: BigInt(1000)});
+		const mockCysFlrUsdPriceReturn = { result: [BigInt(2000)] };
+		(simulateErc20PriceOracleReceiptVaultPreviewDeposit as Mock).mockResolvedValue({
+			result: BigInt(1000)
+		});
 		(simulateQuoterQuoteExactOutputSingle as Mock).mockResolvedValue(mockCysFlrUsdPriceReturn);
 		(readErc20BalanceOf as Mock).mockResolvedValue(BigInt(3e18));
 		(readErc20TotalSupply as Mock).mockResolvedValue(BigInt(1000));
@@ -95,8 +102,6 @@ describe('cysFlrBalanceStore', () => {
 		await waitFor(() => expect(storeValue.TVL).toBe(BigInt(3000n)));
 		expect(storeValue.status).toBe('Ready');
 	});
-
-
 
 	it('should reset the store to its initial state', () => {
 		const mockWFlrBalance = BigInt(1000);

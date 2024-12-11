@@ -95,7 +95,15 @@ describe('Lock Component', () => {
 	});
 
 	it('should disable the lock button if SFLR balance is insufficient', async () => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready', BigInt(1), BigInt(0), BigInt(0), BigInt(0));
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(1),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 		render(Lock);
 		const input = screen.getByTestId('lock-input');
 		await userEvent.type(input, '500000');
@@ -105,7 +113,15 @@ describe('Lock Component', () => {
 	});
 
 	it('should disable the lock button if no value had been entered', async () => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready', BigInt(1), BigInt(0), BigInt(0), BigInt(0));
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(1),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 		render(Lock);
 		const lockButton = screen.getByTestId('lock-button');
 		expect(lockButton).toBeDisabled();

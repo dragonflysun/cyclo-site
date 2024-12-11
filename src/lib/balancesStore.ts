@@ -38,7 +38,7 @@ const getcysFLRUsdPrice = async (
 			}
 		]
 	});
-	return data.result[0] || 0n
+	return data.result[0] || 0n;
 };
 
 const getLockPrice = async (config: Config, cysFlrAddress: Hex) => {
@@ -88,10 +88,10 @@ const balancesStore = () => {
 			getcysFLRSupply(config, cysFlrAddress),
 			getsFLRBalanceLockedInCysFlr(config, cysFlrAddress, sFlrAddress)
 		]);
-		console.log(sFlrBalanceLockedInCysFlr, 'sFlrBalanceLockedInCysFlr')
-		console.log(lockPrice, 'lockPrice')
+		console.log(sFlrBalanceLockedInCysFlr, 'sFlrBalanceLockedInCysFlr');
+		console.log(lockPrice, 'lockPrice');
 		const TVL = (sFlrBalanceLockedInCysFlr * lockPrice) / BigInt(1e18);
-		console.log(TVL, 'TVL')
+		console.log(TVL, 'TVL');
 		update((state) => ({
 			...state,
 			status: 'Ready',
