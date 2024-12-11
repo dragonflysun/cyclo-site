@@ -33,13 +33,18 @@
 				<span>$ {formatUnits($balancesStore.cysFlrUsdPrice, 6)}</span>
 			</div>
 		{/if}
-		{#if $balancesStore.TVL}
+		{#if $balancesStore.TVLUsd}
 			<div
 				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
 				in:fade
 				data-testId="TVL"
 			>
-				<span>Total Locked Value</span> <span>$ {formatUnits($balancesStore.TVL, 18)}</span>
+				<span>Total Locked Value</span>
+				<span
+					>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
+						formatUnits($balancesStore.TVLUsd, 18)
+					).toFixed(2)}</span
+				>
 			</div>
 		{/if}
 		{#if readablecysFLRSupply}

@@ -17,7 +17,8 @@ const initialState = {
 	cysFlrUsdPrice: BigInt(0),
 	sFlrUsdPrice: BigInt(0),
 	cysFlrSupply: BigInt(0),
-	TVL: BigInt(0)
+	TVLsFlr: BigInt(0),
+	TVLUsd: BigInt(0)
 };
 
 const getcysFLRUsdPrice = async (
@@ -90,15 +91,16 @@ const balancesStore = () => {
 		]);
 		console.log(sFlrBalanceLockedInCysFlr, 'sFlrBalanceLockedInCysFlr');
 		console.log(lockPrice, 'lockPrice');
-		const TVL = (sFlrBalanceLockedInCysFlr * lockPrice) / BigInt(1e18);
-		console.log(TVL, 'TVL');
+		const TVLUsd = (sFlrBalanceLockedInCysFlr * lockPrice) / BigInt(1e18);
+		const TVLsFlr = sFlrBalanceLockedInCysFlr;
 		update((state) => ({
 			...state,
 			status: 'Ready',
 			cysFlrUsdPrice,
 			lockPrice,
 			cysFlrSupply,
-			TVL
+			TVLsFlr,
+			TVLUsd
 		}));
 	};
 

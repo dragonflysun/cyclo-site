@@ -43,7 +43,8 @@ describe('cysFlrBalanceStore', () => {
 			cysFlrUsdPrice: BigInt(0),
 			sFlrUsdPrice: BigInt(0),
 			cysFlrSupply: BigInt(0),
-			TVL: BigInt(0)
+			TVLsFlr: BigInt(0),
+			TVLUsd: BigInt(0)
 		});
 	});
 
@@ -99,7 +100,7 @@ describe('cysFlrBalanceStore', () => {
 		const storeValue = get(cysFlrBalanceStore);
 		expect(storeValue.cysFlrUsdPrice).toBe(mockCysFlrUsdPriceReturn.result[0]);
 		expect(storeValue.cysFlrSupply).toBe(BigInt(1000));
-		await waitFor(() => expect(storeValue.TVL).toBe(BigInt(3000n)));
+		await waitFor(() => expect(storeValue.TVLUsd).toBe(BigInt(3000n)));
 		expect(storeValue.status).toBe('Ready');
 	});
 
@@ -123,7 +124,8 @@ describe('cysFlrBalanceStore', () => {
 			cysFlrUsdPrice: BigInt(0),
 			sFlrUsdPrice: BigInt(0),
 			cysFlrSupply: BigInt(0),
-			TVL: BigInt(0)
+			TVLsFlr: BigInt(0),
+			TVLUsd: BigInt(0)
 		});
 	});
 });

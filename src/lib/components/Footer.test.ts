@@ -20,14 +20,15 @@ vi.mock('$lib/balancesStore', async () => {
 describe('Footer.svelte', () => {
 	beforeEach(() => {
 		mockBalancesStore.mockSetSubscribeValue(
-			BigInt(100),
+			BigInt(100), //
 			BigInt(100),
 			'Ready',
 			BigInt(1e18),
 			BigInt(1e18),
 			BigInt(1e18),
 			BigInt(1e18), // cysFlrSupply
-			BigInt(3000) // TVL
+			BigInt(3000),
+			BigInt(3000) // TVLsFlr
 		);
 	});
 
@@ -44,7 +45,7 @@ describe('Footer.svelte', () => {
 
 		await waitFor(() => {
 			expect(screen.getByTestId('TVL')).toBeInTheDocument();
-			expect(screen.getByText('$ 3000')).toBeInTheDocument();
+			expect(screen.getByText('3000 sFLR / $ 3000.00')).toBeInTheDocument();
 		});
 	});
 
