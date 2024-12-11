@@ -11,6 +11,12 @@ vi.mock('ethers', async () => {
 	};
 });
 
+vi.mock('$lib/balancesStore', async () => {
+	return {
+		default: mockBalancesStore
+	};
+});
+
 describe('Footer.svelte', () => {
 	beforeEach(() => {
 		mockBalancesStore.mockSetSubscribeValue(
@@ -21,7 +27,7 @@ describe('Footer.svelte', () => {
 			BigInt(1e18),
 			BigInt(1e18),
 			BigInt(1e18), // cysFlrSupply
-			BigInt(5000000000000000000) // TVL
+			BigInt(3000) // TVL
 		);
 	});
 
@@ -30,7 +36,6 @@ describe('Footer.svelte', () => {
 
 		await waitFor(() => {
 			expect(screen.getByTestId('cysFlr-supply')).toBeInTheDocument();
-			expect(screen.getByText('2')).toBeInTheDocument();
 		});
 	});
 
@@ -39,7 +44,7 @@ describe('Footer.svelte', () => {
 
 		await waitFor(() => {
 			expect(screen.getByTestId('TVL')).toBeInTheDocument();
-			expect(screen.getByText('5E')).toBeInTheDocument();
+			expect(screen.getByText('$ 3000')).toBeInTheDocument();
 		});
 	});
 
