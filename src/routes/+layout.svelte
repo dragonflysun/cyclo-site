@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import { chainId, defaultConfig, signerAddress, wagmiConfig } from 'svelte-wagmi';
+	import { defaultConfig, signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { injected, walletConnect } from '@wagmi/connectors';
 	import Header from '$lib/components/Header.svelte';
 	import { PUBLIC_WALLETCONNECT_ID } from '$env/static/public';
