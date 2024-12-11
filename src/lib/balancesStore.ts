@@ -89,8 +89,6 @@ const balancesStore = () => {
 			getcysFLRSupply(config, cysFlrAddress),
 			getsFLRBalanceLockedInCysFlr(config, cysFlrAddress, sFlrAddress)
 		]);
-		console.log(sFlrBalanceLockedInCysFlr, 'sFlrBalanceLockedInCysFlr');
-		console.log(lockPrice, 'lockPrice');
 		const TVLUsd = (sFlrBalanceLockedInCysFlr * lockPrice) / BigInt(1e18);
 		const TVLsFlr = sFlrBalanceLockedInCysFlr;
 		update((state) => ({

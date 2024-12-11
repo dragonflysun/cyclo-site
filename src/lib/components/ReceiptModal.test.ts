@@ -3,9 +3,10 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/svelte';
 import ReceiptModal from './ReceiptModal.svelte';
 import transactionStore from '$lib/transactionStore';
 
-import { formatEther } from 'ethers';
+import { formatEther, parseEther } from 'ethers';
 import { mockReceipt } from '$lib/mocks/mockReceipt';
 import userEvent from '@testing-library/user-event';
+import { forma } from '@wagmi/core/chains';
 
 const { mockBalancesStore, mockErc1155AddressStore, mockCysFlrAddressStore, mockSflrAddressStore } =
 	await vi.hoisted(() => import('$lib/mocks/mockStores'));
@@ -62,6 +63,7 @@ describe('ReceiptModal Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
+			BigInt(0),
 			BigInt(0)
 		);
 
@@ -81,6 +83,7 @@ describe('ReceiptModal Component', () => {
 			BigInt(0),
 			BigInt(0),
 			'Ready',
+			BigInt(0),
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
@@ -106,6 +109,7 @@ describe('ReceiptModal Component', () => {
 			BigInt(1000000000000000000),
 			BigInt(1000000000000000000),
 			'Ready',
+			BigInt(0),
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
@@ -152,6 +156,7 @@ describe('ReceiptModal Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
+			BigInt(0),
 			BigInt(0)
 		);
 
@@ -186,11 +191,12 @@ describe('ReceiptModal Component', () => {
 
 	it('should set cysFlrBalance when max button is clicked and receipt balance is greater than cysFlrBalance', async () => {
 
-		const mockCysFlrBalance = BigInt('100000000000'); // 1 cysFLR
+		const mockCysFlrBalance = parseEther('0.0001'); // 1 cysFLR
 		mockBalancesStore.mockSetSubscribeValue(
 			mockCysFlrBalance,
 			BigInt(1),
 			'Ready',
+			BigInt(0),
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
@@ -207,7 +213,7 @@ describe('ReceiptModal Component', () => {
 		// Check that the display value is correct
 		await waitFor(() => {
 			const input = screen.getByTestId('redeem-input');
-			expect(input).toHaveValue(formatEther(mockCysFlrBalance));
+			expect(input).toHaveValue(formatEther(mockCysFlrBalance))
 		});
 
 		// Click unlock button

@@ -88,7 +88,6 @@
 		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 	>
 		<span>LOCK-UP PRICE</span>
-
 		<div class="flex flex-row gap-4">
 			<span data-testid="lock-up-price">{'$'}{Number(formatEther(tokenId))}</span>
 		</div>

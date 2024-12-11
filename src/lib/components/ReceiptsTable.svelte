@@ -39,7 +39,7 @@
 			<TableHeadCell>Locked sFLR Price</TableHeadCell>
 			<TableHeadCell>Number Held</TableHeadCell>
 			<TableHeadCell class="hidden md:block">Locked sFLR/Receipt</TableHeadCell>
-			<TableHeadCell>Locked Locked sFLR</TableHeadCell>
+			<TableHeadCell>Locked sFLR</TableHeadCell>
 			<TableHeadCell></TableHeadCell>
 		</TableHead>
 		<TableBody
