@@ -27,20 +27,22 @@
 	};
 
 	const getcysFLRUsdPrice = async () => {
-		const FLARE_USDCE = "0xFbDa5F676cB37624f28265A144A48B0d6e87d3b6" as const;
+		const FLARE_USDCE = '0xFbDa5F676cB37624f28265A144A48B0d6e87d3b6' as const;
 		const FEE_0_3_PERCENT = 3000;
 
 		const data = await simulateQuoterQuoteExactInputSingle($wagmiConfig, {
 			address: $quoterAddress,
-			args: [{
-				tokenIn: $cysFlrAddress,
-				tokenOut: FLARE_USDCE,
-				amountIn: parseEther("1.0"),  // 1 cysFLR (18 decimals)
-				fee: FEE_0_3_PERCENT,
-				sqrtPriceLimitX96: 0n
-			}]
+			args: [
+				{
+					tokenIn: $cysFlrAddress,
+					tokenOut: FLARE_USDCE,
+					amountIn: parseEther('1.0'), // 1 cysFLR (18 decimals)
+					fee: FEE_0_3_PERCENT,
+					sqrtPriceLimitX96: 0n
+				}
+			]
 		});
-		console.log("DATA!", data);
+		console.log('DATA!', data);
 		return (cysFlrUsdPrice = data);
 	};
 
