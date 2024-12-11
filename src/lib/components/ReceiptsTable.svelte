@@ -39,7 +39,7 @@
 			<TableHeadCell>Locked sFLR Price</TableHeadCell>
 			<TableHeadCell>Number Held</TableHeadCell>
 			<TableHeadCell class="hidden md:block">Locked sFLR/Receipt</TableHeadCell>
-			<TableHeadCell>Locked Locked sFLR</TableHeadCell>
+			<TableHeadCell>Locked sFLR</TableHeadCell>
 			<TableHeadCell></TableHeadCell>
 		</TableHead>
 		<TableBody
@@ -48,7 +48,7 @@
 			{#each mappedReceipts as receipt, index}
 				<TableBodyRow class="bg-opacity-0 " data-testid={`receipt-row-${index}`}>
 					<TableBodyCell data-testid={`locked-price-${index}`}>
-						{Number(formatEther(receipt.tokenId)).toFixed(5)}
+						$ {Number(formatEther(receipt.tokenId)).toFixed(5)}
 					</TableBodyCell>
 					<TableBodyCell data-testid={`number-held-${index}`}>
 						{Number(formatEther(receipt.balance)).toFixed(5)}

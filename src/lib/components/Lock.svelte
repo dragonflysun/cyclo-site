@@ -10,23 +10,13 @@
 	import mintMobileSquiggle from '$lib/images/mint-mobile-squiggle.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
-	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
-	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { formatEther, parseEther } from 'ethers';
-	import { ZeroAddress } from 'ethers';
+	import { formatEther, formatUnits, parseEther } from 'ethers';
 
 	export let amountToLock = '0.0';
 
-	$: priceRatio = BigInt(0);
 	$: assets = BigInt(0);
-
-	let intervalId: ReturnType<typeof setInterval>;
-
-	onMount(() => {
-		startGettingPriceRatio();
-	});
 
 	$: if ($signerAddress) {
 		checkBalance();
@@ -45,28 +35,6 @@
 			}
 		}
 	};
-
-	const getPriceRatio = async () => {
-		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cysFlrAddress,
-			args: [BigInt(1e18), 0n],
-			account: ZeroAddress as `0x${string}`
-		});
-		priceRatio = result;
-	};
-
-	const startGettingPriceRatio = async () => {
-		intervalId = setInterval(getPriceRatio, 5000);
-		getPriceRatio();
-	};
-
-	function stopGettingPriceRatio() {
-		clearInterval(intervalId);
-	}
-
-	onDestroy(() => {
-		stopGettingPriceRatio();
-	});
 </script>
 
 <Card size="lg">
@@ -97,28 +65,32 @@
 					data-testid="price-ratio-link">How does Cyclo use the FTSO?</a
 				>
 			</div>
-			{#key priceRatio}
-				<span
-					in:fade={{ duration: 700 }}
-					class="flex flex-row items-center gap-2"
-					data-testid="price-ratio"
-					>{Number(formatEther(priceRatio.toString()))}
+			{#if $balancesStore.lockPrice}
+				<div in:fade>
+					{#key $balancesStore.lockPrice}
+						<span
+							in:fade={{ duration: 700 }}
+							class="flex flex-row items-center gap-2"
+							data-testid="price-ratio"
+							>{Number(formatEther($balancesStore.lockPrice.toString()))}
 
-					<svg width="20" height="20" viewBox="0 0 100 100">
-						<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
-						<circle
-							class="fill-circle"
-							cx="50"
-							cy="50"
-							r="45"
-							stroke="white"
-							stroke-width="10"
-							fill="none"
-							stroke-dasharray="282 282"
-						/>
-					</svg></span
-				>
-			{/key}
+							<svg width="20" height="20" viewBox="0 0 100 100">
+								<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
+								<circle
+									class="fill-circle"
+									cx="50"
+									cy="50"
+									r="45"
+									stroke="white"
+									stroke-width="10"
+									fill="none"
+									stroke-dasharray="282 282"
+								/>
+							</svg></span
+						>
+					{/key}
+				</div>
+			{/if}
 		</div>
 
 		<div
@@ -173,7 +145,7 @@
 					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white"
 				>
 					<img src={ftso} alt="ftso" class="w-1/2" />
-					{Number(formatEther(priceRatio.toString()))}
+					{Number(formatEther($balancesStore.lockPrice.toString()))}
 				</div>
 				<img src={mintDia} alt="diagram" class="w-1/2" />
 				<div class="w-1/4"></div>
@@ -182,12 +154,23 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
 			>
-				{#key priceRatio}
+				{#key $balancesStore.lockPrice}
 					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
-						>{+amountToLock * Number(formatEther(priceRatio.toString()))}</span
+						>{+amountToLock * Number(formatEther($balancesStore.lockPrice.toString()))}</span
 					>
 				{/key}
 				<span>cysFLR</span>
+			</div>
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
+			>
+				{#key $balancesStore.lockPrice}
+					<span in:fade={{ duration: 700 }} class="text-sm" data-testid="calculated-cysflr-usd"
+						>Current market value ~$ {(
+							+amountToLock * Number(formatUnits($balancesStore.cysFlrUsdPrice.toString(), 6))
+						).toFixed(2)}</span
+					>
+				{/key}
 			</div>
 		</div>
 
@@ -203,15 +186,15 @@
 			<img src={mintMobileSquiggle} alt="diagram" class="h-12" />
 			<div class="flex w-1/4 flex-col items-center justify-center text-center text-white">
 				<img src={ftso} alt="ftso" class="" />
-				{Number(formatEther(priceRatio.toString()))}
+				{Number(formatEther($balancesStore.lockPrice.toString()))}
 			</div>
 			<img src={mintMobile} alt="diagram" class="h-60" />
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				{#key priceRatio}
+				{#key $balancesStore.lockPrice}
 					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr-mobile"
-						>{+amountToLock * Number(formatEther(priceRatio.toString()))}</span
+						>{+amountToLock * Number(formatEther($balancesStore.lockPrice.toString()))}</span
 					>
 				{/key}
 				<span>cysFLR</span>

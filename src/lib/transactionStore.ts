@@ -253,7 +253,6 @@ const transactionStore = () => {
 					args: [cysFlrAddress, assets]
 				});
 			} catch {
-				console.log('writeApprovecysFlrSpend error');
 				return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
 			}
 
