@@ -145,4 +145,29 @@ describe('Lock Component', () => {
 			expect(balance).toHaveTextContent('9.876');
 		});
 	});
+
+	it('should display correct USD value', async () => {
+		// Set up balances store with known values
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt('1000000000000000000'), // sFlrBalance (1 sFLR)
+			BigInt('1000000000000000000'), // cysFlrBalance (1 cysFLR)
+			'Ready',
+			BigInt('1000000000000000000'), // lockPrice (1 USD, 18 decimals)
+			BigInt('2000000'), // cysFlrUsdPrice (2 USD, 6 decimals)
+			BigInt('1000000'), // sFlrUsdPrice (1 USD, 6 decimals)
+			BigInt('1000000000000000000'), // cysFlrSupply
+			BigInt('1000000000000000000'), // TVLsFlr
+			BigInt('1000000000000000000') // TVLUsd
+		);
+
+		render(Lock);
+
+		const input = screen.getByTestId('lock-input');
+		await userEvent.type(input, '500000');
+
+		await waitFor(() => {
+			const usdValueElement = screen.getByTestId('calculated-cysflr-usd');
+			expect(usdValueElement).toHaveTextContent('USD Value: 0.10');
+		});
+	});
 });

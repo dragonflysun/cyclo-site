@@ -12,7 +12,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { fade } from 'svelte/transition';
-	import { formatEther, parseEther } from 'ethers';
+	import { formatEther, formatUnits, parseEther } from 'ethers';
 
 	export let amountToLock = '0.0';
 
@@ -160,6 +160,17 @@
 					>
 				{/key}
 				<span>cysFLR</span>
+			</div>
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
+			>
+				{#key $balancesStore.lockPrice}
+					<span in:fade={{ duration: 700 }} class="text-sm" data-testid="calculated-cysflr-usd"
+						>USD Value: {(
+							+amountToLock * Number(formatUnits($balancesStore.cysFlrUsdPrice.toString(), 6))
+						).toFixed(2)}</span
+					>
+				{/key}
 			</div>
 		</div>
 
