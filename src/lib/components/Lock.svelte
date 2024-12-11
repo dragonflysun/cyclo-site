@@ -6,6 +6,8 @@
 	import { cysFlrAddress, erc1155Address, sFlrAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
+	import mintMobile from '$lib/images/mint-mobile.svg';
+	import mintMobileSquiggle from '$lib/images/mint-mobile-squiggle.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
@@ -156,7 +158,8 @@
 			</div>
 		</div>
 
-		<div class="flex w-full flex-col gap-2">
+		<!-- Mint diagram for desktop -->
+		<div class="hidden w-full flex-col gap-2 sm:flex">
 			<div
 				class="flex w-full flex-row items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:flex-col sm:text-xl"
 			>
@@ -181,6 +184,33 @@
 			>
 				{#key priceRatio}
 					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
+						>{+amountToLock * Number(formatEther(priceRatio.toString()))}</span
+					>
+				{/key}
+				<span>cysFLR</span>
+			</div>
+		</div>
+
+		<!-- Mint diagram for mobile -->
+		<div class="flex w-full flex-col items-center gap-2 sm:hidden">
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+			>
+				<span>{amountToLock}</span>
+
+				<span>sFLR</span>
+			</div>
+			<img src={mintMobileSquiggle} alt="diagram" class="h-12" />
+			<div class="flex w-1/4 flex-col items-center justify-center text-center text-white">
+				<img src={ftso} alt="ftso" class="" />
+				{Number(formatEther(priceRatio.toString()))}
+			</div>
+			<img src={mintMobile} alt="diagram" class="h-60" />
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+			>
+				{#key priceRatio}
+					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr-mobile"
 						>{+amountToLock * Number(formatEther(priceRatio.toString()))}</span
 					>
 				{/key}

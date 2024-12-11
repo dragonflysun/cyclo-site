@@ -90,7 +90,7 @@
 		<span>LOCK-UP PRICE</span>
 
 		<div class="flex flex-row gap-4">
-			<span data-testid="lock-up-price">{Number(formatEther(tokenId))}</span>
+			<span data-testid="lock-up-price">{'$'}{Number(formatEther(tokenId))}</span>
 		</div>
 	</div>
 

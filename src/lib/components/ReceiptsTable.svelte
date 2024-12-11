@@ -36,10 +36,10 @@
 			class="bg-opacity-0 bg-none p-1 text-white md:p-4 [&_th]:px-2 [&_th]:md:px-6"
 			data-testid="headers"
 		>
-			<TableHeadCell>Locked Price</TableHeadCell>
+			<TableHeadCell>Locked sFLR Price</TableHeadCell>
 			<TableHeadCell>Number Held</TableHeadCell>
 			<TableHeadCell class="hidden md:block">Locked sFLR/Receipt</TableHeadCell>
-			<TableHeadCell>Locked sFLR</TableHeadCell>
+			<TableHeadCell>Locked Locked sFLR</TableHeadCell>
 			<TableHeadCell></TableHeadCell>
 		</TableHead>
 		<TableBody
@@ -53,7 +53,6 @@
 					<TableBodyCell data-testid={`number-held-${index}`}>
 						{Number(formatEther(receipt.balance)).toFixed(5)}
 					</TableBodyCell>
-
 					<TableBodyCell class="hidden md:table-cell" data-testid={`sflr-per-receipt-${index}`}>
 						{receipt.readableFlrPerReceipt}
 					</TableBodyCell>
