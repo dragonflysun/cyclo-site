@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import logo from '$lib/images/logo-white.svg';
 	import { ArrowsRepeatCountOutline, LockOpenOutline, LockOutline } from 'flowbite-svelte-icons';
 
@@ -22,14 +23,18 @@
 					liquidations.
 				</p>
 			</div>
-			<div class="mb-6">
+			<div class="mb-6 flex flex-col gap-4 items-start">
 				<div class="inline-block border border-dashed border-white p-3 text-lg opacity-80">
 					<span class="text-green-400">&gt; EXECUTING</span> pure_defi_freedom.exe
 				</div>
-				<p class="mt-4 text-sm opacity-90">
-					<span class="text-green-400">SYSTEM_STATUS:</span> Powered by the Flare Time Series Oracle
-					(FTSO)
-				</p>
+				<button 
+					on:click={() => {goto('/lock')}}
+					class="group w-fit max-w-sm border-2 border-white bg-primary p-6 text-center text-xl font-bold tracking-wider transition-colors hover:bg-blue-700"
+					data-testid="get-started-button"
+				>
+					GET STARTED_
+			</button>
+			
 			</div>
 		</div>
 
