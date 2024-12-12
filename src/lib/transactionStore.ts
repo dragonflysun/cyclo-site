@@ -1,13 +1,9 @@
 import { writable } from 'svelte/store';
-
 import type { Hex } from 'viem';
-
 import type { Config } from '@wagmi/core';
 import { waitForTransactionReceipt } from '@wagmi/core';
 import {
-	readErc1155IsApprovedForAll,
 	readErc20Allowance,
-	writeErc1155SetApprovalForAll,
 	writeErc20Approve,
 	writeErc20PriceOracleReceiptVaultDeposit,
 	writeErc20PriceOracleReceiptVaultRedeem
@@ -136,7 +132,7 @@ const transactionStore = () => {
 			try {
 				await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 			} catch {
-				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
+				return transactionError(TransactionErrorMessage.LOCK_FAILED, hash);
 			}
 			// UPDATE BALANCES AND RECEIPTS
 			try {
@@ -222,7 +218,7 @@ const transactionStore = () => {
 			try {
 				await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 			} catch {
-				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
+				return transactionError(TransactionErrorMessage.UNLOCK_FAILED, hash);
 			}
 			// UPDATE BALANCES AND RECEIPTS
 			try {
@@ -243,73 +239,7 @@ const transactionStore = () => {
 			return transactionSuccess(hash);
 		};
 
-		const writeApprovecysFlrSpend = async () => {
-			awaitWalletConfirmation('You need to approve the cysFLR spend to unlock your SFLR...');
-			let hash: Hex | undefined;
-
-			try {
-				hash = await writeErc20Approve(config, {
-					address: cysFlrAddress,
-					args: [cysFlrAddress, assets]
-				});
-			} catch {
-				return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
-			}
-
-			awaitApprovalTx(hash);
-			try {
-				await waitForTransactionReceipt(config, { hash: hash });
-				return writeUnlock();
-			} catch {
-				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
-			}
-		};
-
-		checkingWalletAllowance('Checking you are approved to unlock your sFLR...');
-
-		const isERC1155Approved = await readErc1155IsApprovedForAll(config, {
-			address: erc1155Address,
-			args: [signerAddress as Hex, cysFlrAddress]
-		});
-
-		if (!isERC1155Approved) {
-			awaitWalletConfirmation('You need to approve the cysFLR contract to unlock your SFLR...');
-			let hash: Hex | undefined;
-			try {
-				hash = await writeErc1155SetApprovalForAll(config, {
-					address: erc1155Address,
-					args: [cysFlrAddress, true]
-				});
-			} catch {
-				return transactionError(TransactionErrorMessage.USER_REJECTED_APPROVAL);
-			}
-			awaitApprovalTx(hash);
-			try {
-				await waitForTransactionReceipt(config, { hash: hash });
-			} catch {
-				return transactionError(TransactionErrorMessage.TIMEOUT, hash);
-			}
-
-			const cysFlrSpendAllowance = await readErc20Allowance(config, {
-				address: cysFlrAddress,
-				args: [signerAddress as Hex, cysFlrAddress]
-			});
-			if (cysFlrSpendAllowance < assets) {
-				return writeApprovecysFlrSpend();
-			} else {
-				return writeUnlock();
-			}
-		} else {
-			const cysFlrSpendAllowance = await readErc20Allowance(config, {
-				address: cysFlrAddress,
-				args: [signerAddress as Hex, cysFlrAddress]
-			});
-			if (cysFlrSpendAllowance < assets) {
-				return writeApprovecysFlrSpend();
-			} else {
-				return writeUnlock();
-			}
-		}
+		writeUnlock();
 	};
 
 	return {
