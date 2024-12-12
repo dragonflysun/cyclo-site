@@ -20,7 +20,7 @@
 	let buttonStatus: ButtonStatus = ButtonStatus.READY;
 
 	let erc1155balance = BigInt(receipt.balance);
-	let readableAmountToRedeem: string = '0.0';
+	let readableAmountToRedeem: string = '';
 	let amountToRedeem = BigInt(0);
 	let sFlrToReceive = BigInt(0);
 
