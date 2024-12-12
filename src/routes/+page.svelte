@@ -29,7 +29,7 @@
 				</div>
 				<button 
 					on:click={() => {goto('/lock')}}
-					class="group w-fit max-w-sm border-2 border-white bg-primary p-6 text-center text-xl font-bold tracking-wider transition-colors hover:bg-blue-700"
+					class="group w-fit max-w-sm border-2 border-white bg-green-400 p-6 text-center text-xl font-bold tracking-wider transition-colors hover:bg-green-500 border-outset"
 					data-testid="get-started-button"
 				>
 					GET STARTED_
