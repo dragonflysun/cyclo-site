@@ -205,8 +205,6 @@ const transactionStore = () => {
 			let hash: Hex | undefined;
 			// GET WALLET CONFIRMATION
 			try {
-				console.log('unlocking');
-
 				awaitWalletConfirmation('Awaiting wallet confirmation to unlock your SFLR...');
 				hash = await writeErc20PriceOracleReceiptVaultRedeem(config, {
 					address: cysFlrAddress,
@@ -218,10 +216,7 @@ const transactionStore = () => {
 			awaitUnlockTx(hash);
 			// WAIT FOR TX RECEIPT
 			try {
-				console.log('waiting for receipt');
-				const res = await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
-				console.log(res);
-				console.log('got receipt');
+				await waitForTransactionReceipt(config, { confirmations: 4, hash: hash });
 			} catch {
 				return transactionError(TransactionErrorMessage.UNLOCK_FAILED, hash);
 			}

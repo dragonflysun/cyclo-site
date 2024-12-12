@@ -3,7 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { handleDecimalSeparator } from '$lib/utils/handleDecimalSeparator';
 
-	export let amount: string | number = '0.0';
+	export let amount: string | number = '';
 	export let unit: string = '';
 
 	let displayValue = amount.toString();

@@ -93,7 +93,7 @@ describe('ReceiptModal Component', () => {
 		render(ReceiptModal, { receipt: mockReceipt });
 
 		const input = screen.getByTestId('redeem-input');
-		await userEvent.type(input, '250000000');
+		await userEvent.type(input, '0.00002');
 		await userEvent.tab();
 
 		await waitFor(() => {
