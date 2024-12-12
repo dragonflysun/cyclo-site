@@ -28,8 +28,6 @@
 	$: if (amount.toString() !== displayValue) {
 		displayValue = amount.toString();
 	}
-
-	$: console.log(displayValue);
 </script>
 
 <div
