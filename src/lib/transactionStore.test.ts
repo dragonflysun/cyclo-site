@@ -287,7 +287,7 @@ describe('transactionStore', () => {
 		});
 		expect(get(transactionStore).hash).toBe('mockRedeemHash');
 	});
-		it('should handle user rejecting unlock transaction', async () => {
+	it('should handle user rejecting unlock transaction', async () => {
 		(writeErc20PriceOracleReceiptVaultRedeem as Mock).mockResolvedValue('mockRedeemHash');
 		(writeErc20PriceOracleReceiptVaultRedeem as Mock).mockRejectedValue(
 			new Error('UserRejectedRequestError')
