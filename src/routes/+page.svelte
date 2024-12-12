@@ -23,23 +23,24 @@
 					liquidations.
 				</p>
 			</div>
-			<div class="flex flex-col gap-4 items-start">
+			<div class="flex flex-col items-start gap-4">
 				<div class="inline-block border border-dashed border-white p-3 text-lg opacity-80">
 					<span class="text-green-400">&gt; EXECUTING</span> pure_defi_freedom.exe
 				</div>
-				<button 
-					on:click={() => {goto('/lock')}}
-					class="group w-fit max-w-sm border-2 border-white bg-green-400 p-6 text-center text-xl font-bold tracking-wider transition-colors hover:bg-green-500 border-outset"
+				<button
+					on:click={() => {
+						goto('/lock');
+					}}
+					class="border-outset group w-fit max-w-sm border-2 border-white bg-green-400 p-6 text-center text-xl font-bold tracking-wider transition-colors hover:bg-green-500"
 					data-testid="get-started-button"
 				>
 					GET STARTED_
-			</button>
-			
+				</button>
 			</div>
 		</div>
 
 		<div
-			class="group mx-auto w-full max-w-4xl border-2 border-white bg-primary p-4 sm:p-12 transition-colors hover:bg-blue-700"
+			class="group mx-auto w-full max-w-4xl border-2 border-white bg-primary p-4 transition-colors hover:bg-blue-700 sm:p-12"
 		>
 			<h2 class="mb-8 flex items-center gap-2 text-2xl">
 				[ PURE DEFI FREEDOM ] <span class="text-xs opacity-70 group-hover:opacity-100"
@@ -82,7 +83,7 @@
 
 		<div class="mx-auto grid max-w-4xl gap-12 md:grid-cols-2">
 			<div
-				class="group col-span-2 border-2 border-white bg-primary p-4 sm:p-12 transition-colors hover:bg-blue-700 md:col-span-1"
+				class="group col-span-2 border-2 border-white bg-primary p-4 transition-colors hover:bg-blue-700 sm:p-12 md:col-span-1"
 			>
 				<h2 class="mb-8 flex items-center gap-2 text-2xl">
 					[ WHAT YOU GET ]<span class="text-xs opacity-70 group-hover:opacity-100"
@@ -110,7 +111,7 @@
 			</div>
 
 			<div
-				class="group col-span-2 w-full border-2 border-white bg-primary p-4 sm:p-12 transition-colors hover:bg-blue-700 md:col-span-1"
+				class="group col-span-2 w-full border-2 border-white bg-primary p-4 transition-colors hover:bg-blue-700 sm:p-12 md:col-span-1"
 			>
 				<h2 class="mb-8 flex items-center gap-2 text-2xl">
 					[ HOW IT WORKS ] <span class="text-xs opacity-70 group-hover:opacity-100"
@@ -134,7 +135,7 @@
 			</div>
 			<div class="col-span-2 flex flex-col gap-12">
 				<div
-					class="group mx-auto mb-8 w-full max-w-4xl border-2 border-white bg-primary p-4 sm:p-12 transition-colors hover:bg-blue-700"
+					class="group mx-auto mb-8 w-full max-w-4xl border-2 border-white bg-primary p-4 transition-colors hover:bg-blue-700 sm:p-12"
 				>
 					<h2 class="mb-8 flex items-center gap-2 text-2xl">
 						[ INTRODUCING cysFLR ] <span class="text-xs opacity-70 group-hover:opacity-100"
