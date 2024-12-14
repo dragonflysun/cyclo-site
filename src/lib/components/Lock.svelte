@@ -235,17 +235,49 @@
 	<div class="p-4 text-center">
 		<h2 class="mb-4 text-lg font-semibold text-red-600">Wait!</h2>
 		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
-			Before you deploy your strategy, make sure you understand the following:
+			Before you lock your sFLR, make sure you understand the following:
 		</p>
-		<ul
-			class="mb-4 flex list-inside list-disc flex-col gap-1 text-left text-xs text-gray-700 dark:text-gray-300"
-		>
-			<li>This front end is a tool for interacting with Raindex smart contracts.</li>
-			<li>You are deploying your own strategy and using your own wallet and private keys.</li>
-			<li>No custodianship of funds exists; lost funds are unrecoverable.</li>
-			<li>No endorsement or guarantee is provided for these strategies.</li>
-			<li>Do not proceed if you do not understand the strategy you are deploying.</li>
-			<li>Only invest funds you can afford to lose.</li>
+		<ul class="mb-4 flex flex-col gap-1 pl-4 text-left text-xs text-gray-700 dark:text-gray-300">
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				This front end is a tool for interacting with the Cyclo smart contracts.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				You are depositing funds using your own wallet and private keys.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				No custodianship of funds exists; they are held by the smart contract.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Smart contracts are immutable and cannot be upgraded or modified.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				The protocol is fully autonomous; there are no admin controls or governance.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				You must keep your receipt tokens safe to unlock your sFLR.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				The value of cysFLR is determined solely by market forces.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Do not proceed if you do not understand the transaction you are signing.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Only invest funds you can afford to lose.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Verify the smart contract addresses match the official documentation.
+			</li>
 		</ul>
 		<div class="flex w-full justify-center">
 			<Button
@@ -257,7 +289,7 @@
 				}}
 				data-testid="disclaimer-acknowledge-button"
 			>
-				Acknowledge
+				ACKNOWLEDGE AND LOCK
 			</Button>
 		</div>
 	</div>
