@@ -11,6 +11,11 @@ Here are some examples of how different participants might use the protocol - th
 ## The Leverager: Strategic Position Builder
 **Profile:** The Leverager is a trader who wants to amplify their trading positions without the risk of liquidation. They see Cyclo as a tool to increase their exposure to market movements while maintaining control over their collateral.
 
+The Leverager may use their capital for:
+- Market trading
+- Yield-bearing assets
+- Real world assets
+
 **Strategy:**
 1. Lock sFLR to mint cysFLR
 2. Sell cysFLR for other assets (like FLR or JOULE)
