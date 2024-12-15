@@ -252,11 +252,17 @@
 			</li>
 			<li class="relative pl-2">
 				<span class="absolute -left-4">•</span>
-				Smart contracts are immutable and cannot be upgraded or modified.
+				Smart contracts are immutable and cannot be upgraded or modified. Cyclo has been audited, however
+				this does not guarantee there are no bugs or other vulnerabilities.
 			</li>
 			<li class="relative pl-2">
 				<span class="absolute -left-4">•</span>
 				The protocol is fully autonomous; there are no admin controls or governance.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Cyclo relies on oracles to determine the FLR/USD price and the sFLR/FLR exchange rate. These
+				are maintained by Flare Networks and Sceptre respectively.
 			</li>
 			<li class="relative pl-2">
 				<span class="absolute -left-4">•</span>
@@ -279,6 +285,10 @@
 				Verify the smart contract addresses match the official documentation.
 			</li>
 		</ul>
+		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
+			For more information on risks, please see the <a href={base + '/docs/risks'}>Risks</a> section
+			of the documentation.
+		</p>
 		<div class="flex w-full justify-center">
 			<Button
 				class="mt-4  text-white"
