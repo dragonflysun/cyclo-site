@@ -7,9 +7,17 @@ published: true
     import mechanic from '$lib/images/basic-mechanism.svg'
 </script>
 
+Cyclo rethinks leverage from first principles.
+
+Instead of following the traditional DeFi pattern of lending pools, interest rates, and liquidations, Cyclo creates a simple primitive: the ability to lock sFLR and mint cysFLR, a token that can trade between $0 and $1.
+
+This design leads to a natural market for leverage. When demand for leverage is high, users lock sFLR and sell cysFLR, increasing supply and lowering its price. When traders want to unwind positions, they buy back cysFLR to unlock their sFLR, creating demand that drives the price up.
+
+This cycle repeats naturally without any governance decisions, interest rates, or forced liquidations.
+
 <img src={mechanic} class="mx-auto" width="600px" />
 
-Cyclo leverages sFLR (Flare) tokens in a novel way:
+The protocol consists of just three actions:
 1. **Lock sFLR to Mint**: Participants lock their sFLR tokens and are issued cysFLR based on the FLR-USD price and the FLR-sFLR exchange rate at the time of transaction, and an equal number of ERC-1155 receipt tokens with an ID representing the lock-up price.
 3. **Trade cysFLR**: Users can trade cysFLR within the Flare ecosystem.
 4. **Burn to Unlock sFLR**: To unlock their original sFLR, users burn their receipt tokens and an equal amount of cysFLR.

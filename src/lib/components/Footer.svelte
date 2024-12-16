@@ -39,7 +39,7 @@
 				in:fade
 				data-testId="TVL"
 			>
-				<span>Total Locked Value</span>
+				<span>Total Value Locked</span>
 				<span
 					>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
 						formatUnits($balancesStore.TVLUsd, 18)
