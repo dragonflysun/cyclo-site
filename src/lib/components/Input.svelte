@@ -11,7 +11,6 @@
 	const dispatch = createEventDispatcher();
 
 	function setValueToMax() {
-		amount = maxValue;
 		dispatch('setValueToMax');
 	}
 
@@ -56,7 +55,6 @@
 		disabled={!$signerAddress}
 		data-testid={'set-val-to-max'}
 		on:click={setValueToMax}
-		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base disabled:cursor-not-allowed"
-		>MAX</button
+		class="flex cursor-pointer items-center self-stretch bg-white pl-3 pr-2 text-base">MAX</button
 	>
 </div>
