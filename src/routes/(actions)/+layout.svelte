@@ -27,6 +27,11 @@
 			inset={$page.url.pathname === '/unlock'}
 			on:click={() => goto(base + '/unlock')}>UNLOCK</Button
 		>
+		<Button
+			class="w-32"
+			inset={$page.url.pathname === '/chart'}
+			on:click={() => goto(base + '/chart')}>CHART</Button
+		>
 	</div>
 	<slot />
 	<Footer />
