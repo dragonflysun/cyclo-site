@@ -76,7 +76,17 @@
 	<div
 		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 	>
-		<span>NUMBER HELD</span>
+		<span>TOTAL sFLR LOCKED</span>
+		<div class="flex flex-row gap-4">
+			{#key readableBalance}{#if readableBalance}
+					<span in:fade={{ duration: 700 }}>{formatEther(receipt.totalsFlr ?? 0n)}</span>
+				{/if}{/key}
+		</div>
+	</div>
+	<div
+		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
+	>
+		<span>TOTAL cysFLR MINTED</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}
 					<span in:fade={{ duration: 700 }} data-testid="balance">{Number(readableBalance)}</span>
@@ -87,9 +97,9 @@
 	<div
 		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 	>
-		<span>LOCK-UP PRICE</span>
+		<span>cysFLR PER LOCKED sFLR</span>
 		<div class="flex flex-row gap-4">
-			<span data-testid="lock-up-price">{'$'}{Number(formatEther(tokenId))}</span>
+			<span data-testid="lock-up-price">{Number(formatEther(tokenId))}</span>
 		</div>
 	</div>
 
@@ -97,8 +107,9 @@
 		class="flex w-full flex-col items-start justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 	>
 		<span>REDEEM AMOUNT</span>
-		<div class="flex flex-row items-center">
+		<div class="flex flex-col">
 			<Input
+				unit="cysFLR"
 				bind:amount={readableAmountToRedeem}
 				on:input={handleInput}
 				data-testid="redeem-input"
@@ -109,6 +120,9 @@
 					readableAmountToRedeem = Number(formatEther(maxRedeemable)).toString();
 				}}
 			/>
+			<p class="my-2 text-left text-xs font-light sm:text-right" data-testid="sflr-balance">
+				cysFLR Balance: {Number(formatEther($balancesStore.cysFlrBalance.toString()))}
+			</p>
 		</div>
 	</div>
 	<!-- Burn diagram for desktop -->

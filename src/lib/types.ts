@@ -6,8 +6,9 @@ export type Receipt = {
 	tokenId: string;
 	balance: bigint;
 	readableTokenId?: string;
-	readableTotalFlr?: string;
+	readableTotalsFlr?: string;
 	readableFlrPerReceipt?: string;
+	totalsFlr?: bigint;
 };
 
 export type BlockScoutData = {
