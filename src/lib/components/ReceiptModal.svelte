@@ -67,7 +67,6 @@
 		sFlrToReceive = BigInt(0);
 		amountToRedeem = BigInt(0);
 	}
-
 </script>
 
 <div
@@ -80,9 +79,7 @@
 		<span>TOTAL sFLR LOCKED</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}
-					<span in:fade={{ duration: 700 }}
-						>{formatEther(receipt.totalsFlr ?? 0n)}</span
-					>
+					<span in:fade={{ duration: 700 }}>{formatEther(receipt.totalsFlr ?? 0n)}</span>
 				{/if}{/key}
 		</div>
 	</div>
@@ -147,7 +144,6 @@
 				{Number(formatEther(sFlrToReceive))} sFLR
 			</span>
 		</div>
-
 	</div>
 	<!-- Burn diagram for mobile -->
 	<div
