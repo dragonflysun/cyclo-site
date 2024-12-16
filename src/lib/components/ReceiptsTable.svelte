@@ -20,12 +20,13 @@
 
 	const mappedReceipts = receipts.map((receipt) => {
 		const flrPerReceipt = 10n ** 36n / BigInt(receipt.tokenId);
-		const totalFlr = (BigInt(receipt.balance) * flrPerReceipt) / 10n ** 18n;
+		const totalsFlr = (BigInt(receipt.balance) * flrPerReceipt) / 10n ** 18n;
 
 		return {
 			...receipt,
+			totalsFlr: totalsFlr,
 			readableFlrPerReceipt: Number(formatEther(flrPerReceipt)).toFixed(5),
-			readableTotalFlr: Number(formatEther(totalFlr)).toFixed(5)
+			readableTotalsFlr: Number(formatEther(totalsFlr)).toFixed(5)
 		};
 	});
 </script>
@@ -37,10 +38,8 @@
 			data-testid="headers"
 		>
 			<TableHeadCell>Total sFLR Locked</TableHeadCell>
-			<TableHeadCell>cysFLR to unlock</TableHeadCell>
+			<TableHeadCell>Total cysFLR minted</TableHeadCell>
 			<TableHeadCell>cysFLR per locked sFLR</TableHeadCell>
-
-
 		</TableHead>
 		<TableBody
 			tableBodyClass="bg-opacity-0 [&_td]:text-white p-1 [&_td]:text-left [&_td]:px-2 [&_td]:md:px-6"
@@ -48,7 +47,7 @@
 			{#each mappedReceipts as receipt, index}
 				<TableBodyRow class="bg-opacity-0 " data-testid={`receipt-row-${index}`}>
 					<TableBodyCell class="" data-testid={`total-locked-sflr-${index}`}>
-						{receipt.readableTotalFlr}
+						{receipt.readableTotalsFlr}
 					</TableBodyCell>
 					<TableBodyCell data-testid={`number-held-${index}`}>
 						{Number(formatEther(receipt.balance)).toFixed(5)}
