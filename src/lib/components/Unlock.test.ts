@@ -53,9 +53,10 @@ describe('Unlock Component', () => {
 		render(Unlock);
 
 		await waitFor(() => {
-			const balanceText = screen.getByText(BigInt(1).toString());
+			const balanceText = screen.getByTestId('cysflr-balance');
 			expect(balanceText).toBeInTheDocument();
 			expect(screen.getByText('cysFLR')).toBeInTheDocument();
+			expect(balanceText).toHaveTextContent('1.0');
 		});
 	});
 

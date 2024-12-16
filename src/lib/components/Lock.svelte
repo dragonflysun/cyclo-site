@@ -12,11 +12,11 @@
 	import Button from '$lib/components/Button.svelte';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { fade } from 'svelte/transition';
-	import { formatEther, formatUnits, parseEther } from 'ethers';
+	import { formatEther, parseEther } from 'ethers';
 
 	export let amountToLock = '';
 
-	$: assets = BigInt(0);
+	$: assets = amountToLock ? BigInt(parseEther(amountToLock.toString()).toString()) : BigInt(0);
 
 	$: if ($signerAddress) {
 		checkBalance();
@@ -72,7 +72,7 @@
 							in:fade={{ duration: 700 }}
 							class="flex flex-row items-center gap-2"
 							data-testid="price-ratio"
-							>{Number(formatEther($balancesStore.lockPrice.toString()))}
+							>{Number(formatEther($balancesStore.lockPrice)).toString()}
 
 							<svg width="20" height="20" viewBox="0 0 100 100">
 								<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
@@ -106,7 +106,7 @@
 					}}
 					on:setValueToMax={() => {
 						assets = $balancesStore.sFlrBalance;
-						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toString();
+						amountToLock = Number(formatEther($balancesStore.sFlrBalance)).toString();
 					}}
 					bind:amount={amountToLock}
 					maxValue={$balancesStore.sFlrBalance}
@@ -114,7 +114,7 @@
 				/>
 				{#if $signerAddress}
 					<p class="my-2 text-left text-xs font-light sm:text-right" data-testid="sflr-balance">
-						sFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
+						sFLR Balance: {formatEther($balancesStore.sFlrBalance)}
 					</p>
 				{:else}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -135,17 +135,19 @@
 			<div
 				class="flex w-full flex-row items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:flex-col sm:text-xl"
 			>
-				<span>{amountToLock}</span>
+				<span>{amountToLock || '0'}</span>
 
 				<span>sFLR</span>
 			</div>
 
 			<div class="flex w-full">
 				<div
-					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white"
+					class="flex w-1/4 flex-col items-center justify-center pb-12 pl-6 pr-2 text-center text-white"
 				>
 					<img src={ftso} alt="ftso" class="w-1/2" />
-					{Number(formatEther($balancesStore.lockPrice.toString()))}
+					{#key $balancesStore.lockPrice}
+						{formatEther($balancesStore.lockPrice)}
+					{/key}
 				</div>
 				<img src={mintDia} alt="diagram" class="w-1/2" />
 				<div class="w-1/4"></div>
@@ -155,8 +157,8 @@
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
 			>
 				{#key $balancesStore.lockPrice}
-					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
-						>{+amountToLock * Number(formatEther($balancesStore.lockPrice.toString()))}</span
+					<span data-testid="calculated-cysflr"
+						>{formatEther((assets * $balancesStore.lockPrice) / 10n ** 18n)}</span
 					>
 				{/key}
 				<span>cysFLR</span>
@@ -165,9 +167,11 @@
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
 			>
 				{#key $balancesStore.lockPrice}
-					<span in:fade={{ duration: 700 }} class="text-sm" data-testid="calculated-cysflr-usd"
-						>Current market value ~$ {(
-							+amountToLock * Number(formatUnits($balancesStore.cysFlrUsdPrice.toString(), 6))
+					<span class="text-sm" data-testid="calculated-cysflr-usd"
+						>Current market value ~$ {Number(
+							formatEther(
+								(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n
+							)
 						).toFixed(2)}</span
 					>
 				{/key}
@@ -179,7 +183,7 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				<span>{amountToLock}</span>
+				<span>{amountToLock || '0'}</span>
 
 				<span>sFLR</span>
 			</div>
@@ -193,11 +197,24 @@
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
 				{#key $balancesStore.lockPrice}
-					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr-mobile"
-						>{+amountToLock * Number(formatEther($balancesStore.lockPrice.toString()))}</span
+					<span data-testid="calculated-cysflr-mobile"
+						>{formatEther((assets * $balancesStore.lockPrice) / 10n ** 18n)}</span
 					>
 				{/key}
 				<span>cysFLR</span>
+			</div>
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
+			>
+				{#key $balancesStore.lockPrice}
+					<span class="text-sm" data-testid="calculated-cysflr-usd-mobile"
+						>Current market value ~$ {Number(
+							formatEther(
+								(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n
+							)
+						).toFixed(2)}</span
+					>
+				{/key}
 			</div>
 		</div>
 
