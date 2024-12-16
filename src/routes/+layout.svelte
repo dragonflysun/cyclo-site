@@ -7,7 +7,6 @@
 	import { browser } from '$app/environment';
 	import { PUBLIC_LAUNCHED } from '$env/static/public';
 	import { flare } from '@wagmi/core/chains';
-	import Footer from '$lib/components/Footer.svelte';
 	import { cusdxAddress, cysFlrAddress, quoterAddress, sFlrAddress } from '$lib/stores';
 	import balancesStore from '$lib/balancesStore';
 	import { onDestroy } from 'svelte';
@@ -71,6 +70,5 @@
 		<main class="flex-grow bg-[#1C02B8]">
 			<slot></slot>
 		</main>
-		<Footer />
 	</div>
 {/if}

@@ -8,6 +8,7 @@
 
 	import Button from '$lib/components/Button.svelte';
 	import { base } from '$app/paths';
+	import Footer from '$lib/components/Footer.svelte';
 
 	$: if ($signerAddress) {
 		balancesStore.refreshBalances($wagmiConfig, $sFlrAddress, $cysFlrAddress, $signerAddress);
@@ -26,7 +27,13 @@
 			inset={$page.url.pathname === '/unlock'}
 			on:click={() => goto(base + '/unlock')}>UNLOCK</Button
 		>
+		<Button
+			class="w-32"
+			inset={$page.url.pathname === '/chart'}
+			on:click={() => goto(base + '/chart')}>CHART</Button
+		>
 	</div>
 	<slot />
+	<Footer />
 	<TransactionModal />
 </div>

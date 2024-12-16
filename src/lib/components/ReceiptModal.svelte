@@ -116,6 +116,7 @@
 				bind:amount={readableAmountToRedeem}
 				on:input={handleInput}
 				data-testid="redeem-input"
+				placeholder="0.0"
 				on:setValueToMax={() => {
 					isMaxSelected = true;
 					amountToRedeem = maxRedeemable;
@@ -133,10 +134,10 @@
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
 			<span class="w-1/2 text-center"
-				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPT NFTs</span
+				>{!readableAmountToRedeem ? 0 : readableAmountToRedeem} RECEIPTS</span
 			>
 			<span class="w-1/2 text-center"
-				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
+				>{!readableAmountToRedeem ? 0 : readableAmountToRedeem} cysFLR</span
 			>
 		</div>
 		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
@@ -163,7 +164,7 @@
 			<img src={mobileBurnDia} alt="diagram" class="" />
 			<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 				<span class="flex overflow-ellipsis" data-testid="flr-to-receive-mobile">
-					{Number(formatEther(sFlrToReceive))} sFLR
+					{formatEther(sFlrToReceive)} sFLR
 				</span>
 			</div>
 		</div>
