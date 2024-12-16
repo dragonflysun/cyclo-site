@@ -46,8 +46,8 @@
 
 	$: maxRedeemable =
 		($balancesStore.cysFlrBalance ?? 0n) < (erc1155balance ?? 0n)
-			? ($balancesStore.cysFlrBalance ?? 0n)
-			: (erc1155balance ?? 0n);
+			? $balancesStore.cysFlrBalance ?? 0n
+			: erc1155balance ?? 0n;
 
 	$: if (amountToRedeem) {
 		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
