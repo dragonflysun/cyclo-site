@@ -11,7 +11,6 @@
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 	import { Modal } from 'flowbite-svelte';
-	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { fade } from 'svelte/transition';
 	import { formatEther, formatUnits, parseEther } from 'ethers';
@@ -46,7 +45,7 @@
 	};
 
 	const runLockTransaction = () => {
-		transactionStore.initiateLockTransaction({
+		transactionStore.handleLockTransaction({
 			signerAddress: $signerAddress,
 			config: $wagmiConfig,
 			cysFlrAddress: $cysFlrAddress,
@@ -157,7 +156,7 @@
 			<div
 				class="flex w-full flex-row items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:flex-col sm:text-xl"
 			>
-				<span>{amountToLock || 0}</span>
+				<span>{amountToLock}</span>
 
 				<span>sFLR</span>
 			</div>
@@ -229,7 +228,7 @@
 				customClass="sm:text-xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
 				on:click={() => initiateLockWithDisclaimer()}
-				>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
+				>{insufficientFunds ? 'INSUFFICIENT sFLR' : 'LOCK'}</Button
 			>
 		{:else}
 			<Button
