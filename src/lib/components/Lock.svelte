@@ -35,7 +35,6 @@
 		}
 	};
 
-
 	const initiateLockWithDisclaimer = () => {
 		if (!disclaimerAcknowledged) {
 			disclaimerOpen = true;
@@ -54,8 +53,6 @@
 			assets: assets
 		});
 	};
-
-
 </script>
 
 <Card size="lg">
@@ -246,12 +243,14 @@
 	on:close={() => (disclaimerOpen = false)}
 	data-testid="disclaimer-modal"
 >
-	<div class="p-1 sm:p-4 text-center">
+	<div class="p-1 text-center sm:p-4">
 		<h2 class="mb-4 text-lg font-semibold text-red-600">Wait!</h2>
 		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
 			Before you lock your sFLR, make sure you understand the following:
 		</p>
-		<ul class="mb-4 flex flex-col gap-1 pl-1 sm:pl-4 text-left text-xs text-gray-700 dark:text-gray-300">
+		<ul
+			class="mb-4 flex flex-col gap-1 pl-1 text-left text-xs text-gray-700 dark:text-gray-300 sm:pl-4"
+		>
 			<li class="relative pl-2">
 				<span class="absolute -left-4">•</span>
 				This front end is a tool for interacting with the Cyclo smart contracts.
