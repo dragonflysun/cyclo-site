@@ -34,7 +34,7 @@ const getcysFLRUsdPrice = async (
 				tokenIn: cusdxAddress,
 				tokenOut: cysFlrAddress,
 				amount: BigInt(1e18),
-				fee: 300,
+				fee: 3000,
 				sqrtPriceLimitX96: BigInt(0)
 			}
 		]
@@ -48,6 +48,7 @@ const getLockPrice = async (config: Config, cysFlrAddress: Hex) => {
 		args: [BigInt(1e18), 0n],
 		account: ZeroAddress as `0x${string}`
 	});
+	console.log('result', result);
 	return result;
 };
 
