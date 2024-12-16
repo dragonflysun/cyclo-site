@@ -106,7 +106,7 @@
 					}}
 					on:setValueToMax={() => {
 						assets = $balancesStore.sFlrBalance;
-						amountToLock = Number(formatEther($balancesStore.sFlrBalance)).toString()
+						amountToLock = Number(formatEther($balancesStore.sFlrBalance)).toString();
 					}}
 					bind:amount={amountToLock}
 					maxValue={$balancesStore.sFlrBalance}
@@ -142,7 +142,7 @@
 
 			<div class="flex w-full">
 				<div
-					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 pl-6 text-center text-white"
+					class="flex w-1/4 flex-col items-center justify-center pb-12 pl-6 pr-2 text-center text-white"
 				>
 					<img src={ftso} alt="ftso" class="w-1/2" />
 					{#key $balancesStore.lockPrice}
@@ -158,7 +158,7 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span data-testid="calculated-cysflr"
-						>{formatEther(assets * $balancesStore.lockPrice / 10n ** 18n)}</span
+						>{formatEther((assets * $balancesStore.lockPrice) / 10n ** 18n)}</span
 					>
 				{/key}
 				<span>cysFLR</span>
@@ -168,8 +168,12 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span class="text-sm" data-testid="calculated-cysflr-usd"
-						>Current market value ~$ {Number(formatEther(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice / 10n ** 24n)).toFixed(2)}</span>
-					
+						>Current market value ~$ {Number(
+							formatEther(
+								(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n
+							)
+						).toFixed(2)}</span
+					>
 				{/key}
 			</div>
 		</div>
@@ -194,7 +198,7 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span data-testid="calculated-cysflr-mobile"
-						>{formatEther(assets * $balancesStore.lockPrice / 10n ** 18n)}</span
+						>{formatEther((assets * $balancesStore.lockPrice) / 10n ** 18n)}</span
 					>
 				{/key}
 				<span>cysFLR</span>
@@ -204,8 +208,12 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span class="text-sm" data-testid="calculated-cysflr-usd"
-						>Current market value ~$ {Number(formatEther(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice / 10n ** 24n)).toFixed(2)}</span>
-					
+						>Current market value ~$ {Number(
+							formatEther(
+								(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n
+							)
+						).toFixed(2)}</span
+					>
 				{/key}
 			</div>
 		</div>

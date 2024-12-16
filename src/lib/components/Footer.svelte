@@ -32,10 +32,7 @@
 			</div>
 		{/key}
 		{#key $balancesStore.TVLUsd}
-			<div
-				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-				data-testId="TVL"
-			>
+			<div class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2" data-testId="TVL">
 				<span>Total Locked Value</span>
 				<span
 					>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
