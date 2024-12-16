@@ -43,7 +43,7 @@
 				<span>BALANCE</span>
 				<div class="flex flex-row gap-4">
 					{#key $balancesStore.cysFlrBalance}<span in:fade={{ duration: 700 }}
-							>{Number(formatEther($balancesStore.cysFlrBalance))}</span
+							>{formatEther($balancesStore.cysFlrBalance)}</span
 						>{/key}
 					<span>cysFLR</span>
 				</div>
