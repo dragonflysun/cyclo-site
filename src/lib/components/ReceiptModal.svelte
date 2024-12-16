@@ -10,10 +10,12 @@
 	import mobileBurnLine from '$lib/images/mobile-burn-line.svg';
 	import mobileBurnDia from '$lib/images/mobile-burn.svg';
 	import Input from './Input.svelte';
+	import Button from './Button.svelte';
 
 	enum ButtonStatus {
 		INSUFFICIENT_RECEIPTS = 'INSUFFICIENT RECEIPTS',
 		INSUFFICIENT_cysFLR = 'INSUFFICIENT cysFLR',
+		ZERO_AMOUNT = 'ZERO AMOUNT',
 		READY = 'UNLOCK'
 	}
 	export let receipt: Receipt;
@@ -33,22 +35,26 @@
 		if (readableAmountToRedeem) {
 			const bigNumValue = BigInt(parseEther(readableAmountToRedeem.toString()).toString());
 			amountToRedeem = bigNumValue;
+		} else {
+			amountToRedeem = BigInt(0);
 		}
 	};
 
 	$: maxRedeemable =
 		($balancesStore.cysFlrBalance ?? 0n) < (erc1155balance ?? 0n)
-			? ($balancesStore.cysFlrBalance ?? 0n)
-			: (erc1155balance ?? 0n);
+			? $balancesStore.cysFlrBalance ?? 0n
+			: erc1155balance ?? 0n;
 
 	$: insufficientReceipts = erc1155balance < amountToRedeem;
 	$: insufficientcysFlr = $balancesStore.cysFlrBalance < amountToRedeem;
 
-	$: buttonStatus = insufficientReceipts
-		? ButtonStatus.INSUFFICIENT_RECEIPTS
-		: insufficientcysFlr
-			? ButtonStatus.INSUFFICIENT_cysFLR
-			: ButtonStatus.READY;
+	$: buttonStatus = !readableAmountToRedeem
+		? ButtonStatus.READY
+		: insufficientReceipts
+			? ButtonStatus.INSUFFICIENT_RECEIPTS
+			: insufficientcysFlr
+				? ButtonStatus.INSUFFICIENT_cysFLR
+				: ButtonStatus.READY;
 
 	$: if (amountToRedeem > 0) {
 		const _sFlrToReceive = (amountToRedeem * 10n ** 18n) / BigInt(receipt.tokenId);
@@ -145,9 +151,9 @@
 		</div>
 	</div>
 
-	<button
+	<Button
 		data-testid="unlock-button"
-		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white sm:text-xl"
+		customClass="sm:text-xl text-lg w-full bg-white text-primary"
 		disabled={buttonStatus !== ButtonStatus.READY || amountToRedeem === BigInt(0)}
 		on:click={() =>
 			transactionStore.handleUnlockTransaction({
@@ -161,5 +167,5 @@
 			})}
 	>
 		{buttonStatus}
-	</button>
+	</Button>
 </div>

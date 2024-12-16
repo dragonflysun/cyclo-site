@@ -2,7 +2,7 @@
 	export let inset: boolean = false;
 </script>
 
-<button {...$$restProps} on:click class:inset class:outset={!inset}><slot></slot></button>
+<button {...$$restProps} on:click class:inset class:outset={!inset}><slot /></button>
 
 <style lang="postcss">
 	button {
