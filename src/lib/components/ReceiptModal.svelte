@@ -10,6 +10,7 @@
 	import mobileBurnLine from '$lib/images/mobile-burn-line.svg';
 	import mobileBurnDia from '$lib/images/mobile-burn.svg';
 	import Input from './Input.svelte';
+	import Button from './Button.svelte';
 
 	enum ButtonStatus {
 		INSUFFICIENT_RECEIPTS = 'INSUFFICIENT RECEIPTS',
@@ -27,21 +28,13 @@
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
-	let isMaxSelected = false;
-
 	const checkBalance = () => {
-		if (isMaxSelected) return;
-
-		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
-			readableAmountToRedeem = '0.0';
+		if (readableAmountToRedeem) {
+			const bigNumValue = BigInt(parseEther(readableAmountToRedeem.toString()).toString());
+			amountToRedeem = bigNumValue;
+		} else {
+			amountToRedeem = BigInt(0);
 		}
-		amountToRedeem = parseEther(readableAmountToRedeem.toString());
-	};
-
-	const handleInput = (event: { detail: { value: string } }) => {
-		isMaxSelected = false;
-		readableAmountToRedeem = event.detail.value;
-		checkBalance();
 	};
 
 	$: maxRedeemable =
@@ -49,16 +42,16 @@
 			? $balancesStore.cysFlrBalance ?? 0n
 			: erc1155balance ?? 0n;
 
-	$: if (amountToRedeem) {
-		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
-		if (erc1155balance < amountToRedeem) {
-			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
-		} else if ($balancesStore.cysFlrBalance < amountToRedeem) {
-			buttonStatus = ButtonStatus.INSUFFICIENT_cysFLR;
-		} else {
-			buttonStatus = ButtonStatus.READY;
-		}
-	}
+	$: insufficientReceipts = erc1155balance < amountToRedeem;
+	$: insufficientcysFlr = $balancesStore.cysFlrBalance < amountToRedeem;
+
+	$: buttonStatus = !readableAmountToRedeem
+		? ButtonStatus.READY
+		: insufficientReceipts
+			? ButtonStatus.INSUFFICIENT_RECEIPTS
+			: insufficientcysFlr
+				? ButtonStatus.INSUFFICIENT_cysFLR
+				: ButtonStatus.READY;
 
 	$: if (amountToRedeem > 0) {
 		const _sFlrToReceive = (amountToRedeem * 10n ** 18n) / BigInt(receipt.tokenId);
@@ -111,11 +104,13 @@
 			<Input
 				unit="cysFLR"
 				bind:amount={readableAmountToRedeem}
-				on:input={handleInput}
+				on:input={(event) => {
+					readableAmountToRedeem = event.detail.value;
+					checkBalance();
+				}}
 				data-testid="redeem-input"
 				placeholder="0.0"
 				on:setValueToMax={() => {
-					isMaxSelected = true;
 					amountToRedeem = maxRedeemable;
 					readableAmountToRedeem = Number(formatEther(maxRedeemable)).toString();
 				}}
@@ -141,7 +136,7 @@
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(sFlrToReceive))} sFLR
+				{formatEther(sFlrToReceive)} sFLR
 			</span>
 		</div>
 	</div>
@@ -166,9 +161,9 @@
 		</div>
 	</div>
 
-	<button
+	<Button
 		data-testid="unlock-button"
-		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white sm:text-xl"
+		customClass="sm:text-xl text-lg w-full bg-white text-primary"
 		disabled={buttonStatus !== ButtonStatus.READY || amountToRedeem === BigInt(0)}
 		on:click={() =>
 			transactionStore.handleUnlockTransaction({
@@ -182,5 +177,5 @@
 			})}
 	>
 		{buttonStatus}
-	</button>
+	</Button>
 </div>

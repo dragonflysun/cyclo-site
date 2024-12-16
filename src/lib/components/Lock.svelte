@@ -18,13 +18,24 @@
 	export let amountToLock = '';
 	let disclaimerAcknowledged = false;
 	let disclaimerOpen = false;
-	$: assets = amountToLock ? BigInt(parseEther(amountToLock.toString()).toString()) : BigInt(0);
+
+	enum ButtonStatus {
+		INSUFFICIENT_sFLR = 'INSUFFICIENT sFLR',
+		READY = 'LOCK'
+	}
+
+	$: assets = BigInt(0);
 
 	$: if ($signerAddress) {
 		checkBalance();
 	}
 
 	$: insufficientFunds = $balancesStore.sFlrBalance < assets;
+	$: buttonStatus = !amountToLock
+		? ButtonStatus.READY
+		: insufficientFunds
+			? ButtonStatus.INSUFFICIENT_sFLR
+			: ButtonStatus.READY;
 
 	const checkBalance = () => {
 		if (amountToLock) {
@@ -64,7 +75,7 @@
 
 				<div class="flex flex-row gap-4">
 					<span data-testid="your-balance">
-						{Number(formatEther($balancesStore.sFlrBalance.toString()))}
+						{formatEther($balancesStore.sFlrBalance)}
 					</span>
 				</div>
 			</div>
@@ -175,7 +186,9 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span data-testid="calculated-cysflr"
-						>{formatEther((assets * $balancesStore.lockPrice) / 10n ** 18n)}</span
+						>{!amountToLock
+							? '0'
+							: formatEther((assets * $balancesStore.lockPrice) / 10n ** 18n)}</span
 					>
 				{/key}
 				<span>cysFLR</span>
@@ -185,11 +198,13 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span class="text-sm" data-testid="calculated-cysflr-usd"
-						>Current market value ~$ {Number(
-							formatEther(
-								(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n
-							)
-						).toFixed(2)}</span
+						>Current market value ~$ {!amountToLock
+							? '0'
+							: Number(
+									formatEther(
+										(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n
+									)
+								).toFixed(2)}</span
 					>
 				{/key}
 			</div>
@@ -237,11 +252,10 @@
 
 		{#if $signerAddress}
 			<Button
-				disabled={insufficientFunds || !assets}
+				disabled={insufficientFunds || !assets || !amountToLock}
 				customClass="sm:text-xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
-				on:click={() => initiateLockWithDisclaimer()}
-				>{insufficientFunds ? 'INSUFFICIENT sFLR' : 'LOCK'}</Button
+				on:click={() => initiateLockWithDisclaimer()}>{buttonStatus}</Button
 			>
 		{:else}
 			<Button
