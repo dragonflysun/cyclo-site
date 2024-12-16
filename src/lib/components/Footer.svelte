@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
 	import { formatEther, formatUnits } from 'ethers';
 	import balancesStore from '$lib/balancesStore';
 	import { formatNumberWithAbbreviations } from '$lib/methods';
