@@ -16,7 +16,8 @@
 	import { formatEther, parseEther } from 'ethers';
 
 	export let amountToLock = '';
-
+	let disclaimerAcknowledged = false;
+	let disclaimerOpen = false;
 	$: assets = amountToLock ? BigInt(parseEther(amountToLock.toString()).toString()) : BigInt(0);
 
 	$: if ($signerAddress) {
