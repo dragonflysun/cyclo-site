@@ -89,7 +89,7 @@
 	>
 		<span>LOCK-UP PRICE</span>
 		<div class="flex flex-row gap-4">
-			<span data-testid="lock-up-price">{'$'}{Number(formatEther(tokenId))}</span>
+			<span data-testid="lock-up-price">$ {Number(formatEther(tokenId))}</span>
 		</div>
 	</div>
 
@@ -116,7 +116,7 @@
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
 			<span class="w-1/2 text-center"
-				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPT NFTs</span
 			>
 			<span class="w-1/2 text-center"
 				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
