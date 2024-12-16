@@ -107,7 +107,6 @@
 					amountToRedeem = maxRedeemable;
 					readableAmountToRedeem = Number(formatEther(maxRedeemable)).toString();
 				}}
-				maxValue={Number(maxRedeemable)}
 			/>
 		</div>
 	</div>
@@ -116,8 +115,12 @@
 		class="hidden w-full flex-col items-center justify-center text-lg font-semibold text-white sm:flex sm:text-xl"
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
-			<span class="w-1/2 text-center">{readableAmountToRedeem || 0} RECEIPTS</span>
-			<span class="w-1/2 text-center">{readableAmountToRedeem || 0} cysFLR</span>
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
+			>
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
+			>
 		</div>
 		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
 
