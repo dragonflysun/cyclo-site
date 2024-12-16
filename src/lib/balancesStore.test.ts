@@ -41,7 +41,6 @@ describe('cysFlrBalanceStore', () => {
 			lockPrice: BigInt(0),
 			status: 'Checking',
 			cysFlrUsdPrice: BigInt(0),
-			sFlrUsdPrice: BigInt(0),
 			cysFlrSupply: BigInt(0),
 			TVLsFlr: BigInt(0),
 			TVLUsd: BigInt(0)
@@ -122,7 +121,6 @@ describe('cysFlrBalanceStore', () => {
 			lockPrice: BigInt(0),
 			status: 'Checking',
 			cysFlrUsdPrice: BigInt(0),
-			sFlrUsdPrice: BigInt(0),
 			cysFlrSupply: BigInt(0),
 			TVLsFlr: BigInt(0),
 			TVLUsd: BigInt(0)

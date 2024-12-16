@@ -15,7 +15,6 @@ const initialState = {
 	status: 'Checking',
 	lockPrice: BigInt(0),
 	cysFlrUsdPrice: BigInt(0),
-	sFlrUsdPrice: BigInt(0),
 	cysFlrSupply: BigInt(0),
 	TVLsFlr: BigInt(0),
 	TVLUsd: BigInt(0)
