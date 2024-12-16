@@ -71,6 +71,5 @@
 		<main class="flex-grow bg-[#1C02B8]">
 			<slot></slot>
 		</main>
-		<Footer />
 	</div>
 {/if}

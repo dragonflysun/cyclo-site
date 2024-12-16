@@ -10,7 +10,7 @@
 </script>
 
 <footer
-	class="flex w-full flex-col justify-center bg-[#1C02B8] px-2 pb-6 text-sm text-white sm:px-6 sm:text-base"
+	class="flex w-full flex-col justify-center bg-[#1C02B8] px-2 py-6 text-sm text-white sm:px-6 sm:text-base"
 >
 	<div class="flex w-full max-w-2xl flex-col justify-between gap-4 self-center sm:gap-0">
 		{#if $balancesStore.lockPrice}
