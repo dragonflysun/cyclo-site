@@ -7,6 +7,8 @@
 	import { signerAddress, wagmiConfig } from 'svelte-wagmi';
 	import { formatEther, parseEther } from 'ethers';
 	import burnDia from '$lib/images/burn-dia.svg';
+	import mobileBurnLine from '$lib/images/mobile-burn-line.svg';
+	import mobileBurnDia from '$lib/images/mobile-burn.svg';
 	import Input from './Input.svelte';
 
 	enum ButtonStatus {
@@ -18,21 +20,34 @@
 	let buttonStatus: ButtonStatus = ButtonStatus.READY;
 
 	let erc1155balance = BigInt(receipt.balance);
-	let readableAmountToRedeem: string = '0.0';
+	let readableAmountToRedeem: string = '';
 	let amountToRedeem = BigInt(0);
 	let sFlrToReceive = BigInt(0);
+
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
+	let isMaxSelected = false;
+
 	const checkBalance = () => {
-		if (readableAmountToRedeem) {
-			const bigNumValue = BigInt(parseEther(readableAmountToRedeem.toString()).toString());
-			amountToRedeem = bigNumValue;
+		if (isMaxSelected) return;
+
+		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
+			readableAmountToRedeem = '0.0';
 		}
+		amountToRedeem = parseEther(readableAmountToRedeem.toString());
+	};
+
+	const handleInput = (event: { detail: { value: string } }) => {
+		isMaxSelected = false;
+		readableAmountToRedeem = event.detail.value;
+		checkBalance();
 	};
 
 	$: maxRedeemable =
-		$balancesStore?.cysFlrBalance < erc1155balance ? $balancesStore.cysFlrBalance : erc1155balance;
+		($balancesStore.cysFlrBalance ?? 0n) < (erc1155balance ?? 0n)
+			? ($balancesStore.cysFlrBalance ?? 0n)
+			: (erc1155balance ?? 0n);
 
 	$: if (amountToRedeem) {
 		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
@@ -54,8 +69,13 @@
 	}
 </script>
 
-<div class="flex w-full flex-col items-center justify-center gap-6 p-6" data-testId="receipt-modal">
-	<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
+<div
+	class="flex w-full flex-col items-center justify-center gap-6 p-2 lg:p-6"
+	data-testId="receipt-modal"
+>
+	<div
+		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
+	>
 		<span>NUMBER HELD</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}
@@ -64,35 +84,36 @@
 		</div>
 	</div>
 
-	<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
+	<div
+		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
+	>
 		<span>LOCK-UP PRICE</span>
-
-		<div class="flex flex-row items-center gap-2">
-			<span data-testid="lock-up-price">{Number(formatEther(tokenId))}</span>
+		<div class="flex flex-row gap-4">
+			<span data-testid="lock-up-price">{'$'}{Number(formatEther(tokenId))}</span>
 		</div>
 	</div>
 
 	<div
-		class="flex w-full flex-row items-center justify-between text-lg font-semibold text-white md:text-2xl"
+		class="flex w-full flex-col items-start justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 	>
 		<span>REDEEM AMOUNT</span>
 		<div class="flex flex-row items-center">
 			<Input
-				on:input={(event) => {
-					readableAmountToRedeem = event.detail.value;
-					checkBalance();
-				}}
+				bind:amount={readableAmountToRedeem}
+				on:input={handleInput}
 				data-testid="redeem-input"
 				on:setValueToMax={() => {
+					isMaxSelected = true;
 					amountToRedeem = maxRedeemable;
+					readableAmountToRedeem = Number(formatEther(maxRedeemable)).toString();
 				}}
 				maxValue={Number(maxRedeemable)}
 			/>
 		</div>
 	</div>
-
+	<!-- Burn diagram for desktop -->
 	<div
-		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white md:text-2xl"
+		class="hidden w-full flex-col items-center justify-center text-lg font-semibold text-white sm:flex sm:text-xl"
 	>
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
 			<span class="w-1/2 text-center">{readableAmountToRedeem || 0} RECEIPTS</span>
@@ -102,17 +123,37 @@
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(sFlrToReceive))} SFLR
+				{Number(formatEther(sFlrToReceive))} sFLR
 			</span>
+		</div>
+	</div>
+	<!-- Burn diagram for mobile -->
+	<div
+		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white sm:hidden sm:text-xl"
+	>
+		<div class="flex w-full flex-col items-center justify-center gap-1 text-right">
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
+			>
+			<img src={mobileBurnLine} alt="diagram" class="" />
+			<span class="w-1/2 text-center"
+				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
+			>
+			<img src={mobileBurnDia} alt="diagram" class="" />
+			<div class="flex flex-row items-center gap-2 overflow-ellipsis">
+				<span class="flex overflow-ellipsis" data-testid="flr-to-receive-mobile">
+					{Number(formatEther(sFlrToReceive))} sFLR
+				</span>
+			</div>
 		</div>
 	</div>
 
 	<button
 		data-testid="unlock-button"
-		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white md:text-2xl"
+		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white sm:text-xl"
 		disabled={buttonStatus !== ButtonStatus.READY || amountToRedeem === BigInt(0)}
 		on:click={() =>
-			transactionStore.initiateUnlockTransaction({
+			transactionStore.handleUnlockTransaction({
 				signerAddress: $signerAddress,
 				config: $wagmiConfig,
 				cysFlrAddress: $cysFlrAddress,

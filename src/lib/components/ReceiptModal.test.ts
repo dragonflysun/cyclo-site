@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/svelte';
+import { render, screen, waitFor, fireEvent } from '@testing-library/svelte';
 import ReceiptModal from './ReceiptModal.svelte';
 import transactionStore from '$lib/transactionStore';
 
-import { formatEther } from 'ethers';
+import { formatEther, parseEther } from 'ethers';
 import { mockReceipt } from '$lib/mocks/mockReceipt';
 import userEvent from '@testing-library/user-event';
 
@@ -23,7 +23,7 @@ vi.mock('$lib/balancesStore', async () => {
 });
 
 describe('ReceiptModal Component', () => {
-	const initiateUnlockTransactionSpy = vi.spyOn(transactionStore, 'initiateUnlockTransaction');
+	const initiateUnlockTransactionSpy = vi.spyOn(transactionStore, 'handleUnlockTransaction');
 
 	beforeEach(() => {
 		initiateUnlockTransactionSpy.mockClear();
@@ -49,12 +49,22 @@ describe('ReceiptModal Component', () => {
 		await userEvent.type(input, '0.5');
 
 		await waitFor(() => {
-			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('21.663778162911612 SFLR');
+			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('21.663778162911612 sFLR');
 		});
 	});
 
 	it('should disable the unlock button when the redeem amount is greater than balance', async () => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
 
@@ -68,12 +78,22 @@ describe('ReceiptModal Component', () => {
 	});
 
 	it('should display "INSUFFICIENT cysFLR" if cysFLR balance is insufficient', async () => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
 
 		const input = screen.getByTestId('redeem-input');
-		await userEvent.type(input, '0.00001');
+		await userEvent.type(input, '0.00002');
 		await userEvent.tab();
 
 		await waitFor(() => {
@@ -87,7 +107,13 @@ describe('ReceiptModal Component', () => {
 		mockBalancesStore.mockSetSubscribeValue(
 			BigInt(1000000000000000000),
 			BigInt(1000000000000000000),
-			'Ready'
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
 		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
@@ -101,7 +127,7 @@ describe('ReceiptModal Component', () => {
 		screen.debug();
 	});
 
-	it('should call initiateUnlockTransaction when unlock button is clicked', async () => {
+	it('should call handleUnlockTransaction when unlock button is clicked', async () => {
 		render(ReceiptModal, { receipt: mockReceipt });
 
 		const input = screen.getByTestId('redeem-input');
@@ -116,6 +142,93 @@ describe('ReceiptModal Component', () => {
 
 		await waitFor(() => {
 			expect(initiateUnlockTransactionSpy).toHaveBeenCalledOnce();
+		});
+	});
+
+	it('should set exact receipt balance when max button is clicked and receipt balance is less than cysFlrBalance', async () => {
+		const mockCysFlrBalance = BigInt('1000000000000000000'); // 1 cysFLR
+		mockBalancesStore.mockSetSubscribeValue(
+			mockCysFlrBalance,
+			BigInt(1),
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
+
+		render(ReceiptModal, { receipt: mockReceipt });
+
+		// Find the max button within the input component and click it
+		const maxButton = screen.getByTestId('set-val-to-max');
+		await fireEvent.click(maxButton);
+
+		// Check that the display value is correct
+		await waitFor(() => {
+			const input = screen.getByTestId('redeem-input');
+			expect(input).toHaveValue(formatEther(mockReceipt.balance));
+		});
+
+		// Click unlock button
+		await waitFor(() => {
+			const unlockButton = screen.getByTestId('unlock-button');
+			expect(unlockButton.getAttribute('disabled')).toBeFalsy();
+			userEvent.click(unlockButton);
+		});
+
+		// Verify initiateUnlockTransaction was called with exact cysFlrBalance
+		await waitFor(() => {
+			expect(initiateUnlockTransactionSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					assets: mockReceipt.balance
+				})
+			);
+		});
+	});
+
+	it('should set cysFlrBalance when max button is clicked and receipt balance is greater than cysFlrBalance', async () => {
+		const mockCysFlrBalance = parseEther('0.0001'); // 1 cysFLR
+		mockBalancesStore.mockSetSubscribeValue(
+			mockCysFlrBalance,
+			BigInt(1),
+			'Ready',
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
+
+		render(ReceiptModal, { receipt: mockReceipt });
+
+		// Find the max button within the input component and click it
+		const maxButton = screen.getByTestId('set-val-to-max');
+		await fireEvent.click(maxButton);
+
+		// Check that the display value is correct
+		await waitFor(() => {
+			const input = screen.getByTestId('redeem-input');
+			expect(input).toHaveValue(formatEther(mockCysFlrBalance));
+		});
+
+		// Click unlock button
+
+		await waitFor(() => {
+			const unlockButton = screen.getByTestId('unlock-button');
+			expect(unlockButton.getAttribute('disabled')).toBeFalsy();
+			userEvent.click(unlockButton);
+		});
+
+		// Verify initiateUnlockTransaction was called with exact cysFlrBalance
+		await waitFor(() => {
+			expect(initiateUnlockTransactionSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					assets: mockCysFlrBalance
+				})
+			);
 		});
 	});
 });

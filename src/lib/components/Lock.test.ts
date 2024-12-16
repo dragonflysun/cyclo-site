@@ -4,6 +4,7 @@ import transactionStore from '$lib/transactionStore';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
 import { mockSignerAddressStore } from '$lib/mocks/mockStores';
+import { parseEther } from 'ethers';
 
 const { mockBalancesStore } = await vi.hoisted(() => import('$lib/mocks/mockStores'));
 
@@ -25,48 +26,61 @@ vi.mock('$lib/balancesStore', async () => {
 vi.mock('$lib/transactionStore', async (importOriginal) => ({
 	default: {
 		...((await importOriginal) as object),
-		initiateLockTransaction: vi.fn().mockResolvedValue({})
+		handleLockTransaction: vi.fn().mockResolvedValue({})
 	}
 }));
 
 describe('Lock Component', () => {
-	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'initiateLockTransaction');
+	const initiateLockTransactionSpy = vi.spyOn(transactionStore, 'handleLockTransaction');
 
 	beforeEach(() => {
 		initiateLockTransactionSpy.mockClear();
 		mockBalancesStore.mockSetSubscribeValue(
 			BigInt(1234000000000000000), // sFlrBalance
 			BigInt(9876000000000000000), // cysFlrBalance
-			'Ready' // status
+			'Ready', // status
+			BigInt(1), // lockPrice
+			BigInt(0), // cysFlrSupply
+			BigInt(0) // TVL
 		);
 	});
 
-	it('should render SFLR balance and price ratio correctly', async () => {
+	it('should render sFLR balance and price ratio correctly', async () => {
 		mockSignerAddressStore.mockSetSubscribeValue('0x1234567890123456789012345678901234567890');
 		render(Lock);
 		await waitFor(() => {
 			expect(screen.getByTestId('sflr-balance')).toBeInTheDocument();
 
-			expect(screen.getByTestId('sflr-balance')).toHaveTextContent('9.8760');
+			expect(screen.getByTestId('sflr-balance')).toHaveTextContent('9.876');
 			expect(screen.getByTestId('price-ratio')).toBeInTheDocument();
 		});
 	});
 
 	it('should calculate the correct cysFLR amount based on input', async () => {
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(parseEther('1')),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
+
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
-		await userEvent.type(input, '500000');
+		await userEvent.type(input, '0.5');
 
 		await waitFor(() => {
 			const priceRatio = screen.getByTestId('price-ratio');
 			expect(priceRatio).toBeInTheDocument();
 			const calculatedCysflr = screen.getByTestId('calculated-cysflr');
-			expect(calculatedCysflr).toHaveTextContent('7460.000');
+			expect(calculatedCysflr).toHaveTextContent('0.5');
 		});
 	});
 
-	it('should show the disclaimer modal when lock button is clicked', async () => {
+	it('should call handleLockTransaction when lock button is clicked', async () => {
 		render(Lock);
 
 		const input = screen.getByTestId('lock-input');
@@ -81,10 +95,37 @@ describe('Lock Component', () => {
 	});
 
 	it('should disable the lock button if SFLR balance is insufficient', async () => {
-		mockBalancesStore.mockSetSubscribeValue(BigInt(0), BigInt(0), 'Ready');
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(1),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
+		render(Lock);
+		const input = screen.getByTestId('lock-input');
+		await userEvent.type(input, '500000');
+		const lockButton = screen.getByTestId('lock-button');
+		expect(lockButton).toBeDisabled();
+		expect(lockButton).toHaveTextContent('INSUFFICIENT sFLR');
+	});
+
+	it('should disable the lock button if no value had been entered', async () => {
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Ready',
+			BigInt(1),
+			BigInt(0),
+			BigInt(0),
+			BigInt(0)
+		);
 		render(Lock);
 		const lockButton = screen.getByTestId('lock-button');
 		expect(lockButton).toBeDisabled();
+		expect(lockButton).toHaveTextContent('LOCK');
 	});
 
 	it('should show the connect message if there is no signerAddress', async () => {
@@ -95,13 +136,37 @@ describe('Lock Component', () => {
 		});
 	});
 
-	it('should show the SFLR balance if there is a signerAddress', async () => {
+	it('should show the sFLR balance if there is a signerAddress', async () => {
 		mockSignerAddressStore.mockSetSubscribeValue('0x0000');
 		render(Lock);
 		await waitFor(() => {
 			const balance = screen.getByTestId('your-balance');
 			expect(balance).toBeInTheDocument();
-			expect(balance).toHaveTextContent('SFLR Balance: 9.876');
+			expect(balance).toHaveTextContent('9.876');
+		});
+	});
+
+	it('should display correct USD value', async () => {
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt('1000000000000000000'), // sFlrBalance (1 sFLR)
+			BigInt('1000000000000000000'), // cysFlrBalance (1 cysFLR)
+			'Ready',
+			BigInt('1000000000000000000'), // lockPrice (1 USD, 18 decimals)
+			BigInt('2000000'), // cysFlrUsdPrice (2 USD, 6 decimals)
+			BigInt('1000000'), // sFlrUsdPrice (1 USD, 6 decimals)
+			BigInt('1000000000000000000'), // cysFlrSupply
+			BigInt('1000000000000000000'), // TVLsFlr
+			BigInt('1000000000000000000') // TVLUsd
+		);
+
+		render(Lock);
+
+		const input = screen.getByTestId('lock-input');
+		await userEvent.type(input, '500000');
+
+		await waitFor(() => {
+			const usdValueElement = screen.getByTestId('calculated-cysflr-usd');
+			expect(usdValueElement).toHaveTextContent('Current market value ~$ 1000000.00');
 		});
 	});
 

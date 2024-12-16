@@ -6,32 +6,27 @@
 	import { cysFlrAddress, erc1155Address, sFlrAddress } from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
+	import mintMobile from '$lib/images/mint-mobile.svg';
+	import mintMobileSquiggle from '$lib/images/mint-mobile-squiggle.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
 	import { Modal } from 'flowbite-svelte';
 	import { simulateErc20PriceOracleReceiptVaultPreviewDeposit } from '../../generated';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
-	import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { formatEther, parseEther } from 'ethers';
-	import { ZeroAddress } from 'ethers';
+	import { formatEther, formatUnits, parseEther } from 'ethers';
 
 	export let amountToLock = '0.0';
 	let disclaimerAcknowledged = false;
 	let disclaimerOpen = false;
-
-	let priceRatio = BigInt(0);
-	let assets = BigInt(0);
+	$: assets = BigInt(0);
 	let insufficientFunds = false;
-	let intervalId: ReturnType<typeof setInterval>;
-
-	onMount(() => {
-		startGettingPriceRatio();
-	});
 
 	$: if ($signerAddress) {
 		checkBalance();
 	}
+
+	$: insufficientFunds = $balancesStore.sFlrBalance < assets;
 
 	const checkBalance = () => {
 		if (amountToLock) {
@@ -41,23 +36,6 @@
 		}
 	};
 
-	const getPriceRatio = async () => {
-		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit($wagmiConfig, {
-			address: $cysFlrAddress,
-			args: [BigInt(1e18), 0n],
-			account: ZeroAddress as `0x${string}`
-		});
-		priceRatio = result;
-	};
-
-	const startGettingPriceRatio = async () => {
-		intervalId = setInterval(getPriceRatio, 5000);
-		getPriceRatio();
-	};
-
-	function stopGettingPriceRatio() {
-		clearInterval(intervalId);
-	}
 
 	const initiateLockWithDisclaimer = () => {
 		if (!disclaimerAcknowledged) {
@@ -78,39 +56,30 @@
 		});
 	};
 
-	onDestroy(() => {
-		stopGettingPriceRatio();
-	});
+
 </script>
 
 <Card size="lg">
 	<div class="flex w-full flex-col items-center justify-center gap-10" data-testid="lock-container">
 		{#if $signerAddress}
 			<div
-				class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl"
+				class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
 			>
-				<div class="flex flex-col">
-					<span>SFLR BALANCE</span>
-					<a
-						target="_blank"
-						href={'https://portal.flare.network'}
-						class="cursor-pointer text-xs font-light hover:underline">How do I get SFLR?</a
-					>
-				</div>
+				<span>sFLR BALANCE</span>
+
 				<div class="flex flex-row gap-4">
-					{#key $balancesStore.sFlrBalance}<span
-							data-testid="sflr-balance"
-							in:fade={{ duration: 700 }}
-							>{Number(formatEther($balancesStore.sFlrBalance)).toFixed(4)}</span
-						>{/key}
-					<span>SFLR</span>
+					<span data-testid="your-balance">
+						{Number(formatEther($balancesStore.sFlrBalance.toString()))}
+					</span>
 				</div>
 			</div>
 		{/if}
 
-		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
-			<div class="flex flex-col">
-				<span>SFLR/USD PRICE</span>
+		<div
+			class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
+		>
+			<div class="flex flex-col gap-0">
+				<span>sFLR/USD PRICE</span>
 				<a
 					href={base + '/docs/why-flare'}
 					class="cursor-pointer text-xs font-light hover:underline"
@@ -118,31 +87,37 @@
 					data-testid="price-ratio-link">How does Cyclo use the FTSO?</a
 				>
 			</div>
-			{#key priceRatio}
-				<span
-					in:fade={{ duration: 700 }}
-					class="flex flex-row items-center gap-2"
-					data-testid="price-ratio"
-					>{Number(formatEther(priceRatio.toString())).toFixed(5)}
+			{#if $balancesStore.lockPrice}
+				<div in:fade>
+					{#key $balancesStore.lockPrice}
+						<span
+							in:fade={{ duration: 700 }}
+							class="flex flex-row items-center gap-2"
+							data-testid="price-ratio"
+							>{Number(formatEther($balancesStore.lockPrice.toString()))}
 
-					<svg width="20" height="20" viewBox="0 0 100 100">
-						<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
-						<circle
-							class="fill-circle"
-							cx="50"
-							cy="50"
-							r="45"
-							stroke="white"
-							stroke-width="10"
-							fill="none"
-							stroke-dasharray="282 282"
-						/>
-					</svg></span
-				>
-			{/key}
+							<svg width="20" height="20" viewBox="0 0 100 100">
+								<circle cx="50" cy="50" r="45" stroke="none" stroke-width="10" fill="none" />
+								<circle
+									class="fill-circle"
+									cx="50"
+									cy="50"
+									r="45"
+									stroke="white"
+									stroke-width="10"
+									fill="none"
+									stroke-dasharray="282 282"
+								/>
+							</svg></span
+						>
+					{/key}
+				</div>
+			{/if}
 		</div>
 
-		<div class="flex w-full flex-row justify-between text-lg font-semibold text-white md:text-2xl">
+		<div
+			class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
+		>
 			<span>LOCK AMOUNT</span>
 			<div class="flex flex-col">
 				<Input
@@ -153,14 +128,15 @@
 					}}
 					on:setValueToMax={() => {
 						assets = $balancesStore.sFlrBalance;
-						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toFixed(5);
+						amountToLock = Number(formatEther($balancesStore.sFlrBalance.toString())).toString();
 					}}
-					maxValue={Number($balancesStore.sFlrBalance)}
-					unit={'SFLR'}
+					bind:amount={amountToLock}
+					maxValue={$balancesStore.sFlrBalance}
+					unit={'sFLR'}
 				/>
 				{#if $signerAddress}
-					<p class="my-2 text-right text-xs font-light" data-testid="your-balance">
-						SFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
+					<p class="my-2 text-left text-xs font-light sm:text-right" data-testid="sflr-balance">
+						sFLR Balance: {Number(formatEther($balancesStore.sFlrBalance.toString()))}
 					</p>
 				{:else}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -170,19 +146,20 @@
 						class="my-2 cursor-pointer text-right text-xs font-light hover:underline"
 						data-testid="connect-message"
 					>
-						Connect a wallet to see SFLR balance
+						Connect a wallet to see sFLR balance
 					</div>
 				{/if}
 			</div>
 		</div>
 
-		<div class="flex w-full flex-col gap-2">
+		<!-- Mint diagram for desktop -->
+		<div class="hidden w-full flex-col gap-2 sm:flex">
 			<div
-				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+				class="flex w-full flex-row items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:flex-col sm:text-xl"
 			>
 				<span>{amountToLock || 0}</span>
 
-				<span>SFLR</span>
+				<span>sFLR</span>
 			</div>
 
 			<div class="flex w-full">
@@ -190,18 +167,56 @@
 					class="flex w-1/4 flex-col items-center justify-center pb-12 pr-2 text-center text-white"
 				>
 					<img src={ftso} alt="ftso" class="w-1/2" />
-					{Number(formatEther(priceRatio.toString())).toFixed(5)}
+					{Number(formatEther($balancesStore.lockPrice.toString()))}
 				</div>
 				<img src={mintDia} alt="diagram" class="w-1/2" />
 				<div class="w-1/4"></div>
 			</div>
 
 			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
+			>
+				{#key $balancesStore.lockPrice}
+					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
+						>{+amountToLock * Number(formatEther($balancesStore.lockPrice.toString()))}</span
+					>
+				{/key}
+				<span>cysFLR</span>
+			</div>
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
+			>
+				{#key $balancesStore.lockPrice}
+					<span in:fade={{ duration: 700 }} class="text-sm" data-testid="calculated-cysflr-usd"
+						>Current market value ~$ {(
+							+amountToLock * Number(formatUnits($balancesStore.cysFlrUsdPrice.toString(), 6))
+						).toFixed(2)}</span
+					>
+				{/key}
+			</div>
+		</div>
+
+		<!-- Mint diagram for mobile -->
+		<div class="flex w-full flex-col items-center gap-2 sm:hidden">
+			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
 			>
-				{#key priceRatio}
-					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr"
-						>{(+amountToLock * Number(formatEther(priceRatio.toString()))).toFixed(3)}</span
+				<span>{amountToLock}</span>
+
+				<span>sFLR</span>
+			</div>
+			<img src={mintMobileSquiggle} alt="diagram" class="h-12" />
+			<div class="flex w-1/4 flex-col items-center justify-center text-center text-white">
+				<img src={ftso} alt="ftso" class="" />
+				{Number(formatEther($balancesStore.lockPrice.toString()))}
+			</div>
+			<img src={mintMobile} alt="diagram" class="h-60" />
+			<div
+				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white md:text-2xl"
+			>
+				{#key $balancesStore.lockPrice}
+					<span in:fade={{ duration: 700 }} data-testid="calculated-cysflr-mobile"
+						>{+amountToLock * Number(formatEther($balancesStore.lockPrice.toString()))}</span
 					>
 				{/key}
 				<span>cysFLR</span>
@@ -211,7 +226,7 @@
 		{#if $signerAddress}
 			<Button
 				disabled={insufficientFunds || !assets}
-				customClass="md:text-2xl text-lg w-full bg-white text-primary"
+				customClass="sm:text-xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
 				on:click={() => initiateLockWithDisclaimer()}
 				>{insufficientFunds ? 'INSUFFICIENT SFLR' : 'LOCK'}</Button
@@ -232,12 +247,12 @@
 	on:close={() => (disclaimerOpen = false)}
 	data-testid="disclaimer-modal"
 >
-	<div class="p-4 text-center">
+	<div class="p-1 sm:p-4 text-center">
 		<h2 class="mb-4 text-lg font-semibold text-red-600">Wait!</h2>
 		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
 			Before you lock your sFLR, make sure you understand the following:
 		</p>
-		<ul class="mb-4 flex flex-col gap-1 pl-4 text-left text-xs text-gray-700 dark:text-gray-300">
+		<ul class="mb-4 flex flex-col gap-1 pl-1 sm:pl-4 text-left text-xs text-gray-700 dark:text-gray-300">
 			<li class="relative pl-2">
 				<span class="absolute -left-4">•</span>
 				This front end is a tool for interacting with the Cyclo smart contracts.

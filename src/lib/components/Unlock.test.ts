@@ -30,7 +30,12 @@ describe('Unlock Component', () => {
 		mockBalancesStore.mockSetSubscribeValue(
 			BigInt(1000000000000000000),
 			BigInt(1000000000000000000),
-			'Ready'
+			'Ready',
+			BigInt(1),
+			BigInt(1),
+			BigInt(1),
+			BigInt(1000000),
+			BigInt(1000)
 		);
 	});
 

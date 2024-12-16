@@ -1,5 +1,5 @@
 <script lang="ts">
-	import logo from '$lib/logo-white.svg';
+	import logo from '$lib/images/logo-white.svg';
 	import { ArrowsRepeatCountOutline, LockOpenOutline, LockOutline } from 'flowbite-svelte-icons';
 
 	let loadingDots = '.';
@@ -18,7 +18,7 @@
 					LEVERAGE WITHOUT FEAR_
 				</h1>
 				<p class="mb-4 text-xl">
-					Access the power of leverage while keeping your FLR position completely safe from
+					Access the power of leverage while keeping your sFLR position completely safe from
 					liquidations.
 				</p>
 			</div>
@@ -158,7 +158,7 @@
 							</p>
 							<p class="flex items-start gap-3">
 								<span class="text-xl text-green-400">►</span>
-								<span>Backed by real FLR value, not algorithmic</span>
+								<span>Backed by real sFLR value, not algorithmic</span>
 							</p>
 						</div>
 					</div>
