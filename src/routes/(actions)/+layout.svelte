@@ -8,6 +8,7 @@
 
 	import Button from '$lib/components/Button.svelte';
 	import { base } from '$app/paths';
+	import Footer from '$lib/components/Footer.svelte';
 
 	$: if ($signerAddress) {
 		balancesStore.refreshBalances($wagmiConfig, $sFlrAddress, $cysFlrAddress, $signerAddress);
@@ -28,5 +29,6 @@
 		>
 	</div>
 	<slot />
+	<Footer />
 	<TransactionModal />
 </div>
