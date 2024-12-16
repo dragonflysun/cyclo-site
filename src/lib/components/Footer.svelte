@@ -35,18 +35,16 @@
 			{/key}
 		{/if}
 		{#if $balancesStore.TVLUsd}
-			<div
-				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-				in:fade
-				data-testId="TVL"
-			>
-				<span>Total Value Locked</span>
-				<span
-					>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
-						formatUnits($balancesStore.TVLUsd, 18)
-					).toFixed(2)}</span
-				>
-			</div>
+			{#key $balancesStore.TVLUsd}
+				<div class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2" data-testId="TVL">
+					<span>Total Value Locked</span>
+					<span
+						>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
+							formatUnits($balancesStore.TVLUsd, 18)
+						).toFixed(2)}</span
+					>
+				</div>
+			{/key}
 		{/if}
 		{#if readablecysFLRSupply}
 			{#key readablecysFLRSupply}
