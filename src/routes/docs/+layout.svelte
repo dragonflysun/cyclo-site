@@ -38,7 +38,7 @@
 	</div>
 	<div>
 		<div class="prose prose-neutral max-w-[100ch] p-4 md:p-8">
-			<slot></slot>
+			<slot />
 		</div>
 	</div>
 </div>

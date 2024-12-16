@@ -68,7 +68,7 @@
 	<div class="flex min-h-screen flex-col">
 		<Header launched={PUBLIC_LAUNCHED === 'true'} />
 		<main class="flex-grow bg-[#1C02B8]">
-			<slot></slot>
+			<slot />
 		</main>
 	</div>
 {/if}
