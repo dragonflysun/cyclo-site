@@ -9,7 +9,7 @@
 </script>
 
 <footer
-	class="flex w-full flex-col justify-center bg-[#1C02B8] px-2 pb-6 text-sm text-white sm:px-6 sm:text-base"
+	class="flex w-full flex-col justify-center bg-[#1C02B8] px-2 py-6 text-sm text-white sm:px-6 sm:text-base"
 >
 	<div class="flex w-full max-w-2xl flex-col justify-between gap-4 self-center sm:gap-0">
 		{#if $balancesStore.lockPrice}
@@ -35,16 +35,18 @@
 			{/key}
 		{/if}
 		{#if $balancesStore.TVLUsd}
-			{#key $balancesStore.TVLUsd}
-				<div class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2" data-testId="TVL">
-					<span>Total Locked Value</span>
-					<span
-						>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
-							formatUnits($balancesStore.TVLUsd, 18)
-						).toFixed(2)}</span
-					>
-				</div>
-			{/key}
+			<div
+				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+				in:fade
+				data-testId="TVL"
+			>
+				<span>Total Value Locked</span>
+				<span
+					>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
+						formatUnits($balancesStore.TVLUsd, 18)
+					).toFixed(2)}</span
+				>
+			</div>
 		{/if}
 		{#if readablecysFLRSupply}
 			{#key readablecysFLRSupply}
