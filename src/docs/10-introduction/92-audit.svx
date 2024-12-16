@@ -1,0 +1,9 @@
+
+---
+title: Audit
+published: true
+---
+
+Cyclo was audited by <a href="https://protofire.io" target="_blank">Protofire</a>
+
+The audit can be found at <a href="https://github.com/cyclofinance/cyclo.sol/tree/main/audit" target="_blank">https://github.com/cyclofinance/cyclo.sol/tree/main/audit</a>

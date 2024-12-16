@@ -1,0 +1,120 @@
+
+---
+title: Ecosystem Roles
+published: true
+---
+
+<script>
+    import theLeverager from '$lib/images/the-leverager.png';
+    import theLooper from '$lib/images/the-looper.png';
+    import theSpeculator from '$lib/images/the-speculator.png';
+    import theMarketMaker from '$lib/images/the-market-maker.png';
+</script>
+
+Here are some examples of how different participants might use the protocol - though users will find their own strategies that work best for them.
+
+**This is not financial advice, and users should do their own research before using the protocol.**
+
+## The Leverager: Strategic Position Builder
+
+<img src={theLeverager} alt="The Leverager" class="mx-auto max-w-lg" />
+
+### Profile
+
+The Leverager is a trader who wants to amplify their trading positions without the risk of liquidation. They see Cyclo as a tool to increase their exposure to market movements while maintaining control over their collateral.
+
+The Leverager may use their capital for:
+- Market trading
+- Yield-bearing assets
+- Real world assets
+
+### Strategy
+
+1. Lock sFLR to mint cysFLR
+2. Sell cysFLR for other assets (like FLR or JOULE)
+3. Trade with the increased capital
+4. Use trading profits to buy back cysFLR
+5. Burn cysFLR to reclaim original sFLR
+
+### Key Benefits
+
+- No liquidation risk
+- Continues earning staking rewards on locked sFLR
+- Flexible timeframe for position management
+- Known maximum cost to unwind position ($1 per cysFLR)
+
+## The Looper: Long-Term FLR Accumulator
+
+<img src={theLooper} alt="The Looper" class="mx-auto max-w-lg" />
+
+### Profile
+
+The Looper is bullish on FLR and wants to maximize their FLR exposure. They use Cyclo to create a leveraged long position, taking advantage of the protocol's no-liquidation feature.
+
+### Strategy
+
+1. Lock initial sFLR to mint cysFLR
+2. Sell cysFLR for more sFLR
+3. Lock the new sFLR to mint more cysFLR
+4. Repeat the process multiple times
+5. Hold position long-term, collecting staking rewards
+
+### Key Benefits
+
+- Maximizes FLR exposure
+- Earns staking rewards on all locked sFLR
+- Known maximum unwind cost
+- No forced liquidations
+- Ideal for long-term FLR bulls
+
+## The Speculator: Price Range Trader
+    
+<img src={theSpeculator} alt="The Speculator" class="mx-auto max-w-lg" />
+
+### Profile
+
+The Speculator understands cysFLR's unique price dynamics and trades within its $0-$1 range. They profit from cyclical price movements without needing to mint or lock any sFLR themselves.
+
+### Strategy
+
+1. Buy cysFLR when leverage demand is high (price low)
+2. Hold until leveraged positions need to unwind
+3. Sell cysFLR when demand to unlock collateral increases
+4. Repeat the cycle
+
+### Key Benefits
+
+- Known price boundaries ($0-$1)
+- No collateral requirements
+- Predictable market mechanics
+- Multiple trading opportunities as market cycles
+
+## The Market Maker: Liquidity Provider
+
+<img src={theMarketMaker} alt="The Market Maker" class="mx-auto max-w-lg" />
+
+### Profile
+
+The Market Maker provides essential liquidity to the ecosystem, enabling efficient trading for all other participants while earning fees from trading volume.
+
+### Strategy
+
+1. Provide liquidity to cysFLR/FLR pairs
+2. Maintain balanced positions
+3. Earn trading fees from all ecosystem participants
+4. Adjust positions based on market dynamics
+
+### Key Benefits
+
+- Predictable price range limits IL risk
+- High volume from ecosystem activity
+- Multiple revenue sources
+- Essential ecosystem role
+- Can combine with other strategies
+
+## Cross-Role Interactions
+The ecosystem thrives on the interaction between these roles:
+- Leveragers and Loopers create natural selling pressure
+- Speculators provide buying pressure when needed
+- Market Makers enable efficient price discovery
+- All participants benefit from the bounded price range and no-liquidation design
