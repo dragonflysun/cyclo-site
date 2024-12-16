@@ -44,12 +44,12 @@
 		type="text"
 		value={displayValue}
 	/>
-	{#if tokenName}
+	{#if unit}
 		<span
 			data-testid="unit"
 			class="h-full content-center self-center bg-primary pr-2 text-right text-lg text-white md:text-2xl"
 		>
-			{tokenName}</span
+			{unit}</span
 		>
 	{/if}
 	<button
