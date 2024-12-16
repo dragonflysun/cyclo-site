@@ -207,7 +207,7 @@
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
 			>
 				{#key $balancesStore.lockPrice}
-					<span class="text-sm" data-testid="calculated-cysflr-usd"
+					<span class="text-sm" data-testid="calculated-cysflr-usd-mobile"
 						>Current market value ~$ {Number(
 							formatEther(
 								(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n

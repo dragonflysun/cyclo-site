@@ -41,7 +41,7 @@
 				class=" flex w-full flex-col justify-between font-semibold text-white sm:flex-row sm:text-xl md:text-xl"
 			>
 				<span>BALANCE</span>
-				<div class="flex flex-row gap-4">
+				<div class="flex flex-row gap-4" data-testid="cysflr-balance">
 					{#key $balancesStore.cysFlrBalance}<span in:fade={{ duration: 700 }}
 							>{formatEther($balancesStore.cysFlrBalance)}</span
 						>{/key}
