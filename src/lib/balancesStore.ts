@@ -34,7 +34,7 @@ const getcysFLRUsdPrice = async (
 				tokenIn: cusdxAddress,
 				tokenOut: cysFlrAddress,
 				amount: BigInt(1e18),
-				fee: 300,
+				fee: 3000,
 				sqrtPriceLimitX96: BigInt(0)
 			}
 		]
