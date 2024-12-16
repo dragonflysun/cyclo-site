@@ -15,7 +15,6 @@
 	enum ButtonStatus {
 		INSUFFICIENT_RECEIPTS = 'INSUFFICIENT RECEIPTS',
 		INSUFFICIENT_cysFLR = 'INSUFFICIENT cysFLR',
-		ZERO_AMOUNT = 'ZERO AMOUNT',
 		READY = 'UNLOCK'
 	}
 	export let receipt: Receipt;
