@@ -19,8 +19,8 @@
 	let selectedReceipt: ReceiptType | null = null;
 
 	const mappedReceipts = receipts.map((receipt) => {
+		const totalsFlr = (receipt.balance * 10n ** 18n) / BigInt(receipt.tokenId);
 		const flrPerReceipt = 10n ** 36n / BigInt(receipt.tokenId);
-		const totalsFlr = (BigInt(receipt.balance) * flrPerReceipt) / 10n ** 18n;
 
 		return {
 			...receipt,
