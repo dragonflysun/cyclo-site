@@ -10,6 +10,5 @@
 	#dexscreener-embed {
 		position: relative;
 		width: 100%;
-		padding-bottom: 125%;
 	}
 </style>
