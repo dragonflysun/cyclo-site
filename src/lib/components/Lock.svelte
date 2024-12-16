@@ -10,12 +10,14 @@
 	import mintMobileSquiggle from '$lib/images/mint-mobile-squiggle.svg';
 	import ftso from '$lib/images/ftso.svg';
 	import Button from '$lib/components/Button.svelte';
+	import { Modal } from 'flowbite-svelte';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { fade } from 'svelte/transition';
 	import { formatEther, parseEther } from 'ethers';
 
 	export let amountToLock = '';
-
+	let disclaimerAcknowledged = false;
+	let disclaimerOpen = false;
 	$: assets = amountToLock ? BigInt(parseEther(amountToLock.toString()).toString()) : BigInt(0);
 
 	$: if ($signerAddress) {
@@ -28,12 +30,27 @@
 		if (amountToLock) {
 			const bigNumValue = BigInt(parseEther(amountToLock.toString()).toString());
 			assets = bigNumValue;
-			if ($balancesStore.sFlrBalance < assets) {
-				insufficientFunds = true;
-			} else {
-				insufficientFunds = false;
-			}
+			insufficientFunds = $balancesStore.sFlrBalance < assets;
 		}
+	};
+
+	const initiateLockWithDisclaimer = () => {
+		if (!disclaimerAcknowledged) {
+			disclaimerOpen = true;
+		} else {
+			runLockTransaction();
+		}
+	};
+
+	const runLockTransaction = () => {
+		transactionStore.handleLockTransaction({
+			signerAddress: $signerAddress,
+			config: $wagmiConfig,
+			cysFlrAddress: $cysFlrAddress,
+			sFlrAddress: $sFlrAddress,
+			erc1155Address: $erc1155Address,
+			assets: assets
+		});
 	};
 </script>
 
@@ -223,15 +240,8 @@
 				disabled={insufficientFunds || !assets}
 				customClass="sm:text-xl text-lg w-full bg-white text-primary"
 				data-testid="lock-button"
-				on:click={() =>
-					transactionStore.handleLockTransaction({
-						signerAddress: $signerAddress,
-						config: $wagmiConfig,
-						cysFlrAddress: $cysFlrAddress,
-						sFlrAddress: $sFlrAddress,
-						erc1155Address: $erc1155Address,
-						assets: assets
-					})}>{insufficientFunds ? 'INSUFFICIENT sFLR' : 'LOCK'}</Button
+				on:click={() => initiateLockWithDisclaimer()}
+				>{insufficientFunds ? 'INSUFFICIENT sFLR' : 'LOCK'}</Button
 			>
 		{:else}
 			<Button
@@ -242,6 +252,87 @@
 		{/if}
 	</div>
 </Card>
+
+<Modal
+	size="sm"
+	open={disclaimerOpen}
+	on:close={() => (disclaimerOpen = false)}
+	data-testid="disclaimer-modal"
+>
+	<div class="p-1 text-center sm:p-4">
+		<h2 class="mb-4 text-lg font-semibold text-red-600">Wait!</h2>
+		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
+			Before you lock your sFLR, make sure you understand the following:
+		</p>
+		<ul
+			class="mb-4 flex flex-col gap-1 pl-1 text-left text-xs text-gray-700 dark:text-gray-300 sm:pl-4"
+		>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				This front end is a tool for interacting with the Cyclo smart contracts.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				You are depositing funds using your own wallet and private keys.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				No custodianship of funds exists; they are held by the smart contract.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Smart contracts are immutable and cannot be upgraded or modified. Cyclo has been audited, however
+				this does not guarantee there are no bugs or other vulnerabilities.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				The protocol is fully autonomous; there are no admin controls or governance.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Cyclo relies on oracles to determine the FLR/USD price and the sFLR/FLR exchange rate. These
+				are maintained by Flare Networks and Sceptre respectively.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				You must keep your receipt tokens safe to unlock your sFLR.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				The value of cysFLR is determined solely by market forces.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Do not proceed if you do not understand the transaction you are signing.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Only invest funds you can afford to lose.
+			</li>
+			<li class="relative pl-2">
+				<span class="absolute -left-4">•</span>
+				Verify the smart contract addresses match the official documentation.
+			</li>
+		</ul>
+		<p class="mb-4 text-sm text-gray-700 dark:text-gray-300">
+			For more information on risks, please see the <a href={base + '/docs/risks'}>Risks</a> section
+			of the documentation.
+		</p>
+		<div class="flex w-full justify-center">
+			<Button
+				class="mt-4  text-white"
+				on:click={() => {
+					disclaimerAcknowledged = true;
+					disclaimerOpen = false;
+					runLockTransaction();
+				}}
+				data-testid="disclaimer-acknowledge-button"
+			>
+				ACKNOWLEDGE AND LOCK
+			</Button>
+		</div>
+	</div>
+</Modal>
 
 <style lang="postcss">
 	.fill-circle {
