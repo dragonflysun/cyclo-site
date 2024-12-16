@@ -68,4 +68,23 @@ describe('Footer.svelte', () => {
 			expect(screen.queryByText('Total TVL')).not.toBeInTheDocument();
 		});
 	});
+
+	it('should display market cap correctly', async () => {
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Error',
+			BigInt(0),
+			BigInt(1e18),
+			BigInt(1e18),
+			BigInt(1), // cysFlrSupply
+			BigInt(0) // TVL
+		);
+		render(Footer);
+
+		await waitFor(() => {
+			expect(screen.getByTestId('market-cap')).toBeInTheDocument();
+			expect(screen.getByText('$ 1000000000000.00')).toBeInTheDocument();
+		});
+	});
 });
