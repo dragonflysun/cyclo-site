@@ -6,6 +6,8 @@
 	$: readablecysFLRSupply = $balancesStore.cysFlrSupply
 		? formatNumberWithAbbreviations(+formatEther($balancesStore.cysFlrSupply))
 		: '';
+
+	$: marketCap = ($balancesStore.cysFlrUsdPrice * $balancesStore.cysFlrSupply) / 10n ** 6n;
 </script>
 
 <footer
@@ -34,6 +36,26 @@
 				</div>
 			{/key}
 		{/if}
+		{#if readablecysFLRSupply}
+			{#key readablecysFLRSupply}
+				<div
+					class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+					data-testId="cysFlr-supply"
+				>
+					<span>Total cysFLR supply</span> <span>{readablecysFLRSupply}</span>
+				</div>
+			{/key}
+		{/if}
+		{#if marketCap}
+			{#key marketCap}
+				<div
+					class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+					data-testId="market-cap"
+				>
+					<span>cysFLR Market Cap</span> <span>$ {Number(formatEther(marketCap)).toFixed(2)}</span>
+				</div>
+			{/key}
+		{/if}
 		{#if $balancesStore.TVLUsd}
 			{#key $balancesStore.TVLUsd}
 				<div class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2" data-testId="TVL">
@@ -43,16 +65,6 @@
 							formatUnits($balancesStore.TVLUsd, 18)
 						).toFixed(2)}</span
 					>
-				</div>
-			{/key}
-		{/if}
-		{#if readablecysFLRSupply}
-			{#key readablecysFLRSupply}
-				<div
-					class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-					data-testId="cysFlr-supply"
-				>
-					<span>Total cysFLR supply</span> <span>{readablecysFLRSupply}</span>
 				</div>
 			{/key}
 		{/if}
