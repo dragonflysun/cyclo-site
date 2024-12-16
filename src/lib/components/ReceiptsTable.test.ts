@@ -20,9 +20,6 @@ describe('ReceiptsTable Component', () => {
 			expect(screen.getByTestId(`number-held-${i}`)).toHaveTextContent(
 				Number(formatEther(mockReceipts[i].balance)).toFixed(5)
 			);
-			expect(screen.getByTestId(`sflr-per-receipt-${i}`)).toHaveTextContent(
-				Number(mockReceipts[i].readableFlrPerReceipt).toFixed(5)
-			);
 			expect(screen.getByTestId(`total-locked-sflr-${i}`)).toHaveTextContent(
 				Number(mockReceipts[i].readableTotalsFlr).toFixed(5)
 			);

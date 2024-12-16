@@ -80,7 +80,7 @@
 		<span>TOTAL sFLR LOCKED</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}
-					<span in:fade={{ duration: 700 }} data-testid="balance"
+					<span in:fade={{ duration: 700 }}
 						>{formatEther(receipt.totalsFlr ?? 0n)}</span
 					>
 				{/if}{/key}
