@@ -30,18 +30,10 @@
 	let isMaxSelected = false;
 
 	const checkBalance = () => {
-		if (isMaxSelected) return;
-
-		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
-			readableAmountToRedeem = '0.0';
+		if (readableAmountToRedeem) {
+			const bigNumValue = BigInt(parseEther(readableAmountToRedeem.toString()).toString());
+			amountToRedeem = bigNumValue;
 		}
-		amountToRedeem = parseEther(readableAmountToRedeem.toString());
-	};
-
-	const handleInput = (event: { detail: { value: string } }) => {
-		isMaxSelected = false;
-		readableAmountToRedeem = event.detail.value;
-		checkBalance();
 	};
 
 	$: maxRedeemable =
@@ -49,16 +41,14 @@
 			? ($balancesStore.cysFlrBalance ?? 0n)
 			: (erc1155balance ?? 0n);
 
-	$: if (amountToRedeem) {
-		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
-		if (erc1155balance < amountToRedeem) {
-			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
-		} else if ($balancesStore.cysFlrBalance < amountToRedeem) {
-			buttonStatus = ButtonStatus.INSUFFICIENT_cysFLR;
-		} else {
-			buttonStatus = ButtonStatus.READY;
-		}
-	}
+	$: insufficientReceipts = erc1155balance < amountToRedeem;
+	$: insufficientcysFlr = $balancesStore.cysFlrBalance < amountToRedeem;
+
+	$: buttonStatus = insufficientReceipts
+		? ButtonStatus.INSUFFICIENT_RECEIPTS
+		: insufficientcysFlr
+			? ButtonStatus.INSUFFICIENT_cysFLR
+			: ButtonStatus.READY;
 
 	$: if (amountToRedeem > 0) {
 		const _sFlrToReceive = (amountToRedeem * 10n ** 18n) / BigInt(receipt.tokenId);
@@ -89,7 +79,7 @@
 	>
 		<span>LOCK-UP PRICE</span>
 		<div class="flex flex-row gap-4">
-			<span data-testid="lock-up-price">{'$'}{Number(formatEther(tokenId))}</span>
+			<span data-testid="lock-up-price">$ {Number(formatEther(tokenId))}</span>
 		</div>
 	</div>
 
@@ -100,7 +90,10 @@
 		<div class="flex flex-row items-center">
 			<Input
 				bind:amount={readableAmountToRedeem}
-				on:input={handleInput}
+				on:input={(event) => {
+					readableAmountToRedeem = event.detail.value;
+					checkBalance();
+				}}
 				data-testid="redeem-input"
 				placeholder="0.0"
 				on:setValueToMax={() => {
@@ -127,7 +120,7 @@
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(sFlrToReceive))} sFLR
+				{formatEther(sFlrToReceive)} sFLR
 			</span>
 		</div>
 	</div>
