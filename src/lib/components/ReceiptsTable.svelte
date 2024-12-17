@@ -73,7 +73,7 @@
 		outsideclose={true}
 		dismissable={true}
 		on:close={() => (selectedReceipt = null)}
-		defaultClass="bg-primary border-4 rounded-none inset"
+		defaultClass="bg-primary border-4 rounded-none inset h-fit"
 		open={selectedReceipt ? true : false}
 	>
 		<ReceiptModal receipt={selectedReceipt} />
