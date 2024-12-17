@@ -20,14 +20,14 @@ describe('Header.svelte', () => {
 	it('shows the "App" button when PUBLIC_LAUNCHED is "true"', async () => {
 		render(Header, { props: { launched: true } });
 
-		const appButton = screen.getByRole('button', { name: /App/i });
+		const appButton = screen.getByTestId('app-button');
 		expect(appButton).toBeInTheDocument();
 	});
 
 	it('does not show the "App" button when PUBLIC_LAUNCHED is not "true"', async () => {
 		render(Header, { props: { launched: false } });
 
-		const appButton = screen.queryByRole('button', { name: /App/i });
+		const appButton = screen.queryByTestId('app-button');
 		expect(appButton).not.toBeInTheDocument();
 	});
 });

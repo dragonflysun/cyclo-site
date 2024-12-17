@@ -8,6 +8,7 @@
 <div class="flex items-center justify-center gap-4 sm:hidden">
 	{#if launched}
 		<button
+			data-testid="app-button-mobile"
 			class="text-lg text-white sm:ml-4 sm:block sm:text-xl"
 			class:hidden={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
 			on:click={() => {
@@ -27,6 +28,7 @@
 <div class="hidden items-center justify-center gap-4 sm:flex">
 	{#if launched}
 		<button
+			data-testid="app-button"
 			class="text-lg text-white sm:ml-4 sm:block sm:text-xl"
 			class:underline={$page.url.pathname === '/lock' || $page.url.pathname === '/unlock'}
 			on:click={() => {
