@@ -4,11 +4,13 @@ import {
 	readErc20TotalSupply,
 	simulateErc20PriceOracleReceiptVaultPreviewDeposit,
 	simulateQuoterQuoteExactInputSingle,
-	simulateQuoterQuoteExactOutputSingle
 } from '../generated';
+import { multicall } from "@wagmi/core"
 import { writable } from 'svelte/store';
 import type { Hex } from 'viem';
 import { ZeroAddress } from 'ethers';
+import {quoterAbi} from "$lib/contracts/quoterAbi"
+import {erc20PriceOracleReceiptVaultAbi} from "$lib/contracts/ERC20PriceOracleReceiptVaultAbi"
 
 const initialState = {
 	cysFlrBalance: BigInt(0),
@@ -55,34 +57,43 @@ const getSwapQuote = async (
 	return { cysFlrOutput: depositPreviewValue, cusdxOutput: swapQuote[0] };
 };
 
-const getcysFLRUsdPrice = async (
+const getPrices = async (
 	config: Config,
 	quoterAddress: Hex,
 	cusdxAddress: Hex,
 	cysFlrAddress: Hex
 ) => {
-	const data = await simulateQuoterQuoteExactOutputSingle(config, {
-		address: quoterAddress,
-		args: [
+	const data = await multicall(config,{
+		contracts: [
+
 			{
-				tokenIn: cusdxAddress,
-				tokenOut: cysFlrAddress,
-				amount: BigInt(1e18),
-				fee: 3000,
-				sqrtPriceLimitX96: BigInt(0)
+				address: cysFlrAddress,
+				abi: erc20PriceOracleReceiptVaultAbi,
+				functionName: 'previewDeposit',
+				account: ZeroAddress as `0x${string}`,
+				args: [BigInt(1e18), 0n]
+			},
+			{
+				address: quoterAddress,
+				abi: quoterAbi,
+				functionName: 'quoteExactOutputSingle',
+				args: [{
+					tokenIn: cusdxAddress,
+					tokenOut: cysFlrAddress,
+					amount: BigInt(1e18),
+					fee: 3000,
+					sqrtPriceLimitX96: BigInt(0)
+				}]
 			}
 		]
 	});
-	return data.result[0] || 0n;
-};
 
-const getLockPrice = async (config: Config, cysFlrAddress: Hex) => {
-	const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(config, {
-		address: cysFlrAddress,
-		args: [BigInt(1e18), 0n],
-		account: ZeroAddress as `0x${string}`
-	});
-	return result;
+	console.log(data[0], data[1])
+
+	return {
+		cysFlrUsdPrice: data[0] || 0n,
+		lockPrice: data[1] || 0n
+	};
 };
 
 const getcysFLRSupply = async (config: Config, cysFlrAddress: Hex) => {
@@ -117,23 +128,32 @@ const balancesStore = () => {
 		cusdxAddress: Hex,
 		sFlrAddress: Hex
 	) => {
-		const [cysFlrUsdPrice, lockPrice, cysFlrSupply, sFlrBalanceLockedInCysFlr] = await Promise.all([
-			getcysFLRUsdPrice(config, quoterAddress, cusdxAddress, cysFlrAddress),
-			getLockPrice(config, cysFlrAddress),
-			getcysFLRSupply(config, cysFlrAddress),
-			getsFLRBalanceLockedInCysFlr(config, cysFlrAddress, sFlrAddress)
-		]);
-		const TVLUsd = (sFlrBalanceLockedInCysFlr * lockPrice) / BigInt(1e18);
-		const TVLsFlr = sFlrBalanceLockedInCysFlr;
-		update((state) => ({
-			...state,
-			status: 'Ready',
-			cysFlrUsdPrice,
-			lockPrice,
-			cysFlrSupply,
-			TVLsFlr,
-			TVLUsd
-		}));
+		try {
+			const [prices, cysFlrSupply, sFlrBalanceLockedInCysFlr] = await Promise.all([
+				getPrices(config, quoterAddress, cusdxAddress, cysFlrAddress),
+				getcysFLRSupply(config, cysFlrAddress),
+				getsFLRBalanceLockedInCysFlr(config, cysFlrAddress, sFlrAddress)
+			]);
+
+			const TVLUsd = (sFlrBalanceLockedInCysFlr * prices.lockPrice) / BigInt(1e18);
+			const TVLsFlr = sFlrBalanceLockedInCysFlr;
+
+			update((state) => ({
+				...state,
+				status: 'Ready',
+				cysFlrUsdPrice: prices.cysFlrUsdPrice,
+				lockPrice: prices.lockPrice,
+				cysFlrSupply,
+				TVLsFlr,
+				TVLUsd
+			}));
+		} catch (error) {
+			console.error('Error refreshing prices:', error);
+			update((state) => ({
+				...state,
+				status: 'Error'
+			}));
+		}
 	};
 
 	const refreshBalances = async (
