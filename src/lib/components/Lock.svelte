@@ -248,8 +248,8 @@
 				{#key $balancesStore.lockPrice}
 					<span class="text-sm" data-testid="calculated-cysflr-usd-mobile"
 						>Current market value ~$ {amountToLock
-						? formatUnits($balancesStore.swapQuotes.cusdxOutput, 6)
-						: '0'}
+							? formatUnits($balancesStore.swapQuotes.cusdxOutput, 6)
+							: '0'}
 					</span>
 				{/key}
 			</div>
