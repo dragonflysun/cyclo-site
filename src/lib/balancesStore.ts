@@ -3,6 +3,7 @@ import {
 	readErc20BalanceOf,
 	readErc20TotalSupply,
 	simulateErc20PriceOracleReceiptVaultPreviewDeposit,
+	simulateQuoterQuoteExactInputSingle,
 	simulateQuoterQuoteExactOutputSingle
 } from '../generated';
 import { writable } from 'svelte/store';
@@ -15,10 +16,43 @@ const initialState = {
 	status: 'Checking',
 	lockPrice: BigInt(0),
 	cysFlrUsdPrice: BigInt(0),
-	sFlrUsdPrice: BigInt(0),
 	cysFlrSupply: BigInt(0),
 	TVLsFlr: BigInt(0),
-	TVLUsd: BigInt(0)
+	TVLUsd: BigInt(0),
+	swapQuotes: {
+		cysFlrOutput: BigInt(0),
+		cusdxOutput: BigInt(0)
+	}
+};
+
+const getSwapQuote = async (
+	config: Config,
+	cysFlrAddress: Hex,
+	cusdxAddress: Hex,
+	assets: bigint,
+	quoterAddress: Hex
+) => {
+	const { result: depositPreviewValue } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(
+		config,
+		{
+			address: cysFlrAddress,
+			args: [assets, 0n],
+			account: ZeroAddress as `0x${string}`
+		}
+	);
+	const { result: swapQuote } = await simulateQuoterQuoteExactInputSingle(config, {
+		address: quoterAddress,
+		args: [
+			{
+				tokenIn: cysFlrAddress,
+				tokenOut: cusdxAddress,
+				amountIn: depositPreviewValue,
+				fee: 3000,
+				sqrtPriceLimitX96: BigInt(0)
+			}
+		]
+	});
+	return { cysFlrOutput: depositPreviewValue, cusdxOutput: swapQuote[0] };
 };
 
 const getcysFLRUsdPrice = async (
@@ -34,7 +68,7 @@ const getcysFLRUsdPrice = async (
 				tokenIn: cusdxAddress,
 				tokenOut: cysFlrAddress,
 				amount: BigInt(1e18),
-				fee: 300,
+				fee: 3000,
 				sqrtPriceLimitX96: BigInt(0)
 			}
 		]
@@ -135,11 +169,32 @@ const balancesStore = () => {
 		}
 	};
 
+	const refreshSwapQuote = async (
+		config: Config,
+		cysFlrAddress: Hex,
+		cusdxAddress: Hex,
+		assets: bigint,
+		quoterAddress: Hex
+	) => {
+		const swapQuotes = await getSwapQuote(
+			config,
+			cysFlrAddress,
+			cusdxAddress,
+			assets,
+			quoterAddress
+		);
+		update((state) => ({
+			...state,
+			swapQuotes
+		}));
+	};
+
 	return {
 		subscribe,
 		reset,
 		refreshBalances,
-		refreshPrices
+		refreshPrices,
+		refreshSwapQuote
 	};
 };
 

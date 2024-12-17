@@ -28,7 +28,8 @@ describe('Footer.svelte', () => {
 			BigInt(1e18),
 			BigInt(1e18), // cysFlrSupply
 			BigInt(3000),
-			BigInt(3000) // TVLsFlr
+			BigInt(3000), // TVLsFlr
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
 		);
 	});
 
@@ -58,7 +59,9 @@ describe('Footer.svelte', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0), // cysFlrSupply
-			BigInt(0) // TVL
+			BigInt(0), // TVL
+			BigInt(0),
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
 		);
 
 		render(Footer);
@@ -66,6 +69,27 @@ describe('Footer.svelte', () => {
 		await waitFor(() => {
 			expect(screen.queryByText('Total cysFLR supply')).not.toBeInTheDocument();
 			expect(screen.queryByText('Total TVL')).not.toBeInTheDocument();
+		});
+	});
+
+	it('should display market cap correctly', async () => {
+		mockBalancesStore.mockSetSubscribeValue(
+			BigInt(0),
+			BigInt(0),
+			'Error',
+			BigInt(0),
+			BigInt(1e18),
+			BigInt(1e18),
+			BigInt(1), // cysFlrSupply
+			BigInt(0), // TVL
+			BigInt(0),
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
+		);
+		render(Footer);
+
+		await waitFor(() => {
+			expect(screen.getByTestId('market-cap')).toBeInTheDocument();
+			expect(screen.getByText('$ 1000000000000.00')).toBeInTheDocument();
 		});
 	});
 });

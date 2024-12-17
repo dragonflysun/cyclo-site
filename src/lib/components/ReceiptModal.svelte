@@ -10,6 +10,7 @@
 	import mobileBurnLine from '$lib/images/mobile-burn-line.svg';
 	import mobileBurnDia from '$lib/images/mobile-burn.svg';
 	import Input from './Input.svelte';
+	import Button from './Button.svelte';
 
 	enum ButtonStatus {
 		INSUFFICIENT_RECEIPTS = 'INSUFFICIENT RECEIPTS',
@@ -27,38 +28,30 @@
 	const readableBalance = Number(formatEther(receipt.balance));
 	const tokenId = receipt.tokenId;
 
-	let isMaxSelected = false;
-
 	const checkBalance = () => {
-		if (isMaxSelected) return;
-
-		if (readableAmountToRedeem === '' || readableAmountToRedeem === null) {
-			readableAmountToRedeem = '0.0';
+		if (readableAmountToRedeem) {
+			const bigNumValue = BigInt(parseEther(readableAmountToRedeem.toString()).toString());
+			amountToRedeem = bigNumValue;
+		} else {
+			amountToRedeem = BigInt(0);
 		}
-		amountToRedeem = parseEther(readableAmountToRedeem.toString());
-	};
-
-	const handleInput = (event: { detail: { value: string } }) => {
-		isMaxSelected = false;
-		readableAmountToRedeem = event.detail.value;
-		checkBalance();
 	};
 
 	$: maxRedeemable =
 		($balancesStore.cysFlrBalance ?? 0n) < (erc1155balance ?? 0n)
-			? ($balancesStore.cysFlrBalance ?? 0n)
-			: (erc1155balance ?? 0n);
+			? $balancesStore.cysFlrBalance ?? 0n
+			: erc1155balance ?? 0n;
 
-	$: if (amountToRedeem) {
-		readableAmountToRedeem = Number(formatEther(amountToRedeem)).toString();
-		if (erc1155balance < amountToRedeem) {
-			buttonStatus = ButtonStatus.INSUFFICIENT_RECEIPTS;
-		} else if ($balancesStore.cysFlrBalance < amountToRedeem) {
-			buttonStatus = ButtonStatus.INSUFFICIENT_cysFLR;
-		} else {
-			buttonStatus = ButtonStatus.READY;
-		}
-	}
+	$: insufficientReceipts = erc1155balance < amountToRedeem;
+	$: insufficientcysFlr = $balancesStore.cysFlrBalance < amountToRedeem;
+
+	$: buttonStatus = !readableAmountToRedeem
+		? ButtonStatus.READY
+		: insufficientReceipts
+			? ButtonStatus.INSUFFICIENT_RECEIPTS
+			: insufficientcysFlr
+				? ButtonStatus.INSUFFICIENT_cysFLR
+				: ButtonStatus.READY;
 
 	$: if (amountToRedeem > 0) {
 		const _sFlrToReceive = (amountToRedeem * 10n ** 18n) / BigInt(receipt.tokenId);
@@ -70,13 +63,19 @@
 </script>
 
 <div
-	class="flex w-full flex-col items-center justify-center gap-6 p-2 lg:p-6"
+	class="flex h-fit w-full flex-col items-center justify-center gap-4 overflow-y-scroll p-0 text-sm sm:gap-6 sm:p-6 sm:text-base"
 	data-testId="receipt-modal"
 >
-	<div
-		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
-	>
-		<span>NUMBER HELD</span>
+	<div class="flex w-full flex-col justify-between font-semibold text-white sm:flex-row">
+		<span>TOTAL sFLR LOCKED</span>
+		<div class="flex flex-row gap-4">
+			{#key readableBalance}{#if readableBalance}
+					<span in:fade={{ duration: 700 }}>{formatEther(receipt.totalsFlr ?? 0n)}</span>
+				{/if}{/key}
+		</div>
+	</div>
+	<div class="flex w-full flex-col justify-between font-semibold text-white sm:flex-row">
+		<span>TOTAL cysFLR MINTED</span>
 		<div class="flex flex-row gap-4">
 			{#key readableBalance}{#if readableBalance}
 					<span in:fade={{ duration: 700 }} data-testid="balance">{Number(readableBalance)}</span>
@@ -84,76 +83,79 @@
 		</div>
 	</div>
 
-	<div
-		class="flex w-full flex-col justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
-	>
-		<span>LOCK-UP PRICE</span>
+	<div class="flex w-full flex-col justify-between font-semibold text-white sm:flex-row">
+		<span>cysFLR PER LOCKED sFLR</span>
 		<div class="flex flex-row gap-4">
-			<span data-testid="lock-up-price">{'$'}{Number(formatEther(tokenId))}</span>
+			<span data-testid="lock-up-price">{Number(formatEther(tokenId))}</span>
 		</div>
 	</div>
 
 	<div
-		class="flex w-full flex-col items-start justify-between text-lg font-semibold text-white sm:flex-row sm:text-xl"
+		class="flex w-full flex-col items-start justify-between font-semibold text-white sm:flex-row"
 	>
 		<span>REDEEM AMOUNT</span>
-		<div class="flex flex-row items-center">
+		<div class="flex flex-col">
 			<Input
+				unit="cysFLR"
 				bind:amount={readableAmountToRedeem}
-				on:input={handleInput}
+				on:input={(event) => {
+					readableAmountToRedeem = event.detail.value;
+					checkBalance();
+				}}
 				data-testid="redeem-input"
+				placeholder="0.0"
 				on:setValueToMax={() => {
-					isMaxSelected = true;
 					amountToRedeem = maxRedeemable;
 					readableAmountToRedeem = Number(formatEther(maxRedeemable)).toString();
 				}}
 			/>
+			<p class="my-2 text-left text-xs font-light sm:text-right" data-testid="sflr-balance">
+				cysFLR Balance: {Number(formatEther($balancesStore.cysFlrBalance.toString()))}
+			</p>
 		</div>
 	</div>
 	<!-- Burn diagram for desktop -->
-	<div
-		class="hidden w-full flex-col items-center justify-center text-lg font-semibold text-white sm:flex sm:text-xl"
-	>
+	<div class="hidden w-full flex-col items-center justify-center font-semibold text-white sm:flex">
 		<div class="flex w-full flex-row justify-center gap-12 text-right">
 			<span class="w-1/2 text-center"
-				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
+				>{!readableAmountToRedeem ? 0 : readableAmountToRedeem} RECEIPTS</span
 			>
 			<span class="w-1/2 text-center"
-				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
+				>{!readableAmountToRedeem ? 0 : readableAmountToRedeem} cysFLR</span
 			>
 		</div>
 		<img src={burnDia} alt="diagram" class="w-1/2 py-4" />
 
 		<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 			<span class="flex overflow-ellipsis" data-testid="flr-to-receive">
-				{Number(formatEther(sFlrToReceive))} sFLR
+				{formatEther(sFlrToReceive)} sFLR
 			</span>
 		</div>
 	</div>
 	<!-- Burn diagram for mobile -->
 	<div
-		class="flex w-full flex-col items-center justify-center text-lg font-semibold text-white sm:hidden sm:text-xl"
+		class="flex w-full flex-col items-center justify-center text-sm font-semibold text-white sm:hidden sm:text-xl"
 	>
 		<div class="flex w-full flex-col items-center justify-center gap-1 text-right">
-			<span class="w-1/2 text-center"
+			<span class="w-full text-center"
 				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} cysFLR</span
 			>
-			<img src={mobileBurnLine} alt="diagram" class="" />
-			<span class="w-1/2 text-center"
+			<img src={mobileBurnLine} alt="diagram" class="h-6" />
+			<span class="w-full text-center"
 				>{readableAmountToRedeem === null ? 0 : readableAmountToRedeem} RECEIPTS</span
 			>
-			<img src={mobileBurnDia} alt="diagram" class="" />
+			<img src={mobileBurnDia} alt="diagram" class="h-32" />
 			<div class="flex flex-row items-center gap-2 overflow-ellipsis">
 				<span class="flex overflow-ellipsis" data-testid="flr-to-receive-mobile">
-					{Number(formatEther(sFlrToReceive))} sFLR
+					{formatEther(sFlrToReceive)} sFLR
 				</span>
 			</div>
 		</div>
 	</div>
 
-	<button
+	<Button
 		data-testid="unlock-button"
-		class="outset flex h-fit w-full items-center justify-center gap-2 border-4 border-white bg-primary px-4 py-2 text-lg font-bold text-white sm:text-xl"
+		customClass="  w-full bg-white text-primary"
 		disabled={buttonStatus !== ButtonStatus.READY || amountToRedeem === BigInt(0)}
 		on:click={() =>
 			transactionStore.handleUnlockTransaction({
@@ -167,5 +169,5 @@
 			})}
 	>
 		{buttonStatus}
-	</button>
+	</Button>
 </div>

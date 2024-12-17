@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
 	import { formatEther, formatUnits } from 'ethers';
 	import balancesStore from '$lib/balancesStore';
 	import { formatNumberWithAbbreviations } from '$lib/methods';
@@ -7,6 +6,8 @@
 	$: readablecysFLRSupply = $balancesStore.cysFlrSupply
 		? formatNumberWithAbbreviations(+formatEther($balancesStore.cysFlrSupply))
 		: '';
+
+	$: marketCap = ($balancesStore.cysFlrUsdPrice * $balancesStore.cysFlrSupply) / 10n ** 6n;
 </script>
 
 <footer
@@ -14,47 +15,58 @@
 >
 	<div class="flex w-full max-w-2xl flex-col justify-between gap-4 self-center sm:gap-0">
 		{#if $balancesStore.lockPrice}
-			<div
-				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-				in:fade
-				data-testId="lock-price"
-			>
-				<span>Current Lock Price (USD/sFLR)</span>
-				<span>$ {formatEther($balancesStore.lockPrice)}</span>
-			</div>
+			{#key $balancesStore.lockPrice}
+				<div
+					class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+					data-testId="lock-price"
+				>
+					<span>Current Lock Price (USD/sFLR)</span>
+					<span>$ {formatEther($balancesStore.lockPrice)}</span>
+				</div>
+			{/key}
 		{/if}
 		{#if $balancesStore.cysFlrUsdPrice}
-			<div
-				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-				in:fade
-				data-testId="cysFlr-price"
-			>
-				<span>Current cysFLR Price</span>
-				<span>$ {formatUnits($balancesStore.cysFlrUsdPrice, 6)}</span>
-			</div>
-		{/if}
-		{#if $balancesStore.TVLUsd}
-			<div
-				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-				in:fade
-				data-testId="TVL"
-			>
-				<span>Total Value Locked</span>
-				<span
-					>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
-						formatUnits($balancesStore.TVLUsd, 18)
-					).toFixed(2)}</span
+			{#key $balancesStore.cysFlrUsdPrice}
+				<div
+					class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+					data-testId="cysFlr-price"
 				>
-			</div>
+					<span>Current cysFLR Price</span>
+					<span>$ {formatUnits($balancesStore.cysFlrUsdPrice, 6)}</span>
+				</div>
+			{/key}
 		{/if}
 		{#if readablecysFLRSupply}
-			<div
-				class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
-				in:fade
-				data-testId="cysFlr-supply"
-			>
-				<span>Total cysFLR supply</span> <span>{readablecysFLRSupply}</span>
-			</div>
+			{#key readablecysFLRSupply}
+				<div
+					class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+					data-testId="cysFlr-supply"
+				>
+					<span>Total cysFLR supply</span> <span>{readablecysFLRSupply}</span>
+				</div>
+			{/key}
+		{/if}
+		{#if marketCap}
+			{#key marketCap}
+				<div
+					class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2"
+					data-testId="market-cap"
+				>
+					<span>cysFLR Market Cap</span> <span>$ {Number(formatEther(marketCap)).toFixed(2)}</span>
+				</div>
+			{/key}
+		{/if}
+		{#if $balancesStore.TVLUsd}
+			{#key $balancesStore.TVLUsd}
+				<div class="flex flex-col justify-between gap-0 sm:flex-row sm:gap-2" data-testId="TVL">
+					<span>Total Value Locked</span>
+					<span
+						>{formatEther($balancesStore.TVLsFlr)} sFLR / $ {Number(
+							formatUnits($balancesStore.TVLUsd, 18)
+						).toFixed(2)}</span
+					>
+				</div>
+			{/key}
 		{/if}
 	</div>
 </footer>

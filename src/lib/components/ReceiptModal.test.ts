@@ -49,7 +49,7 @@ describe('ReceiptModal Component', () => {
 		await userEvent.type(input, '0.5');
 
 		await waitFor(() => {
-			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('21.663778162911612 sFLR');
+			expect(screen.getByTestId('flr-to-receive')).toHaveTextContent('21.663778162911611785 sFLR');
 		});
 	});
 
@@ -63,7 +63,8 @@ describe('ReceiptModal Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
-			BigInt(0)
+			BigInt(0),
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
 		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
@@ -87,7 +88,8 @@ describe('ReceiptModal Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
-			BigInt(0)
+			BigInt(0),
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
 		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
@@ -113,7 +115,8 @@ describe('ReceiptModal Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
-			BigInt(0)
+			BigInt(0),
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
 		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
@@ -156,7 +159,8 @@ describe('ReceiptModal Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
-			BigInt(0)
+			BigInt(0),
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
 		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
@@ -199,7 +203,8 @@ describe('ReceiptModal Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
-			BigInt(0)
+			BigInt(0),
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
 		);
 
 		render(ReceiptModal, { receipt: mockReceipt });
