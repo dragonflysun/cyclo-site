@@ -237,7 +237,7 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span data-testid="calculated-cysflr-mobile"
-						>{formatEther((assets * $balancesStore.lockPrice) / 10n ** 18n)}</span
+						>{!amountToLock ? '0' : formatEther($balancesStore.swapQuotes.cysFlrOutput)}</span
 					>
 				{/key}
 				<span>cysFLR</span>
@@ -247,7 +247,9 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span class="text-sm" data-testid="calculated-cysflr-usd-mobile"
-						>Current market value ~$
+						>Current market value ~$ {amountToLock
+						? formatUnits($balancesStore.swapQuotes.cusdxOutput, 6)
+						: '0'}
 					</span>
 				{/key}
 			</div>
