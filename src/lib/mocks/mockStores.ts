@@ -25,7 +25,11 @@ const mockBalancesWritable = writable({
 	sFlrUsdPrice: BigInt(1),
 	cysFlrSupply: BigInt(1000000),
 	TVLsFlr: BigInt(1000),
-	TVLUsd: BigInt(1000)
+	TVLUsd: BigInt(1000),
+	swapQuotes: {
+		cysFlrOutput: BigInt(0),
+		cusdxOutput: BigInt(0)
+	}
 });
 
 export const mockBalancesStore = {
@@ -40,7 +44,11 @@ export const mockBalancesStore = {
 		sFlrUsdPrice: bigint,
 		cysFlrSupply: bigint = BigInt(1000000),
 		TVLsFlr: bigint = BigInt(1000),
-		TVLUsd: bigint = BigInt(1000)
+		TVLUsd: bigint = BigInt(1000),
+		swapQuotes: {
+			cysFlrOutput: bigint;
+			cusdxOutput: bigint;
+		}
 	): void => {
 		mockBalancesWritable.set({
 			cysFlrBalance,
@@ -51,7 +59,8 @@ export const mockBalancesStore = {
 			sFlrUsdPrice,
 			cysFlrSupply,
 			TVLsFlr,
-			TVLUsd
+			TVLUsd,
+			swapQuotes
 		});
 	}
 };

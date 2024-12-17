@@ -43,7 +43,11 @@ describe('cysFlrBalanceStore', () => {
 			cysFlrUsdPrice: BigInt(0),
 			cysFlrSupply: BigInt(0),
 			TVLsFlr: BigInt(0),
-			TVLUsd: BigInt(0)
+			TVLUsd: BigInt(0),
+			swapQuotes: {
+				cysFlrOutput: BigInt(0),
+				cusdxOutput: BigInt(0)
+			}
 		});
 	});
 
@@ -123,7 +127,11 @@ describe('cysFlrBalanceStore', () => {
 			cysFlrUsdPrice: BigInt(0),
 			cysFlrSupply: BigInt(0),
 			TVLsFlr: BigInt(0),
-			TVLUsd: BigInt(0)
+			TVLUsd: BigInt(0),
+			swapQuotes: {
+				cysFlrOutput: BigInt(0),
+				cusdxOutput: BigInt(0)
+			}
 		});
 	});
 });
