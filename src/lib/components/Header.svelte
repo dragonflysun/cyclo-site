@@ -3,7 +3,6 @@
 	import logo from '$lib/images/logo-white.svg';
 	import spiralLogo from '$lib/images/spiral-logo.svg';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { base } from '$app/paths';
 	import SocialLinks from './SocialLinks.svelte';
 	import NavButtons from './NavButtons.svelte';
