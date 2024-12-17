@@ -35,7 +35,9 @@ describe('Unlock Component', () => {
 			BigInt(1),
 			BigInt(1),
 			BigInt(1000000),
-			BigInt(1000)
+			BigInt(1000),
+			BigInt(0),
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) }
 		);
 	});
 

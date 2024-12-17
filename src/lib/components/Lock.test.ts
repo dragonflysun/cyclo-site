@@ -19,7 +19,7 @@ vi.mock('../../generated', async (importOriginal) => {
 
 vi.mock('$lib/balancesStore', async () => {
 	return {
-		default: {...mockBalancesStore, refreshSwapQuote: vi.fn()}
+		default: { ...mockBalancesStore, refreshSwapQuote: vi.fn() }
 	};
 });
 
@@ -45,8 +45,7 @@ describe('Lock Component', () => {
 			BigInt(0), // TVLUsd
 			BigInt(0), // cysFlrUsdPrice
 			BigInt(0), // swapQuotes
-			{cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0)} // swapQuotes
-
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) } // swapQuotes
 		);
 	});
 
@@ -72,8 +71,7 @@ describe('Lock Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
-			{cysFlrOutput: BigInt(1234e18), cusdxOutput: BigInt(0)} // swapQuotes
-
+			{ cysFlrOutput: BigInt(1234e18), cusdxOutput: BigInt(0) } // swapQuotes
 		);
 
 		render(Lock);
@@ -114,8 +112,7 @@ describe('Lock Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
-			{cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0)} // swapQuotes
-
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) } // swapQuotes
 		);
 		render(Lock);
 		const input = screen.getByTestId('lock-input');
@@ -136,8 +133,7 @@ describe('Lock Component', () => {
 			BigInt(0),
 			BigInt(0),
 			BigInt(0),
-			{cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0)} // swapQuotes
-
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0) } // swapQuotes
 		);
 		render(Lock);
 		const lockButton = screen.getByTestId('lock-button');
@@ -174,7 +170,7 @@ describe('Lock Component', () => {
 			BigInt('1000000000000000000'), // cysFlrSupply
 			BigInt('1000000000000000000'), // TVLsFlr
 			BigInt('1000000000000000000'), // TVLUsd
-			{cysFlrOutput: BigInt(0), cusdxOutput: BigInt('3000000000000000000')} // swapQuotes
+			{ cysFlrOutput: BigInt(0), cusdxOutput: BigInt('3000000000000000000') } // swapQuotes
 		);
 
 		render(Lock);

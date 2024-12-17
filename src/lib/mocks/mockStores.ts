@@ -46,8 +46,8 @@ export const mockBalancesStore = {
 		TVLsFlr: bigint = BigInt(1000),
 		TVLUsd: bigint = BigInt(1000),
 		swapQuotes: {
-			cysFlrOutput: bigint,
-			cusdxOutput: bigint
+			cysFlrOutput: bigint;
+			cusdxOutput: bigint;
 		}
 	): void => {
 		mockBalancesWritable.set({
