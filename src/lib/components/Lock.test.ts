@@ -19,7 +19,7 @@ vi.mock('../../generated', async (importOriginal) => {
 
 vi.mock('$lib/balancesStore', async () => {
 	return {
-		default: mockBalancesStore
+		default: {...mockBalancesStore, refreshSwapQuote: vi.fn()}
 	};
 });
 
@@ -41,7 +41,12 @@ describe('Lock Component', () => {
 			'Ready', // status
 			BigInt(1), // lockPrice
 			BigInt(0), // cysFlrSupply
-			BigInt(0) // TVL
+			BigInt(0), // TVL
+			BigInt(0), // TVLUsd
+			BigInt(0), // cysFlrUsdPrice
+			BigInt(0), // swapQuotes
+			{cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0)} // swapQuotes
+
 		);
 	});
 
@@ -64,7 +69,11 @@ describe('Lock Component', () => {
 			BigInt(parseEther('1')),
 			BigInt(0),
 			BigInt(0),
-			BigInt(0)
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			{cysFlrOutput: BigInt(1234e18), cusdxOutput: BigInt(0)} // swapQuotes
+
 		);
 
 		render(Lock);
@@ -76,7 +85,7 @@ describe('Lock Component', () => {
 			const priceRatio = screen.getByTestId('price-ratio');
 			expect(priceRatio).toBeInTheDocument();
 			const calculatedCysflr = screen.getByTestId('calculated-cysflr');
-			expect(calculatedCysflr).toHaveTextContent('0.5');
+			expect(calculatedCysflr).toHaveTextContent('1234.0');
 		});
 	});
 
@@ -102,7 +111,11 @@ describe('Lock Component', () => {
 			BigInt(1),
 			BigInt(0),
 			BigInt(0),
-			BigInt(0)
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			{cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0)} // swapQuotes
+
 		);
 		render(Lock);
 		const input = screen.getByTestId('lock-input');
@@ -120,7 +133,11 @@ describe('Lock Component', () => {
 			BigInt(1),
 			BigInt(0),
 			BigInt(0),
-			BigInt(0)
+			BigInt(0),
+			BigInt(0),
+			BigInt(0),
+			{cysFlrOutput: BigInt(0), cusdxOutput: BigInt(0)} // swapQuotes
+
 		);
 		render(Lock);
 		const lockButton = screen.getByTestId('lock-button');
@@ -156,7 +173,8 @@ describe('Lock Component', () => {
 			BigInt('1000000'), // sFlrUsdPrice (1 USD, 6 decimals)
 			BigInt('1000000000000000000'), // cysFlrSupply
 			BigInt('1000000000000000000'), // TVLsFlr
-			BigInt('1000000000000000000') // TVLUsd
+			BigInt('1000000000000000000'), // TVLUsd
+			{cysFlrOutput: BigInt(0), cusdxOutput: BigInt('3000000000000000000')} // swapQuotes
 		);
 
 		render(Lock);
@@ -166,7 +184,7 @@ describe('Lock Component', () => {
 
 		await waitFor(() => {
 			const usdValueElement = screen.getByTestId('calculated-cysflr-usd');
-			expect(usdValueElement).toHaveTextContent('Current market value ~$ 1000000.00');
+			expect(usdValueElement).toHaveTextContent('Current market value ~$ 3000000000000.0');
 		});
 	});
 

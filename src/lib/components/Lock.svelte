@@ -3,7 +3,13 @@
 	import transactionStore from '$lib/transactionStore';
 	import balancesStore from '$lib/balancesStore';
 	import Input from '$lib/components/Input.svelte';
-	import { cysFlrAddress, erc1155Address, sFlrAddress } from '$lib/stores';
+	import {
+		cusdxAddress,
+		cysFlrAddress,
+		erc1155Address,
+		quoterAddress,
+		sFlrAddress
+	} from '$lib/stores';
 	import { base } from '$app/paths';
 	import mintDia from '$lib/images/mint-dia.svg';
 	import mintMobile from '$lib/images/mint-mobile.svg';
@@ -13,7 +19,7 @@
 	import { Modal } from 'flowbite-svelte';
 	import { signerAddress, wagmiConfig, web3Modal } from 'svelte-wagmi';
 	import { fade } from 'svelte/transition';
-	import { formatEther, parseEther } from 'ethers';
+	import { formatEther, formatUnits, parseEther } from 'ethers';
 
 	export let amountToLock = '';
 	let disclaimerAcknowledged = false;
@@ -25,17 +31,16 @@
 	}
 
 	$: assets = BigInt(0);
-
-	$: if ($signerAddress) {
-		checkBalance();
-	}
-
 	$: insufficientFunds = $balancesStore.sFlrBalance < assets;
 	$: buttonStatus = !amountToLock
 		? ButtonStatus.READY
 		: insufficientFunds
 			? ButtonStatus.INSUFFICIENT_sFLR
 			: ButtonStatus.READY;
+
+	$: if ($signerAddress) {
+		checkBalance();
+	}
 
 	const checkBalance = () => {
 		if (amountToLock) {
@@ -63,6 +68,16 @@
 			assets: assets
 		});
 	};
+
+	$: if (assets || amountToLock) {
+		balancesStore.refreshSwapQuote(
+			$wagmiConfig,
+			$cysFlrAddress,
+			$cusdxAddress,
+			assets,
+			$quoterAddress
+		);
+	}
 </script>
 
 <Card size="lg">
@@ -186,9 +201,7 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span data-testid="calculated-cysflr"
-						>{!amountToLock
-							? '0'
-							: formatEther((assets * $balancesStore.lockPrice) / 10n ** 18n)}</span
+						>{!amountToLock ? '0' : formatEther($balancesStore.swapQuotes.cysFlrOutput)}</span
 					>
 				{/key}
 				<span>cysFLR</span>
@@ -196,17 +209,11 @@
 			<div
 				class="flex w-full items-center justify-center gap-2 text-center text-lg font-semibold text-white sm:text-xl"
 			>
-				{#key $balancesStore.lockPrice}
-					<span class="text-sm" data-testid="calculated-cysflr-usd"
-						>Current market value ~$ {!amountToLock
-							? '0'
-							: Number(
-									formatEther(
-										(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n
-									)
-								).toFixed(2)}</span
-					>
-				{/key}
+				<span class="text-sm" data-testid="calculated-cysflr-usd"
+					>Current market value ~$ {amountToLock
+						? formatUnits($balancesStore.swapQuotes.cusdxOutput, 6)
+						: '0'}</span
+				>
 			</div>
 		</div>
 
@@ -240,12 +247,8 @@
 			>
 				{#key $balancesStore.lockPrice}
 					<span class="text-sm" data-testid="calculated-cysflr-usd-mobile"
-						>Current market value ~$ {Number(
-							formatEther(
-								(assets * $balancesStore.lockPrice * $balancesStore.cysFlrUsdPrice) / 10n ** 24n
-							)
-						).toFixed(2)}</span
-					>
+						>Current market value ~$
+					</span>
 				{/key}
 			</div>
 		</div>
