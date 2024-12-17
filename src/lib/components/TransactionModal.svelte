@@ -78,12 +78,20 @@
 					{/if}
 
 					{#if $transactionStore.hash}
+						<div class="flex flex-col gap-2">
 						<a
 							target="_blank"
 							class="whitespace-pre-wrap break-words text-center hover:underline"
 							href={`https://flarescan.com/tx/${$transactionStore.hash}`}
 							data-testid="view-transaction-link">View transaction on Flarescan</a
 						>
+						<a
+							target="_blank"
+							class="whitespace-pre-wrap break-words text-center hover:underline"
+							href={`https://sparkdex.ai/swap/`}
+								data-testid="view-transaction-link">Sell your cysFLR on Sparkdex</a
+							>
+						</div>
 					{/if}
 				</div>
 
