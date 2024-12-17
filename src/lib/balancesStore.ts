@@ -1,4 +1,4 @@
-import type { Config } from '@wagmi/core';
+import { getBlock, type Config } from '@wagmi/core';
 import {
 	readErc20BalanceOf,
 	readErc20TotalSupply,
@@ -9,6 +9,8 @@ import {
 import { writable } from 'svelte/store';
 import type { Hex } from 'viem';
 import { ZeroAddress } from 'ethers';
+import blockNumberStore from './blockNumberStore';
+import { get } from 'svelte/store';
 
 const initialState = {
 	cysFlrBalance: BigInt(0),
@@ -25,23 +27,31 @@ const initialState = {
 	}
 };
 
+const getCurrentBlock = async (config: Config) => {
+	const data = await getBlock(config);
+	return data.number;
+};
+
 const getSwapQuote = async (
 	config: Config,
 	cysFlrAddress: Hex,
 	cusdxAddress: Hex,
 	assets: bigint,
-	quoterAddress: Hex
+	quoterAddress: Hex,
+	blockNumber: bigint
 ) => {
 	const { result: depositPreviewValue } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(
 		config,
 		{
 			address: cysFlrAddress,
 			args: [assets, 0n],
-			account: ZeroAddress as `0x${string}`
+			account: ZeroAddress as `0x${string}`,
+			blockNumber: blockNumber
 		}
 	);
 	const { result: swapQuote } = await simulateQuoterQuoteExactInputSingle(config, {
 		address: quoterAddress,
+		blockNumber: blockNumber,
 		args: [
 			{
 				tokenIn: cysFlrAddress,
@@ -59,10 +69,12 @@ const getcysFLRUsdPrice = async (
 	config: Config,
 	quoterAddress: Hex,
 	cusdxAddress: Hex,
-	cysFlrAddress: Hex
+	cysFlrAddress: Hex,
+	blockNumber: bigint
 ) => {
 	const data = await simulateQuoterQuoteExactOutputSingle(config, {
 		address: quoterAddress,
+		blockNumber: blockNumber,
 		args: [
 			{
 				tokenIn: cusdxAddress,
@@ -76,18 +88,20 @@ const getcysFLRUsdPrice = async (
 	return data.result[0] || 0n;
 };
 
-const getLockPrice = async (config: Config, cysFlrAddress: Hex) => {
+const getLockPrice = async (config: Config, cysFlrAddress: Hex, blockNumber: bigint) => {
 	const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(config, {
 		address: cysFlrAddress,
 		args: [BigInt(1e18), 0n],
-		account: ZeroAddress as `0x${string}`
+		account: ZeroAddress as `0x${string}`,
+		blockNumber: blockNumber
 	});
 	return result;
 };
 
-const getcysFLRSupply = async (config: Config, cysFlrAddress: Hex) => {
+const getcysFLRSupply = async (config: Config, cysFlrAddress: Hex, blockNumber: bigint) => {
 	const data = await readErc20TotalSupply(config, {
-		address: cysFlrAddress
+		address: cysFlrAddress,
+		blockNumber: blockNumber
 	});
 	return data;
 };
@@ -97,11 +111,13 @@ const getcysFLRSupply = async (config: Config, cysFlrAddress: Hex) => {
 const getsFLRBalanceLockedInCysFlr = async (
 	config: Config,
 	cysFlrAddress: Hex,
-	sFlrAddress: Hex
+	sFlrAddress: Hex,
+	currentBlock: bigint
 ) => {
 	const sFlrBalanceLockedInCysFlr = await readErc20BalanceOf(config, {
 		address: sFlrAddress,
-		args: [cysFlrAddress]
+		args: [cysFlrAddress],
+		blockNumber: currentBlock
 	});
 	return sFlrBalanceLockedInCysFlr;
 };
@@ -117,11 +133,13 @@ const balancesStore = () => {
 		cusdxAddress: Hex,
 		sFlrAddress: Hex
 	) => {
+		const { blockNumber } = get(blockNumberStore);
+
 		const [cysFlrUsdPrice, lockPrice, cysFlrSupply, sFlrBalanceLockedInCysFlr] = await Promise.all([
-			getcysFLRUsdPrice(config, quoterAddress, cusdxAddress, cysFlrAddress),
-			getLockPrice(config, cysFlrAddress),
-			getcysFLRSupply(config, cysFlrAddress),
-			getsFLRBalanceLockedInCysFlr(config, cysFlrAddress, sFlrAddress)
+			getcysFLRUsdPrice(config, quoterAddress, cusdxAddress, cysFlrAddress, blockNumber),
+			getLockPrice(config, cysFlrAddress, blockNumber),
+			getcysFLRSupply(config, cysFlrAddress, blockNumber),
+			getsFLRBalanceLockedInCysFlr(config, cysFlrAddress, sFlrAddress, blockNumber)
 		]);
 		const TVLUsd = (sFlrBalanceLockedInCysFlr * lockPrice) / BigInt(1e18);
 		const TVLsFlr = sFlrBalanceLockedInCysFlr;
@@ -142,15 +160,19 @@ const balancesStore = () => {
 		cysFlrAddress: Hex,
 		signerAddress: string
 	) => {
+		const { blockNumber } = get(blockNumberStore);
+
 		try {
 			const [newSFlrBalance, newCysFlrBalance] = await Promise.all([
 				readErc20BalanceOf(config, {
 					address: sFlrAddress,
-					args: [signerAddress as Hex]
+					args: [signerAddress as Hex],
+					blockNumber
 				}),
 				readErc20BalanceOf(config, {
 					address: cysFlrAddress,
-					args: [signerAddress as Hex]
+					args: [signerAddress as Hex],
+					blockNumber
 				})
 			]);
 
@@ -176,16 +198,19 @@ const balancesStore = () => {
 		assets: bigint,
 		quoterAddress: Hex
 	) => {
+		const currentBlock = await getCurrentBlock(config);
 		const swapQuotes = await getSwapQuote(
 			config,
 			cysFlrAddress,
 			cusdxAddress,
 			assets,
-			quoterAddress
+			quoterAddress,
+			currentBlock
 		);
 		update((state) => ({
 			...state,
-			swapQuotes
+			swapQuotes,
+			currentBlock
 		}));
 	};
 
