@@ -1,4 +1,4 @@
-import { getBlock, type Config } from '@wagmi/core';
+import { type Config } from '@wagmi/core';
 import {
 	readErc20BalanceOf,
 	readErc20TotalSupply,
@@ -27,11 +27,6 @@ const initialState = {
 	}
 };
 
-const getCurrentBlock = async (config: Config) => {
-	const data = await getBlock(config);
-	return data.number;
-};
-
 const getSwapQuote = async (
 	config: Config,
 	cysFlrAddress: Hex,
@@ -40,9 +35,10 @@ const getSwapQuote = async (
 	quoterAddress: Hex,
 	blockNumber: bigint
 ) => {
-	const { result: depositPreviewValue } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(
-		config,
-		{
+	try {
+		const { result: depositPreviewValue } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(
+			config,
+			{
 			address: cysFlrAddress,
 			args: [assets, 0n],
 			account: ZeroAddress as `0x${string}`,
@@ -62,7 +58,11 @@ const getSwapQuote = async (
 			}
 		]
 	});
-	return { cysFlrOutput: depositPreviewValue, cusdxOutput: swapQuote[0] };
+		return { cysFlrOutput: depositPreviewValue, cusdxOutput: swapQuote[0] };
+	} catch (error) {
+		console.error('Error getting swapQuote:', error);
+		return { cysFlrOutput: 0n, cusdxOutput: 0n };
+	}
 };
 
 const getcysFLRUsdPrice = async (
@@ -72,10 +72,11 @@ const getcysFLRUsdPrice = async (
 	cysFlrAddress: Hex,
 	blockNumber: bigint
 ) => {
-	const data = await simulateQuoterQuoteExactOutputSingle(config, {
-		address: quoterAddress,
-		blockNumber: blockNumber,
-		args: [
+	try {
+		const data = await simulateQuoterQuoteExactOutputSingle(config, {
+			address: quoterAddress,
+			blockNumber: blockNumber,
+			args: [
 			{
 				tokenIn: cusdxAddress,
 				tokenOut: cysFlrAddress,
@@ -83,27 +84,41 @@ const getcysFLRUsdPrice = async (
 				fee: 3000,
 				sqrtPriceLimitX96: BigInt(0)
 			}
-		]
-	});
-	return data.result[0] || 0n;
+			]
+		});
+		return data.result[0] || 0n;
+	} catch (error) {
+		console.error('Error getting cysFLRUsdPrice:', error);
+		return 0n;
+	}
 };
 
 const getLockPrice = async (config: Config, cysFlrAddress: Hex, blockNumber: bigint) => {
-	const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(config, {
-		address: cysFlrAddress,
-		args: [BigInt(1e18), 0n],
-		account: ZeroAddress as `0x${string}`,
-		blockNumber: blockNumber
+	try {
+		const { result } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(config, {
+			address: cysFlrAddress,
+			args: [BigInt(1e18), 0n],
+			account: ZeroAddress as `0x${string}`,
+			blockNumber: blockNumber
 	});
-	return result;
+		return result;
+	} catch (error) {
+		console.error('Error getting lockPrice:', error);
+		return 0n;
+	}
 };
 
 const getcysFLRSupply = async (config: Config, cysFlrAddress: Hex, blockNumber: bigint) => {
-	const data = await readErc20TotalSupply(config, {
-		address: cysFlrAddress,
-		blockNumber: blockNumber
-	});
-	return data;
+	try {
+		const data = await readErc20TotalSupply(config, {
+			address: cysFlrAddress,
+			blockNumber: blockNumber
+		});
+		return data;
+	} catch (error) {
+		console.error('Error getting cysFLRSupply:', error);
+		return 0n;
+	}
 };
 
 // Get the TVL
@@ -114,12 +129,17 @@ const getsFLRBalanceLockedInCysFlr = async (
 	sFlrAddress: Hex,
 	currentBlock: bigint
 ) => {
-	const sFlrBalanceLockedInCysFlr = await readErc20BalanceOf(config, {
-		address: sFlrAddress,
-		args: [cysFlrAddress],
-		blockNumber: currentBlock
+	try {
+		const sFlrBalanceLockedInCysFlr = await readErc20BalanceOf(config, {
+			address: sFlrAddress,
+			args: [cysFlrAddress],
+			blockNumber: currentBlock
 	});
-	return sFlrBalanceLockedInCysFlr;
+		return sFlrBalanceLockedInCysFlr;
+	} catch (error) {
+		console.error('Error getting sFlrBalanceLockedInCysFlr:', error);
+		return 0n;
+	}
 };
 
 const balancesStore = () => {
@@ -133,6 +153,7 @@ const balancesStore = () => {
 		cusdxAddress: Hex,
 		sFlrAddress: Hex
 	) => {
+		console.log('refreshPrices');
 		const { blockNumber } = get(blockNumberStore);
 
 		const [cysFlrUsdPrice, lockPrice, cysFlrSupply, sFlrBalanceLockedInCysFlr] = await Promise.all([
@@ -141,8 +162,12 @@ const balancesStore = () => {
 			getcysFLRSupply(config, cysFlrAddress, blockNumber),
 			getsFLRBalanceLockedInCysFlr(config, cysFlrAddress, sFlrAddress, blockNumber)
 		]);
+		console.log('refreshPrices done');
 		const TVLUsd = (sFlrBalanceLockedInCysFlr * lockPrice) / BigInt(1e18);
+		console.log('TVLUsd', TVLUsd);
 		const TVLsFlr = sFlrBalanceLockedInCysFlr;
+		console.log('TVLsFlr', TVLsFlr);
+		console.log('refreshPrices done');
 		update((state) => ({
 			...state,
 			status: 'Ready',
@@ -198,19 +223,18 @@ const balancesStore = () => {
 		assets: bigint,
 		quoterAddress: Hex
 	) => {
-		const currentBlock = await getCurrentBlock(config);
+		const {blockNumber} = get(blockNumberStore);
 		const swapQuotes = await getSwapQuote(
 			config,
 			cysFlrAddress,
 			cusdxAddress,
 			assets,
 			quoterAddress,
-			currentBlock
+			blockNumber
 		);
 		update((state) => ({
 			...state,
-			swapQuotes,
-			currentBlock
+			swapQuotes
 		}));
 	};
 
