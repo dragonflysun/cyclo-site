@@ -36,28 +36,26 @@ const getSwapQuote = async (
 	blockNumber: bigint
 ) => {
 	try {
-		const { result: depositPreviewValue } = await simulateErc20PriceOracleReceiptVaultPreviewDeposit(
-			config,
-			{
-			address: cysFlrAddress,
-			args: [assets, 0n],
-			account: ZeroAddress as `0x${string}`,
-			blockNumber: blockNumber
-		}
-	);
-	const { result: swapQuote } = await simulateQuoterQuoteExactInputSingle(config, {
-		address: quoterAddress,
-		blockNumber: blockNumber,
-		args: [
-			{
-				tokenIn: cysFlrAddress,
-				tokenOut: cusdxAddress,
-				amountIn: depositPreviewValue,
-				fee: 3000,
-				sqrtPriceLimitX96: BigInt(0)
-			}
-		]
-	});
+		const { result: depositPreviewValue } =
+			await simulateErc20PriceOracleReceiptVaultPreviewDeposit(config, {
+				address: cysFlrAddress,
+				args: [assets, 0n],
+				account: ZeroAddress as `0x${string}`,
+				blockNumber: blockNumber
+			});
+		const { result: swapQuote } = await simulateQuoterQuoteExactInputSingle(config, {
+			address: quoterAddress,
+			blockNumber: blockNumber,
+			args: [
+				{
+					tokenIn: cysFlrAddress,
+					tokenOut: cusdxAddress,
+					amountIn: depositPreviewValue,
+					fee: 3000,
+					sqrtPriceLimitX96: BigInt(0)
+				}
+			]
+		});
 		return { cysFlrOutput: depositPreviewValue, cusdxOutput: swapQuote[0] };
 	} catch (error) {
 		console.error('Error getting swapQuote:', error);
@@ -77,13 +75,13 @@ const getcysFLRUsdPrice = async (
 			address: quoterAddress,
 			blockNumber: blockNumber,
 			args: [
-			{
-				tokenIn: cusdxAddress,
-				tokenOut: cysFlrAddress,
-				amount: BigInt(1e18),
-				fee: 3000,
-				sqrtPriceLimitX96: BigInt(0)
-			}
+				{
+					tokenIn: cusdxAddress,
+					tokenOut: cysFlrAddress,
+					amount: BigInt(1e18),
+					fee: 3000,
+					sqrtPriceLimitX96: BigInt(0)
+				}
 			]
 		});
 		return data.result[0] || 0n;
@@ -100,7 +98,7 @@ const getLockPrice = async (config: Config, cysFlrAddress: Hex, blockNumber: big
 			args: [BigInt(1e18), 0n],
 			account: ZeroAddress as `0x${string}`,
 			blockNumber: blockNumber
-	});
+		});
 		return result;
 	} catch (error) {
 		console.error('Error getting lockPrice:', error);
@@ -134,7 +132,7 @@ const getsFLRBalanceLockedInCysFlr = async (
 			address: sFlrAddress,
 			args: [cysFlrAddress],
 			blockNumber: currentBlock
-	});
+		});
 		return sFlrBalanceLockedInCysFlr;
 	} catch (error) {
 		console.error('Error getting sFlrBalanceLockedInCysFlr:', error);
@@ -153,7 +151,6 @@ const balancesStore = () => {
 		cusdxAddress: Hex,
 		sFlrAddress: Hex
 	) => {
-		console.log('refreshPrices');
 		const { blockNumber } = get(blockNumberStore);
 
 		const [cysFlrUsdPrice, lockPrice, cysFlrSupply, sFlrBalanceLockedInCysFlr] = await Promise.all([
@@ -162,12 +159,9 @@ const balancesStore = () => {
 			getcysFLRSupply(config, cysFlrAddress, blockNumber),
 			getsFLRBalanceLockedInCysFlr(config, cysFlrAddress, sFlrAddress, blockNumber)
 		]);
-		console.log('refreshPrices done');
 		const TVLUsd = (sFlrBalanceLockedInCysFlr * lockPrice) / BigInt(1e18);
-		console.log('TVLUsd', TVLUsd);
 		const TVLsFlr = sFlrBalanceLockedInCysFlr;
-		console.log('TVLsFlr', TVLsFlr);
-		console.log('refreshPrices done');
+
 		update((state) => ({
 			...state,
 			status: 'Ready',
@@ -223,7 +217,7 @@ const balancesStore = () => {
 		assets: bigint,
 		quoterAddress: Hex
 	) => {
-		const {blockNumber} = get(blockNumberStore);
+		const { blockNumber } = get(blockNumberStore);
 		const swapQuotes = await getSwapQuote(
 			config,
 			cysFlrAddress,
